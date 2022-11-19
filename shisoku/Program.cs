@@ -3,6 +3,6 @@
 using System;
 using shisoku;
 
-Console.WriteLine("hello");
-
-Console.WriteLine(lexer.lexInt("123abc"));
+var tokens  = lexer.lex("123+34+56");
+var tree = ast.parse(tokens);
+Console.WriteLine(tree);
