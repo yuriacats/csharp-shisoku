@@ -1,12 +1,18 @@
 using System;
 namespace shisoku;
 public abstract record Token();
+public abstract record TokenSymble():Token;
 public record TokenNumber(int Number):Token;
-public record TokenPlus():Token;
+public record TokenPlus():TokenSymble;
+public record TokenSlash():TokenSymble;
+public record TokenMinus():TokenSymble;
+public record TokenAsterisk():TokenSymble;
+public record TokenStartSection():Token;
+public record TokenEndSection():Token;
 public class lexer{
 
 
-public static Token[] lex(String input){
+public static List<Token> lex(String input){
     List<string> raw_tokens= new List<string>{}; 
     int x = 0;
     while(input.Length >= 1){
@@ -18,6 +24,28 @@ public static Token[] lex(String input){
         }else if(input[x] == '-'){
             raw_tokens.Add(input[..x]);
             raw_tokens.Add("-");
+            input = input[(x+1)..];
+            x = 0;
+
+        }else if(input[x] == '/'){
+            raw_tokens.Add(input[..x]);
+            raw_tokens.Add("/");
+            input = input[(x+1)..];
+            x = 0;
+        }else if(input[x] == '*'){
+            raw_tokens.Add(input[..x]);
+            raw_tokens.Add("*");
+            input = input[(x+1)..];
+            x = 0;
+        }else if(input[x] == '('){
+            raw_tokens.Add(input[..x]);
+            raw_tokens.Add("(");
+            input = input[(x+1)..];
+            x = 0;
+
+        }else if(input[x] == ')'){
+            raw_tokens.Add(input[..x]);
+            raw_tokens.Add(")");
             input = input[(x+1)..];
             x = 0;
 
@@ -33,14 +61,22 @@ public static Token[] lex(String input){
     foreach(string raw_token in raw_tokens){
         switch(raw_token){
             case string  i when raw_token == "+" :
-                Token t_p = new TokenPlus();
-                tokens.Add(t_p);
+                tokens.Add(new TokenPlus());
                 break;
             case string  i when raw_token == "-" :
+                tokens.Add(new TokenMinus());
                 break;
             case string  i when raw_token == "*" :
+                tokens.Add(new TokenAsterisk());
                 break;
             case string  i when raw_token == "/" :
+                tokens.Add(new TokenSlash());
+                break;
+            case string  i when raw_token == "(" :
+                tokens.Add(new TokenStartSection());
+                break;
+            case string  i when raw_token == ")" :
+                tokens.Add(new TokenEndSection());
                 break;
             case string  i when raw_token == "" :
                 break;
@@ -51,7 +87,7 @@ public static Token[] lex(String input){
                 break;
         }
     }
-    return tokens.ToArray();
+    return tokens;
 }
 
 public static (int,int) lexInt(String input){
