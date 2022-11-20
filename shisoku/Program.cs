@@ -5,11 +5,12 @@ using System.Collections.Generic;
 using shisoku;
 
 while(true) {
-    Console.Write("> ");
+    try {
     string? input;
     do{
+        Console.Write("> ");
         input = Console.ReadLine();
-    } while (input is null);
+    } while (input is null || input.Length == 0);
     var tokens  = lexer.lex(input);
         //tokens.ForEach(Console.WriteLine);
 
@@ -18,5 +19,5 @@ while(true) {
 
     var answer = MyCalc.toInt(tree);
     Console.WriteLine(answer);
-
+    } catch (Exception){}
 }

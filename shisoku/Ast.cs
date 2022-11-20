@@ -8,7 +8,7 @@ public record AstMul(Ast hidari, Ast migi):Ast;
 public record AstDiv(Ast hidari, Ast migi):Ast;
 public class ast{
     public static (Ast, shisoku.Token[]) parse(shisoku.Token[] input){
-        Console.WriteLine($"parse({ViewTokens(input)})");
+        Console.WriteLine($"parse: {ViewTokens(input)}");
         (var defualt_ast,var default_token )=parseMaldiv(input);
         switch(default_token){
             case [TokenPlus,..var nokori]:
@@ -26,7 +26,7 @@ public class ast{
         }
     }
     public static (Ast, shisoku.Token[]) parseMaldiv(shisoku.Token[] input){
-        Console.WriteLine($"parseMaldiv({ViewTokens(input)})");
+        Console.WriteLine($"parseMaldiv: {ViewTokens(input)}");
         (var defualt_ast,var default_token )=parseNumOrSection(input);
         switch(default_token){
             case [TokenAsterisk,..var nokori]:
@@ -44,7 +44,7 @@ public class ast{
         }
     }
     public static (Ast, shisoku.Token[]) parseNumOrSection(shisoku.Token[] input){
-        Console.WriteLine($"parseNumOrSection({ViewTokens(input)})");
+        Console.WriteLine($"parseNumOrSection: {ViewTokens(input)}");
         switch(input){
             case [TokenNumber(var num),..var nokori]:
                 return (new AstNumber(num), nokori);
@@ -77,5 +77,5 @@ static string ViewToken(Token token){
 }
 
 static string ViewTokens(Token[] tokens) => 
-    "{" + string.Join( ",", tokens.Select(ViewToken)) +"}";
+    string.Join( "", tokens.Select(ViewToken)) ;
 }
