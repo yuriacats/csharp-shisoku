@@ -4,11 +4,19 @@ using System;
 using System.Collections.Generic;
 using shisoku;
 
-var tokens  = lexer.lex("10+2*(9/3)-3");
-//tokens.ForEach(Console.WriteLine);
+while(true) {
+    Console.Write("> ");
+    string? input;
+    do{
+        input = Console.ReadLine();
+    } while (input is null);
+    var tokens  = lexer.lex(input);
+        //tokens.ForEach(Console.WriteLine);
 
-var (tree, _) = ast.parse(tokens.ToArray());
-Console.WriteLine(tree);
+    var (tree, _) = ast.parse(tokens.ToArray());
+    Console.WriteLine(tree);
 
-var answer = MyCalc.toInt(tree);
-Console.WriteLine(answer);
+    var answer = MyCalc.toInt(tree);
+    Console.WriteLine(answer);
+
+}
