@@ -18,7 +18,7 @@ while (true)
         //tokens.ForEach(Console.WriteLine);
 
         var (tree, _) = ast.parse(tokens.ToArray());
-        Console.WriteLine(tree);
+        //Console.WriteLine(tree);
         Console.WriteLine(PrettyPrinter.PrettyPrint(tree));
 
         var answer = MyCalc.toInt(tree);
