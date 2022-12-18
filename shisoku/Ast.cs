@@ -1,58 +1,72 @@
 
 namespace shisoku;
 public abstract record Ast();
-public record AstNumber(int Number):Ast;
-public record AstAdd(Ast hidari, Ast migi):Ast;
-public record AstSub(Ast hidari, Ast migi):Ast;
-public record AstMul(Ast hidari, Ast migi):Ast;
-public record AstDiv(Ast hidari, Ast migi):Ast;
-public class ast{
-    public static (Ast, shisoku.Token[]) parse(shisoku.Token[] input){
+public record AstNumber(int Number) : Ast;
+public record AstAdd(Ast hidari, Ast migi) : Ast;
+public record AstSub(Ast hidari, Ast migi) : Ast;
+public record AstMul(Ast hidari, Ast migi) : Ast;
+public record AstDiv(Ast hidari, Ast migi) : Ast;
+public class ast
+{
+    public static (Ast, shisoku.Token[]) parse(shisoku.Token[] input)
+    {
         Console.WriteLine($"parse: {ViewTokens(input)}");
-        (var defualt_ast,var default_token )=parseMaldiv(input);
-        switch(default_token){
-            case [TokenPlus,..var nokori]:
-                {
-                    (var migi_ast, var other)=parse(nokori);
-                    return (new AstAdd(defualt_ast,migi_ast), other);
-                }
-            case [TokenMinus,..var nokori]:
-                {
-                    (var migi_ast, var other)=parse(nokori);
-                    return (new AstSub(defualt_ast,migi_ast), other);
-                }
-            default:
-                return (defualt_ast,default_token);
+        (var result, var rest) = parseMaldiv(input);
+        while (rest is [TokenPlus or TokenMinus, .. var rest2])
+        {
+            switch (rest[0])
+            {
+                case TokenPlus:
+                    var (addRhs, addRest) = parseMaldiv(rest2);
+                    result = new AstAdd(result, addRhs);
+                    rest = addRest;
+                    break;
+                case TokenMinus:
+                    var (subRhs, subRest) = parseMaldiv(rest2);
+                    result = new AstSub(result, subRhs);
+                    rest = subRest;
+                    break;
+            }
         }
+        return (result, rest);
     }
-    public static (Ast, shisoku.Token[]) parseMaldiv(shisoku.Token[] input){
+    public static (Ast, shisoku.Token[]) parseMaldiv(shisoku.Token[] input)
+    {
         Console.WriteLine($"parseMaldiv: {ViewTokens(input)}");
-        (var defualt_ast,var default_token )=parseNumOrSection(input);
-        switch(default_token){
-            case [TokenAsterisk,..var nokori]:
-                {
-                    (var migi_ast, var other)=parse(nokori);
-                    return (new AstMul(defualt_ast,migi_ast), other);
-                }
-            case [TokenSlash,..var nokori]:
-                {
-                    (var migi_ast, var other)=parse(nokori);
-                    return (new AstDiv(defualt_ast,migi_ast), other);
-                }
-            default:
-                return (defualt_ast,default_token);
+        (var result, var rest) = parseNumOrSection(input);
+        while (rest is [TokenSlash or TokenAsterisk, .. var rest2])
+        {
+            switch (rest[0])
+            {
+                case TokenSlash:
+                    var (malRhs, malRest) = parseMaldiv(rest2);
+                    result = new AstMul(result, malRhs);
+                    rest = malRest;
+                    break;
+                case TokenAsterisk:
+                    var (subRhs, subRest) = parseMaldiv(rest2);
+                    result = new AstSub(result, subRhs);
+                    rest = subRest;
+                    break;
+            }
+
         }
     }
-    public static (Ast, shisoku.Token[]) parseNumOrSection(shisoku.Token[] input){
+    public static (Ast, shisoku.Token[]) parseNumOrSection(shisoku.Token[] input)
+    {
         Console.WriteLine($"parseNumOrSection: {ViewTokens(input)}");
-        switch(input){
-            case [TokenNumber(var num),..var nokori]:
+        switch (input)
+        {
+            case [TokenNumber(var num), .. var nokori]:
                 return (new AstNumber(num), nokori);
             case [TokenStartSection, .. var target]:
-                (var innner_ast,var token_nokori)=parse(target);
-                if(token_nokori[0] is TokenEndSection){
-                    return (innner_ast,token_nokori[1..]);
-                }else{
+                (var innner_ast, var token_nokori) = parse(target);
+                if (token_nokori[0] is TokenEndSection)
+                {
+                    return (innner_ast, token_nokori[1..]);
+                }
+                else
+                {
                     input.ToList().ForEach(Console.WriteLine);
                     throw new Exception($"Token undifinde: {input}");
                 }
@@ -61,21 +75,22 @@ public class ast{
                 throw new Exception($"Token undifinde: {input}");
         }
 
-    } 
-static string ViewToken(Token token){
-    return token switch
+    }
+    static string ViewToken(Token token)
     {
-        TokenNumber(var n) => n.ToString(),
-        TokenPlus => "+",
-        TokenMinus => "-",
-        TokenAsterisk => "*",
-        TokenSlash => "/",
-        TokenStartSection => "(",
-        TokenEndSection => ")",  
-        _ => throw new Exception("sonna token nai")
-    };
-}
+        return token switch
+        {
+            TokenNumber(var n) => n.ToString(),
+            TokenPlus => "+",
+            TokenMinus => "-",
+            TokenAsterisk => "*",
+            TokenSlash => "/",
+            TokenStartSection => "(",
+            TokenEndSection => ")",
+            _ => throw new Exception("sonna token nai")
+        };
+    }
 
-static string ViewTokens(Token[] tokens) => 
-    string.Join( "", tokens.Select(ViewToken)) ;
+    static string ViewTokens(Token[] tokens) =>
+        string.Join("", tokens.Select(ViewToken));
 }
