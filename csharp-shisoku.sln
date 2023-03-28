@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "shisoku", "shisoku\shisoku.csproj", "{135F40EC-A28F-433F-9D53-376DAE11DB2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\test.csproj", "{21706E28-2FBA-4101-B0B5-71C0F6FFD87C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "shisoku.Tests", "shisoku.Tests\shisoku.Tests.csproj", "{98D4273F-6B22-4053-A076-4FF06BBACC73}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +24,9 @@ Global
 		{21706E28-2FBA-4101-B0B5-71C0F6FFD87C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21706E28-2FBA-4101-B0B5-71C0F6FFD87C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21706E28-2FBA-4101-B0B5-71C0F6FFD87C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98D4273F-6B22-4053-A076-4FF06BBACC73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98D4273F-6B22-4053-A076-4FF06BBACC73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98D4273F-6B22-4053-A076-4FF06BBACC73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98D4273F-6B22-4053-A076-4FF06BBACC73}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
