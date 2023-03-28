@@ -10,11 +10,10 @@ public class ast
 {
     public static (Ast, shisoku.Token[]) parse(shisoku.Token[] input)
     {
-        Console.WriteLine($"parse: {ViewTokens(input)}");
+        //Console.WriteLine($"parse: {ViewTokens(input)}");
         (var result, var rest) = parseMaldiv(input);
         while (rest is [TokenPlus or TokenMinus, .. var rest2])
         {
-            Console.WriteLine($"parse: {ViewTokens(input)}");
             switch (rest[0])
             {
                 case TokenPlus:
@@ -33,7 +32,7 @@ public class ast
     }
     public static (Ast, shisoku.Token[]) parseMaldiv(shisoku.Token[] input)
     {
-        Console.WriteLine($"parseMaldiv: {ViewTokens(input)}");
+        //Console.WriteLine($"parseMaldiv: {ViewTokens(input)}");
         (var result, var rest) = parseNumOrSection(input);
         while (rest is [TokenSlash or TokenAsterisk, .. var rest2])
         {
@@ -55,7 +54,7 @@ public class ast
     }
     public static (Ast, shisoku.Token[]) parseNumOrSection(shisoku.Token[] input)
     {
-        Console.WriteLine($"parseNumOrSection: {ViewTokens(input)}");
+        //Console.WriteLine($"parseNumOrSection: {ViewTokens(input)}");
         switch (input)
         {
             case [TokenNumber(var num), .. var nokori]:
