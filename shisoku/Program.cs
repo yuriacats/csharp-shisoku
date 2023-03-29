@@ -1,7 +1,4 @@
 ﻿// See https://aka.ms/new-console-template for more information
-
-using System;
-using System.Collections.Generic;
 using shisoku;
 
 while (true)
@@ -14,10 +11,10 @@ while (true)
             Console.Write("> ");
             input = Console.ReadLine();
         } while (input is null || input.Length == 0);
-        var tokens = lexer.lex(input);
+        var tokens = Lexer.lex(input);
         //tokens.ForEach(Console.WriteLine);
 
-        var (tree, _) = ast.parse(tokens.ToArray());
+        var (tree, _) = Parser.parse(tokens.ToArray());
         //Console.WriteLine(tree);
         Console.WriteLine(PrettyPrinter.PrettyPrint(tree));
 
