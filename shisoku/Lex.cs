@@ -1,4 +1,3 @@
-using System;
 namespace shisoku;
 public abstract record Token();
 public abstract record TokenSymble() : Token;
@@ -9,7 +8,7 @@ public record TokenMinus() : TokenSymble;
 public record TokenAsterisk() : TokenSymble;
 public record TokenStartSection() : Token;
 public record TokenEndSection() : Token;
-public class lexer
+public class Lexer
 {
 
 
