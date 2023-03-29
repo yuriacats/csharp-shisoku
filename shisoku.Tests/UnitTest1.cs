@@ -90,7 +90,7 @@ public class lexerTest
     }
     public void lexInputOnlyStringAndNumber()
     {
-        Assert.Throws<Exception>(() => shisoku.lexer.lex("aaaaa"));
+        Assert.Throws<Exception>(() => shisoku.lexer.lex("12a"));
     }
     [Fact]
     public void lexInputFail()
