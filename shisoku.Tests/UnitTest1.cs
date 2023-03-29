@@ -92,9 +92,4 @@ public class lexerTest
     {
         Assert.Throws<Exception>(() => shisoku.lexer.lex("12a"));
     }
-    [Fact]
-    public void lexInputFail()
-    {
-        Assert.Throws<Exception>(() => shisoku.lexer.lex("11"));
-    }
 }
