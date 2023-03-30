@@ -19,6 +19,9 @@ $ dotnet run --project shisoku
 ```mermaid
 mindmap
   root((Load Map))
+    テストの拡充
+      ASTのテストの追加
+      インテグレーションテストの追加
     言語処理系としての実装
       変数の実装
         予約語の制定
