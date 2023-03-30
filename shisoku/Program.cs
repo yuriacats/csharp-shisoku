@@ -1,27 +1,50 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using shisoku;
 
-while (true)
+bool isVerboseOption = false ? true : false;
+if (false)
 {
-    try
+    // -eの時のみ省略して行う
+    string input = "1+1";
+    Calculate(input, isVerboseOption);
+
+}
+else
+{
+    Repl(isVerboseOption);
+}
+static void Repl(bool isVerboseOption)
+{
+    while (true)
     {
-        string? input;
-        do
+        try
         {
-            Console.Write("> ");
-            input = Console.ReadLine();
-        } while (input is null || input.Length == 0);
-        var tokens = Lexer.lex(input);
-        //tokens.ForEach(Console.WriteLine);
-
-        var (tree, _) = Parser.parse(tokens.ToArray());
-        //Console.WriteLine(tree);
-        Console.WriteLine(PrettyPrinter.PrettyPrint(tree));
-
-        var answer = MyCalc.toInt(tree);
-        Console.WriteLine(answer);
+            string? input;
+            do
+            {
+                Console.Write("> ");
+                input = Console.ReadLine();
+            } while (input is null || input.Length == 0);
+            Calculate(input, isVerboseOption);
+        }
+        catch (Exception) { }
     }
-    catch (Exception) { }
+
+}
+static void Calculate(string input, bool isVerboseOption)
+{
+    var tokens = Lexer.lex(input);
+
+    var (tree, _) = Parser.parse(tokens.ToArray());
+    if (isVerboseOption)
+    {
+        Console.WriteLine("木構造イメージ図");
+        Console.WriteLine(PrettyPrinter.PrettyPrint(tree));
+        Console.WriteLine("データ構造");
+        Console.WriteLine(tree);
+    }
+    var answer = MyCalc.toInt(tree);
+    Console.WriteLine(answer);
 }
 public static class PrettyPrinter
 {
