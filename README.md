@@ -14,11 +14,11 @@ $ dotnet run --project shisoku
 
 上記の演算子、数字以外を入力した場合はErrorを返します。
 
-## Load　Map
+## Road　Map
 
 ```mermaid
 mindmap
-  root((Load Map))
+  root((Road Map))
     テストの拡充
       ASTのテストの追加
       インテグレーションテストの追加
