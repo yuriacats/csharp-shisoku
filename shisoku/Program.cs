@@ -1,51 +1,73 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using shisoku;
+namespace calc;
+using System.CommandLine;
 
-bool isVerboseOption = false ? true : false;
-if (false)
+class Program
 {
-    // -eの時のみ省略して行う
-    string input = "1+1";
-    Calculate(input, isVerboseOption);
-
-}
-else
-{
-    Repl(isVerboseOption);
-}
-static void Repl(bool isVerboseOption)
-{
-    while (true)
+    static async Task<int> Main(string[] args)
     {
-        try
+        var rootCommand = new RootCommand("calclate application");
+        var expOption = new Option<string>(
+            name: "--exp",
+            description: "一つの式だけ評価する時に使います"
+        );
+
+        var varboseOption = new Option<bool>(
+            name: "--varbose",
+            description: "詳しいAST構造等も表示します",
+            getDefaultValue: () => false
+        );
+        rootCommand.AddOption(expOption);
+        rootCommand.AddOption(varboseOption);
+        rootCommand.SetHandler((isVarbose) =>
         {
-            string? input;
-            do
-            {
-                Console.Write("> ");
-                input = Console.ReadLine();
-            } while (input is null || input.Length == 0);
-            Calculate(input, isVerboseOption);
-        }
-        catch (Exception) { }
+            Repl(isVarbose);
+        }, varboseOption
+        );
+        rootCommand.SetHandler((input, isVarbose) =>
+        {
+            Calculate(input, isVarbose);
+        }, expOption, varboseOption);
+        return await rootCommand.InvokeAsync(args);
+
     }
-
-}
-static void Calculate(string input, bool isVerboseOption)
-{
-    var tokens = Lexer.lex(input);
-
-    var (tree, _) = Parser.parse(tokens.ToArray());
-    if (isVerboseOption)
+    static void Repl(bool isVerboseOption)
     {
-        Console.WriteLine("木構造イメージ図");
-        Console.WriteLine(PrettyPrinter.PrettyPrint(tree));
-        Console.WriteLine("データ構造");
-        Console.WriteLine(tree);
+        while (true)
+        {
+            try
+            {
+                string? input;
+                do
+                {
+                    Console.Write("> ");
+                    input = Console.ReadLine();
+                } while (input is null || input.Length == 0);
+                Calculate(input, isVerboseOption);
+            }
+            catch (Exception) { }
+        }
+
     }
-    var answer = MyCalc.toInt(tree);
-    Console.WriteLine(answer);
+    static void Calculate(string input, bool isVerboseOption)
+    {
+        var tokens = Lexer.lex(input);
+
+        var (tree, _) = Parser.parse(tokens.ToArray());
+        if (isVerboseOption)
+        {
+            Console.WriteLine("木構造イメージ図");
+            Console.WriteLine(PrettyPrinter.PrettyPrint(tree));
+            Console.WriteLine("データ構造");
+            Console.WriteLine(tree);
+        }
+        var answer = MyCalc.toInt(tree);
+        Console.WriteLine(answer);
+    }
 }
+// -eの時のみ省略して行う
+
 public static class PrettyPrinter
 {
     public static string Indent(string str)
