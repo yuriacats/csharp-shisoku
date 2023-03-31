@@ -1,16 +1,16 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using shisoku;
-namespace calc;
 using System.CommandLine;
 
 class Program
 {
-    static async Task<int> Main(string[] args)
+    static Task<int> Main(string[] args)
     {
         var rootCommand = new RootCommand("calclate application");
         var expOption = new Option<string>(
             name: "--exp",
-            description: "一つの式だけ評価する時に使います"
+            description: "一つの式だけ評価する時に使います",
+            getDefaultValue: () => ""
         );
 
         var varboseOption = new Option<bool>(
@@ -20,16 +20,18 @@ class Program
         );
         rootCommand.AddOption(expOption);
         rootCommand.AddOption(varboseOption);
-        rootCommand.SetHandler((isVarbose) =>
-        {
-            Repl(isVarbose);
-        }, varboseOption
-        );
         rootCommand.SetHandler((input, isVarbose) =>
         {
-            Calculate(input, isVarbose);
+            if (input != "")
+            {
+                Calculate(input, isVarbose);
+            }
+            else
+            {
+                Repl(isVarbose);
+            }
         }, expOption, varboseOption);
-        return await rootCommand.InvokeAsync(args);
+        return rootCommand.InvokeAsync(args);
 
     }
     static void Repl(bool isVerboseOption)
