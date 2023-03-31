@@ -9,8 +9,7 @@ class Program
         var rootCommand = new RootCommand("calclate application");
         var expOption = new Option<string>(
             name: "--exp",
-            description: "一つの式だけ評価する時に使います",
-            getDefaultValue: () => ""
+            description: "一つの式だけ評価する時に使います"
         );
 
         var varboseOption = new Option<bool>(
@@ -22,7 +21,7 @@ class Program
         rootCommand.AddOption(varboseOption);
         rootCommand.SetHandler((input, isVarbose) =>
         {
-            if (input != "")
+            if (input != null)
             {
                 Calculate(input, isVarbose);
             }
