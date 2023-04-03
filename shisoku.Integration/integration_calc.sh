@@ -1,14 +1,16 @@
 set -eu
 function main(){
-    run_test_case 1+1 2 
-    run_test_case 1*1 1 
-    run_test_case "(1+1)*3" 6
-    run_test_case "aaaa" error
+    run_test_case "足し算" 1+1 2 
+    run_test_case "掛け算" 1*1 1 
+    run_test_case "（）付きの計算式" "(1+1)*3" 6
+    run_test_case "文字列を入れると失敗する" "aaaa" error
 }
 
 function run_test_case(){
-    local input=($1)
-    local expected=($2)
+    local case_name=($1)
+    local input=($2)
+    local expected=($3)
+    echo "${case_name}"
 
     local output=$(dotnet run --project shisoku -- --exp ${input})
     local error_code=$?
