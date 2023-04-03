@@ -1,6 +1,6 @@
 set -eu
 function main(){
-    run_test_case 1+1 3 
+    run_test_case 1+1 2 
     run_test_case 1*1 1 
     run_test_case "(1+1)*3" 6
     run_test_case "aaaa" error
