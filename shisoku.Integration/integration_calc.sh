@@ -3,7 +3,13 @@ function main(){
     run_test_case "足し算" 1+1 2 
     run_test_case "掛け算" 1*1 1 
     run_test_case "（）付きの計算式" "(1+1)*3" 6
+    run_test_case "（）の後に数字もしくは（）が来ている" "(1+1)(3)" error 
+    run_test_case "空白は異常終了する" "(1+1) (3)" error
+    run_test_case "(が終了していない" "(1+1" error
     run_test_case "文字列を入れると失敗する" "aaaa" error
+    run_test_case "演算記号のみを入れると失敗する" "---" error
+    run_test_case "演算記号のみを入れると失敗する" "1-2" -1 
+
 }
 
 function run_test_case(){
