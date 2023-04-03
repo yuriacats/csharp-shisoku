@@ -11,7 +11,7 @@ function run_test_case(){
     local input=($2)
     local expected=($3)
 
-    local output=$(dotnet run --project shisoku -- --exp ${input})
+    local output=$(dotnet run --no-build --project shisoku -- --exp ${input})
     local error_code=$?
     if [ ${output} = ${expected} ];then
         echo "${case_name}:Pass"
