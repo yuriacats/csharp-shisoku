@@ -14,18 +14,18 @@ public class Parser
     }
     public static (Ast, shisoku.Token[]) parseAddSub(shisoku.Token[] input)
     {
-        (var result, var rest) = parseMalDiv(input);
+        (var result, var rest) = parseMulDiv(input);
         while (rest is [TokenPlus or TokenMinus, .. var rest2])
         {
             switch (rest[0])
             {
                 case TokenPlus:
-                    var (addRhs, addRest) = parseMalDiv(rest2);
+                    var (addRhs, addRest) = parseMulDiv(rest2);
                     result = new AstAdd(result, addRhs);
                     rest = addRest;
                     break;
                 case TokenMinus:
-                    var (subRhs, subRest) = parseMalDiv(rest2);
+                    var (subRhs, subRest) = parseMulDiv(rest2);
                     result = new AstSub(result, subRhs);
                     rest = subRest;
                     break;
@@ -33,7 +33,7 @@ public class Parser
         }
         return (result, rest);
     }
-    public static (Ast, shisoku.Token[]) parseMalDiv(shisoku.Token[] input)
+    public static (Ast, shisoku.Token[]) parseMulDiv(shisoku.Token[] input)
     {
         (var result, var rest) = parseNumOrSection(input);
         while (rest is [TokenSlash or TokenAsterisk, .. var rest2])
