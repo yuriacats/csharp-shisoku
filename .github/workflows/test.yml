@@ -17,7 +17,27 @@ jobs:
             dotnet-version: 7.0.x
         - name: build
           run: dotnet build
+    unit-test:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v3
+        - name: setup C-charp
+          uses: actions/setup-dotnet@v3
+          with:
+            dotnet-version: 7.0.x
+        - name: build
+          run: dotnet build
         - name: Unit Test
           run: dotnet test --no-build
+    integration-test:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v3
+        - name: setup C-charp
+          uses: actions/setup-dotnet@v3
+          with:
+            dotnet-version: 7.0.x
+        - name: build
+          run: dotnet build
         - name: Integration Test
           run: shisoku.Integration/integration_calc.sh
