@@ -4,7 +4,6 @@ public class MyCalc
 {
     public static int toInt(Ast input)
     {
-        Console.WriteLine(input);
         switch (input)
         {
             case AstNumber(var n):

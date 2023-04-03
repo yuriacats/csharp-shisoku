@@ -1,28 +1,74 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using shisoku;
+using System.CommandLine;
 
-while (true)
+class Program
 {
-    try
+    static Task<int> Main(string[] args)
     {
-        string? input;
-        do
+        var rootCommand = new RootCommand("calculate application");
+        var expOption = new Option<string>(
+            name: "--exp",
+            description: "一つの式だけ評価する時に使います"
+        );
+
+        var verboseOption = new Option<bool>(
+            name: "--verbose",
+            description: "詳しいAST構造等も表示します",
+            getDefaultValue: () => false
+        );
+        rootCommand.AddOption(expOption);
+        rootCommand.AddOption(verboseOption);
+        rootCommand.SetHandler((input, isVerbose) =>
         {
-            Console.Write("> ");
-            input = Console.ReadLine();
-        } while (input is null || input.Length == 0);
+            if (input != null)
+            {
+                Calculate(input, isVerbose);
+            }
+            else
+            {
+                Repl(isVerbose);
+            }
+        }, expOption, verboseOption);
+        return rootCommand.InvokeAsync(args);
+
+    }
+    static void Repl(bool isVerboseOption)
+    {
+        while (true)
+        {
+            try
+            {
+                string? input;
+                do
+                {
+                    Console.Write("> ");
+                    input = Console.ReadLine();
+                } while (input is null || input.Length == 0);
+                Calculate(input, isVerboseOption);
+            }
+            catch (Exception) { }
+        }
+
+    }
+    static void Calculate(string input, bool isVerboseOption)
+    {
         var tokens = Lexer.lex(input);
-        //tokens.ForEach(Console.WriteLine);
 
         var (tree, _) = Parser.parse(tokens.ToArray());
-        //Console.WriteLine(tree);
-        Console.WriteLine(PrettyPrinter.PrettyPrint(tree));
-
+        if (isVerboseOption)
+        {
+            Console.WriteLine("木構造イメージ図");
+            Console.WriteLine(PrettyPrinter.PrettyPrint(tree));
+            Console.WriteLine("データ構造");
+            Console.WriteLine(tree);
+        }
         var answer = MyCalc.toInt(tree);
         Console.WriteLine(answer);
     }
-    catch (Exception) { }
 }
+// -eの時のみ省略して行う
+
 public static class PrettyPrinter
 {
     public static string Indent(string str)
