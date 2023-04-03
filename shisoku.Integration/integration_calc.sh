@@ -10,18 +10,18 @@ function run_test_case(){
     local case_name=($1)
     local input=($2)
     local expected=($3)
-    echo "ケース名:${case_name}"
 
     local output=$(dotnet run --project shisoku -- --exp ${input})
     local error_code=$?
     if [ ${output} = ${expected} ];then
-        echo ">OK:${input} == ${expected}です"
+        echo "${case_name}:Pass"
         return 0
     elif [ ${expected} = "error" ] && [ ${error_code} -eq '0' ];then
-        echo ">OK:想定通りに異常終了しました"
+        echo "${case_name}:Pass"
         return 0
     else
-        echo ">NG:${input} == ${expected}ではありません"
+        echo "${case_name}:Fail" 
+        echo "${input} == ${expected}ではありません"
         return 1
     fi
 }
