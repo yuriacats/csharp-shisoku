@@ -6,30 +6,30 @@ class Program
 {
     static Task<int> Main(string[] args)
     {
-        var rootCommand = new RootCommand("calclate application");
+        var rootCommand = new RootCommand("calculate application");
         var expOption = new Option<string>(
             name: "--exp",
             description: "一つの式だけ評価する時に使います"
         );
 
-        var varboseOption = new Option<bool>(
-            name: "--varbose",
+        var verboseOption = new Option<bool>(
+            name: "--verbose",
             description: "詳しいAST構造等も表示します",
             getDefaultValue: () => false
         );
         rootCommand.AddOption(expOption);
-        rootCommand.AddOption(varboseOption);
-        rootCommand.SetHandler((input, isVarbose) =>
+        rootCommand.AddOption(verboseOption);
+        rootCommand.SetHandler((input, isVerbose) =>
         {
             if (input != null)
             {
-                Calculate(input, isVarbose);
+                Calculate(input, isVerbose);
             }
             else
             {
-                Repl(isVarbose);
+                Repl(isVerbose);
             }
-        }, expOption, varboseOption);
+        }, expOption, verboseOption);
         return rootCommand.InvokeAsync(args);
 
     }

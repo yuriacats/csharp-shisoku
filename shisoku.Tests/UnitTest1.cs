@@ -6,16 +6,16 @@ public class LexerTest
     [Fact]
     public void lexIntTestInputOnlyNumber()
     {
-        var (number, numbar_length) = shisoku.Lexer.lexInt("11+");
+        var (number, number_length) = shisoku.Lexer.lexInt("11+");
         Assert.Equal(11, number);
-        Assert.Equal(2, numbar_length);
+        Assert.Equal(2, number_length);
     }
     [Fact]
     public void lexIntFirstNotANumberTest()
     {
-        var (number, numbar_length) = shisoku.Lexer.lexInt("+");
+        var (number, number_length) = shisoku.Lexer.lexInt("+");
         Assert.Equal(0, number);
-        Assert.Equal(0, numbar_length);
+        Assert.Equal(0, number_length);
     }
 
     [Fact]
