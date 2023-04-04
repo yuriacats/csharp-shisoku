@@ -1,9 +1,12 @@
+set -eu
 function main(){
     run_test_case "足し算" 1+1 2 
     run_test_case "掛け算" 1*1 1 
     run_test_case "（）付きの計算式" "(1+1)*3" 6
     run_test_case "割算が優先" "1+6/3" 3
-    #run_test_case "（）の後に数字もしくは（）が来ている" "(1+1)(3)" error 
+    #run_test_case "（）の後に（）が来ている" "(1+1)(3)" error
+    # なぜ上が正しくないかというとパースした後に全てのTokenが使い切れる構文木が生成されないから。 
+    # Tokenが余っていたら弾く
     # TODO 本体コードを修正する
     run_test_case "空白は全て無視するよって正しい計算式が空白で区切られても問題ない" "1+1 +2" 4 
     run_test_case "(が終了していない" "(1+1" error
