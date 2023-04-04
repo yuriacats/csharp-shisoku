@@ -21,9 +21,14 @@ function main(){
     exit_all=$((exit_all+$?))
     run_test_case "演算記号のみを入れると失敗する" "---" error
     exit_all=$((exit_all+$?))
-    run_test_case "演算記号のみを入れると失敗する" "1-2" -1 
+    run_test_case "正解が負の数になっても失敗しない" "1-2" -1 
     exit_all=$((exit_all+$?))
-    return ${exit_all}
+    
+    if [ ${exit_all} == "0" ];then
+        return 0
+    else
+        return 1
+    fi 
 }
 
 function run_test_case(){
