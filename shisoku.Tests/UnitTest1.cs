@@ -103,12 +103,4 @@ public class LexerTest
         var tokens = shisoku.Lexer.lex("12 + 12");
         Assert.Equal<Token>(teacher_token, tokens);
     }
-    public void lexInputSplitNumberWithWhitespace()
-    {
-        Assert.Throws<Exception>(() => shisoku.Lexer.lex("12 12"));
-    }
-    public void lexInputStartParenthesisAfterEndParenthesis()
-    {
-        Assert.Throws<Exception>(() => shisoku.Lexer.lex("(12+12)(12+12)"));
-    }
 }
