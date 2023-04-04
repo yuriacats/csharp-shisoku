@@ -21,62 +21,68 @@ public class LexerTest
     [Fact]
     public void lexInputOnlyNumber()
     {
-        var teacher_token = new List<Token> { };
-        teacher_token.Add(new TokenNumber(12));
+        var expectedToken = new List<Token> {
+            new TokenNumber(12)
+         };
         var tokens = shisoku.Lexer.lex("12");
-        Assert.Equal<Token>(teacher_token, tokens);
+        Assert.Equal<Token>(expectedToken, tokens);
 
     }
     [Fact]
     public void lexInputFirstNumberAndAdd()
     {
-        var teacher_token = new List<Token> { };
-        teacher_token.Add(new TokenNumber(12));
-        teacher_token.Add(new TokenPlus());
-        teacher_token.Add(new TokenNumber(12));
+        var expectedToken = new List<Token> {
+            new TokenNumber(12),
+            new TokenPlus(),
+            new TokenNumber(12)
+        };
         var tokens = shisoku.Lexer.lex("12+12");
-        Assert.Equal<Token>(teacher_token, tokens);
+        Assert.Equal<Token>(expectedToken, tokens);
 
     }
     [Fact]
     public void lexInputFirstNumberAndSub()
     {
-        var teacher_token = new List<Token> { };
-        teacher_token.Add(new TokenNumber(12));
-        teacher_token.Add(new TokenMinus());
-        teacher_token.Add(new TokenNumber(12));
+        var expectedToken = new List<Token> {
+            new TokenNumber(12),
+            new TokenMinus(),
+            new TokenNumber(12)
+         };
         var tokens = shisoku.Lexer.lex("12-12");
-        Assert.Equal<Token>(teacher_token, tokens);
+        Assert.Equal<Token>(expectedToken, tokens);
 
     }
     [Fact]
     public void lexInputFirstNumberAndMul()
     {
-        var teacher_token = new List<Token> { };
-        teacher_token.Add(new TokenNumber(12));
-        teacher_token.Add(new TokenAsterisk());
-        teacher_token.Add(new TokenNumber(12));
+        var expectedToken = new List<Token> {
+            new TokenNumber(12),
+            new TokenAsterisk(),
+            new TokenNumber(12)
+        };
         var tokens = shisoku.Lexer.lex("12*12");
-        Assert.Equal<Token>(teacher_token, tokens);
+        Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
     public void lexInputFirstNumberAndDiv()
     {
-        var teacher_token = new List<Token> { };
-        teacher_token.Add(new TokenNumber(12));
-        teacher_token.Add(new TokenSlash());
-        teacher_token.Add(new TokenNumber(12));
+        var expectedToken = new List<Token> {
+            new TokenNumber(12),
+            new TokenSlash(),
+            new TokenNumber(12)
+         };
         var tokens = shisoku.Lexer.lex("12/12");
-        Assert.Equal<Token>(teacher_token, tokens);
+        Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
     public void lexInputNotEndNumber()
     {
-        var teacher_token = new List<Token> { };
-        teacher_token.Add(new TokenNumber(12));
-        teacher_token.Add(new TokenSlash());
+        var expectedToken = new List<Token> {
+            new TokenNumber(12),
+            new TokenSlash()
+         };
         var tokens = shisoku.Lexer.lex("12/");
-        Assert.Equal<Token>(teacher_token, tokens);
+        Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
     public void lexInputOtherChars()
@@ -92,5 +98,16 @@ public class LexerTest
     public void lexInputOnlyStringAndNumber()
     {
         Assert.Throws<Exception>(() => shisoku.Lexer.lex("12a"));
+    }
+    [Fact]
+    public void lexInputWithWhiteSpace()
+    {
+        var expectedToken = new List<Token> {
+            new TokenNumber(12),
+            new TokenPlus(),
+            new TokenNumber(12)
+         };
+        var tokens = shisoku.Lexer.lex("12 + 12");
+        Assert.Equal<Token>(expectedToken, tokens);
     }
 }
