@@ -14,12 +14,12 @@ function main(){
 }
 
 function run_test_case(){
-    local case_name=($1)
-    local input=($2)
-    local expected=($3)
+    local case_name=("$1")
+    local input=("$2")
+    local expected=("$3")
 
     local output
-    output=$(dotnet run --no-build --project shisoku -- --exp ${input} 2> /dev/null)
+    output=$(dotnet run --no-build --project shisoku -- --exp "${input}" 2> /dev/null)
     local error_code=$?
     if [ "${output}" = "${expected}" ];then
         echo "${case_name}:Pass"
