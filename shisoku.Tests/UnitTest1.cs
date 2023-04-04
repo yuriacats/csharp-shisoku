@@ -93,4 +93,22 @@ public class LexerTest
     {
         Assert.Throws<Exception>(() => shisoku.Lexer.lex("12a"));
     }
+    [Fact]
+    public void lexInputWithWhiteSpace()
+    {
+        var teacher_token = new List<Token> { };
+        teacher_token.Add(new TokenNumber(12));
+        teacher_token.Add(new TokenPlus());
+        teacher_token.Add(new TokenNumber(12));
+        var tokens = shisoku.Lexer.lex("12 + 12");
+        Assert.Equal<Token>(teacher_token, tokens);
+    }
+    public void lexInputSplitNumberWithWhitespace()
+    {
+        Assert.Throws<Exception>(() => shisoku.Lexer.lex("12 12"));
+    }
+    public void lexInputStartParenthesisAfterEndParenthesis()
+    {
+        Assert.Throws<Exception>(() => shisoku.Lexer.lex("(12+12)(12+12)"));
+    }
 }

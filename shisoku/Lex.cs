@@ -50,6 +50,10 @@ public class Lexer
                 input = input[(1)..];
 
             }
+            else if (input[0] == ' ')
+            {
+                input = input[(1)..];
+            }
             else if (input[0] - '0' >= 0 && input[0] - '0' < 10)
             {
                 (int target, int len) = lexInt(input);

@@ -5,7 +5,7 @@ function main(){
     run_test_case "割算が優先" "1+6/3" 3
     #run_test_case "（）の後に数字もしくは（）が来ている" "(1+1)(3)" error 
     # TODO 本体コードを修正する
-    #run_test_case "空白は全て無視するよって正しい計算式が空白で区切られても問題ない" "(1+1) +2" 4 
+    run_test_case "空白は全て無視するよって正しい計算式が空白で区切られても問題ない" "1+1 +2" 4 
     run_test_case "(が終了していない" "(1+1" error
     run_test_case "文字列を入れると失敗する" "aaaa" error
     run_test_case "演算記号のみを入れると失敗する" "---" error
@@ -28,7 +28,7 @@ function run_test_case(){
         echo "${case_name}:Pass"
         return 0
     else
-        echo "${case_name}:Fail" 
+        echo "${case_name}:Fail output is ${output}. Be ${expected}" 
         return 1
     fi
 }
