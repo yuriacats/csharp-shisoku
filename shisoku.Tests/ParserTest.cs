@@ -16,7 +16,7 @@ public class ParserTest
     }
 
     [Fact]
-    public void CanParseOnlyAdd()
+    public void SimpleAddCanParse()
     {
         var inputToken = new List<Token> {
             new TokenNumber(12),
@@ -28,7 +28,7 @@ public class ParserTest
         Assert.Equal(expectedAst, outputAst);
     }
     [Fact]
-    public void CanParseOnlyMal()
+    public void SimpleMulCanParse()
     {
         var inputToken = new List<Token> {
             new TokenNumber(12),
@@ -40,7 +40,7 @@ public class ParserTest
         Assert.Equal(expectedAst, outputAst);
     }
     [Fact]
-    public void CanParseOnlySub()
+    public void SimpleSubCanParse()
     {
         var inputToken = new List<Token> {
             new TokenNumber(12),
@@ -52,7 +52,7 @@ public class ParserTest
         Assert.Equal(expectedAst, outputAst);
     }
     [Fact]
-    public void CanParseOnlyDiv()
+    public void SimpleDivCanParse()
     {
         var inputToken = new List<Token> {
             new TokenNumber(12),
@@ -64,7 +64,7 @@ public class ParserTest
         Assert.Equal(expectedAst, outputAst);
     }
     [Fact]
-    public void CanParseSub()
+    public void MultipleSubCanParse()
     {
         var inputToken = new List<Token> {
             new TokenNumber(12),
@@ -81,7 +81,7 @@ public class ParserTest
         Assert.Equal(expectedAst, outputAst);
     }
     [Fact]
-    public void CannotParseOnlyMinusTOken()
+    public void AloneMinusTokenCannotParse()
     {
         var inputToken = new List<Token> {
             new TokenMinus()
