@@ -73,14 +73,12 @@ public class Lexer
 
     private static (Token target, int len) lexString(string input)
     {
-        int read_length = 0;
-        string split_word = "";
+        string targetWord = "";
         foreach (char i in input)
         {
             if (Char.IsLetter(i) || Char.IsNumber(i))
             {
-                split_word += Char.ToString(i);
-                read_length++;
+                targetWord += Char.ToString(i);
             }
             else
             {
@@ -88,14 +86,14 @@ public class Lexer
             }
         }
 
-        switch (split_word)
+        switch (targetWord)
         {
             case "const":
-                return (new TokenConst(), read_length);
+                return (new TokenConst(), targetWord.Length);
             case "var":
-                return (new TokenVariable(), read_length);
+                return (new TokenVariable(), targetWord.Length);
             default:
-                return (new TokenIdentifier(split_word), read_length);
+                return (new TokenIdentifier(targetWord), targetWord.Length);
         }
 
     }
