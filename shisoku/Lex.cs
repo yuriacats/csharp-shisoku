@@ -77,6 +77,7 @@ public class Lexer
         foreach (char i in input)
         {
             if (Char.IsLetter(i) || Char.IsNumber(i))
+            // TODO ここでアンダーバーも許可する
             {
                 targetWord += Char.ToString(i);
             }
