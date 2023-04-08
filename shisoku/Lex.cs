@@ -103,7 +103,7 @@ public class Lexer
     /// 読み込めない時は　０文字読めて０を返す
     private static (TokenNumber, int) lexInt(String input)
     {
-        int number_num = 0;
+        int lexedLength = 0;
         int number = 0;
         foreach (char i in input)
         {
@@ -111,14 +111,14 @@ public class Lexer
             {
                 int digit = i - '0';
                 number = number * 10 + digit;
-                number_num++;
+                lexedLength++;
             }
             else
             {
                 break;
             }
         }
-        return (new TokenNumber(number), number_num);
+        return (new TokenNumber(number), lexedLength);
     }
 }
 
