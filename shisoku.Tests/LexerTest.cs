@@ -158,6 +158,17 @@ public class LexerTest
         var tokens = shisoku.Lexer.lex("=");
         Assert.Equal<Token>(expectedToken, tokens);
     }
+    [Fact]
+    public void lexInputTab()
+    {
+        var expectedToken = new List<Token> {
+            new TokenNumber(12),
+            new TokenPlus(),
+            new TokenNumber(12)
+         };
+        var tokens = shisoku.Lexer.lex("12\t+\t12");
+        Assert.Equal<Token>(expectedToken, tokens);
+    }
 
 
 }
