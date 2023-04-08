@@ -4,21 +4,6 @@ using shisoku;
 public class LexerTest
 {
     [Fact]
-    public void lexIntTestInputOnlyNumber()
-    {
-        var (number, number_length) = shisoku.Lexer.lexInt("11+");
-        Assert.Equal(11, number);
-        Assert.Equal(2, number_length);
-    }
-    [Fact]
-    public void lexIntFirstNotANumberTest()
-    {
-        var (number, number_length) = shisoku.Lexer.lexInt("+");
-        Assert.Equal(0, number);
-        Assert.Equal(0, number_length);
-    }
-
-    [Fact]
     public void lexInputOnlyNumber()
     {
         var expectedToken = new List<Token> {
@@ -87,17 +72,33 @@ public class LexerTest
     [Fact]
     public void lexInputOtherChars()
     {
-        Assert.Throws<Exception>(() => shisoku.Lexer.lex("12aaa/a"));
+        var expectedToken = new List<Token> {
+            new TokenNumber(12),
+            new TokenIdentifier("aaa"),
+            new TokenSlash(),
+            new TokenIdentifier("a"),
+         };
+        var tokens = shisoku.Lexer.lex("12aaa/a");
+        Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
     public void lexInputOnlyOtherChars()
     {
-        Assert.Throws<Exception>(() => shisoku.Lexer.lex("aaaaa"));
+        var expectedToken = new List<Token> {
+            new TokenIdentifier("aaaa"),
+         };
+        var tokens = shisoku.Lexer.lex("aaaa");
+        Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
     public void lexInputOnlyStringAndNumber()
     {
-        Assert.Throws<Exception>(() => shisoku.Lexer.lex("12a"));
+        var expectedToken = new List<Token> {
+            new TokenNumber(12),
+            new TokenIdentifier("a"),
+         };
+        var tokens = shisoku.Lexer.lex("12a");
+        Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
     public void lexInputWithWhiteSpace()
@@ -110,4 +111,53 @@ public class LexerTest
         var tokens = shisoku.Lexer.lex("12 + 12");
         Assert.Equal<Token>(expectedToken, tokens);
     }
+    [Fact]
+    public void lexInputConst()
+    {
+        var expectedToken = new List<Token> {
+            new TokenConst()
+         };
+        var tokens = shisoku.Lexer.lex("const");
+        Assert.Equal<Token>(expectedToken, tokens);
+    }
+    [Fact]
+    public void lexInputConstAndIdentifier()
+    {
+        var expectedToken = new List<Token> {
+            new TokenConst(),
+            new TokenIdentifier("constA")
+         };
+        var tokens = shisoku.Lexer.lex("const constA");
+        Assert.Equal<Token>(expectedToken, tokens);
+    }
+    [Fact]
+    public void lexInputVarAndIdentifier()
+    {
+        var expectedToken = new List<Token> {
+            new TokenVariable(),
+            new TokenIdentifier("constA")
+         };
+        var tokens = shisoku.Lexer.lex("var constA");
+        Assert.Equal<Token>(expectedToken, tokens);
+    }
+    [Fact]
+    public void lexInputIdentifierInNumber()
+    {
+        var expectedToken = new List<Token> {
+            new TokenIdentifier("const12")
+         };
+        var tokens = shisoku.Lexer.lex("const12");
+        Assert.Equal<Token>(expectedToken, tokens);
+    }
+    [Fact]
+    public void lexInputDefinition()
+    {
+        var expectedToken = new List<Token> {
+            new TokenEqual(),
+         };
+        var tokens = shisoku.Lexer.lex("=");
+        Assert.Equal<Token>(expectedToken, tokens);
+    }
+
+
 }

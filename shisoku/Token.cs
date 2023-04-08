@@ -11,6 +11,6 @@ public record TokenEndSection() : Token;
 // 変数追加機能で加えたToken
 public record TokenConst() : Token;
 public record TokenVariable() : Token;
-public record TokenDefinition() : Token;
+public record TokenEqual() : Token;
 public record TokenIdentifier(string Name) : Token;
 
