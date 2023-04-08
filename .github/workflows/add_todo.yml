@@ -1,0 +1,14 @@
+name: add-todo
+
+on:
+    push:
+        branches: [ master ]
+
+
+jobs:
+    add-todo:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v3
+          - name: "TDDO to Issue"
+            uses: "alstr/todo-to-issue-action@v4"

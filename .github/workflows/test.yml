@@ -41,18 +41,3 @@ jobs:
           run: dotnet build
         - name: Integration Test
           run: shisoku.Integration/integration_calc.sh
-    add-todo:
-        runs-on: ubuntu-latest
-        steps:
-          - uses: actions/checkout@v3
-          - name: "TDDO to Issue"
-            uses: "alstr/todo-to-issue-action@v4"
-       
-       
-       
-       
-       
-       
-       
-       
-       
