@@ -1,10 +1,7 @@
 name: add-todo
-
 on:
     push:
         branches: [ master ]
-
-
 jobs:
     add-todo:
         runs-on: ubuntu-latest
