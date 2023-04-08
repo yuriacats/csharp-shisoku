@@ -41,15 +41,15 @@ public class Lexer
                 input = input[(1)..];
 
             }
-            else if (input[0] == ' ')
-            {
-                input = input[(1)..];
-            }
             else if (input[0] == '=')
             {
                 tokens.Add(new TokenEqual());
                 input = input[(1)..];
 
+            }
+            else if (Char.IsWhiteSpace(input[0]) || Char.IsControl(input[0]))
+            {
+                input = input[(1)..];
             }
             else if (Char.IsNumber(input[0]))
             {
