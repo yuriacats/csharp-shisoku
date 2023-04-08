@@ -1,13 +1,4 @@
 namespace shisoku;
-public abstract record Token();
-public abstract record TokenSymbol() : Token;
-public record TokenNumber(int Number) : Token;
-public record TokenPlus() : TokenSymbol;
-public record TokenSlash() : TokenSymbol;
-public record TokenMinus() : TokenSymbol;
-public record TokenAsterisk() : TokenSymbol;
-public record TokenStartSection() : Token;
-public record TokenEndSection() : Token;
 public class Lexer
 {
 
@@ -54,10 +45,22 @@ public class Lexer
             {
                 input = input[(1)..];
             }
-            else if (input[0] - '0' >= 0 && input[0] - '0' < 10)
+            else if (input[0] == '=')
             {
-                (int target, int len) = lexInt(input);
-                tokens.Add(new TokenNumber(target));
+                tokens.Add(new TokenEqual());
+                input = input[(1)..];
+
+            }
+            else if (Char.IsNumber(input[0]))
+            {
+                (TokenNumber target, int len) = lexInt(input);
+                tokens.Add(target);
+                input = input[(len)..];
+            }
+            else if (Char.IsLetter(input[0]))
+            {
+                (Token target, int len) = lexString(input);
+                tokens.Add(target);
                 input = input[(len)..];
             }
             else
@@ -67,26 +70,55 @@ public class Lexer
         }
         return tokens;
     }
-    /// 文字列を受け取って、数字としてトーカナイズできるところまでを読み込み、値を返す
-    /// 読み込めない時は　０文字読めて０を返す
-    public static (int, int) lexInt(String input)
+
+    private static (Token target, int len) lexString(string input)
     {
-        int number_num = 0;
-        int number = 0;
+        string targetWord = "";
         foreach (char i in input)
         {
-            int digit = i - '0';
-            if (0 <= digit && digit < 10)
+            if (Char.IsLetter(i) || Char.IsNumber(i))
             {
-                number = number * 10 + digit;
-                number_num++;
+                targetWord += Char.ToString(i);
             }
             else
             {
                 break;
             }
         }
-        return (number, number_num);
+
+        switch (targetWord)
+        {
+            case "const":
+                return (new TokenConst(), targetWord.Length);
+            case "var":
+                return (new TokenVariable(), targetWord.Length);
+            default:
+                return (new TokenIdentifier(targetWord), targetWord.Length);
+        }
+
+    }
+
+
+    /// 文字列を受け取って、数字としてトーカナイズできるところまでを読み込み、値を返す
+    /// 読み込めない時は　０文字読めて０を返す
+    private static (TokenNumber, int) lexInt(String input)
+    {
+        int lexedLength = 0;
+        int number = 0;
+        foreach (char i in input)
+        {
+            if (Char.IsNumber(i))
+            {
+                int digit = i - '0';
+                number = number * 10 + digit;
+                lexedLength++;
+            }
+            else
+            {
+                break;
+            }
+        }
+        return (new TokenNumber(number), lexedLength);
     }
 }
 
