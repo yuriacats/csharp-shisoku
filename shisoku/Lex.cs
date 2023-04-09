@@ -25,13 +25,13 @@ public class Lexer
             }
             else if (input[0] == '(')
             {
-                tokens.Add(new TokenStartSection());
+                tokens.Add(new TokenSectionOpen());
                 input = input[(1)..];
 
             }
             else if (input[0] == ')')
             {
-                tokens.Add(new TokenEndSection());
+                tokens.Add(new TokenSectionClose());
                 input = input[(1)..];
 
             }
@@ -54,6 +54,11 @@ public class Lexer
             else if (input[0] == ',')
             {
                 tokens.Add(new TokenComma());
+                input = input[(1)..];
+            }
+            else if (input[0] == '?')
+            {
+                tokens.Add(new TokenQuestion());
                 input = input[(1)..];
             }
             else if (input[0] == '|')

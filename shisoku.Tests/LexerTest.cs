@@ -211,6 +211,7 @@ public class LexerTest
          };
         var tokens = shisoku.Lexer.lex("12+12,");
     }
+    [Fact]
     public void lexInputInPipe()
     {
         var expectedToken = new List<Token> {
@@ -273,6 +274,7 @@ public class LexerTest
         var tokens = shisoku.Lexer.lex("12+12{12}");
         //TODO Bracketを使う構文ができたら、テストを改変する
     }
+    [Fact]
     public void lexInputEndHyphen()
     {
         var expectedToken = new List<Token> {
@@ -281,6 +283,13 @@ public class LexerTest
          };
         var tokens = shisoku.Lexer.lex("12-");
     }
-
-
+    [Fact]
+    public void lexInputQuestion()
+    {
+        var expectedToken = new List<Token> {
+            new TokenNumber(12),
+            new TokenQuestion(),
+        };
+        var tokens = shisoku.Lexer.lex("12?");
+    }
 }
