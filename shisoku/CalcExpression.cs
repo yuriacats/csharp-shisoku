@@ -1,6 +1,6 @@
 namespace shisoku;
 
-public class MyCalc
+public class CalcExpression
 {
     public static int toInt(Expression input)
     {

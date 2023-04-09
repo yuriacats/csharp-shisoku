@@ -55,16 +55,16 @@ class Program
     {
         var tokens = Lexer.lex(input);
 
-        var (tree, _) = ParseExpression.parse(tokens.ToArray());
+        var (tree, _) = ParseStatement.parse(tokens.ToArray());
         if (isVerboseOption)
         {
             Console.WriteLine("木構造イメージ図");
-            Console.WriteLine(PrettyPrinter.PrettyPrint(tree));
+            //Console.WriteLine(PrettyPrinter.PrettyPrint(tree));
+            //TODO PrettyPrintのStatement対応
             Console.WriteLine("データ構造");
             Console.WriteLine(tree);
         }
-        var answer = MyCalc.toInt(tree);
-        Console.WriteLine(answer);
+        CalcStatement.toInt(tree);
     }
 }
 // -eの時のみ省略して行う
