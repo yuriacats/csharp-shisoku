@@ -179,6 +179,117 @@ public class LexerTest
          };
         var tokens = shisoku.Lexer.lex("12\n+\n12");
     }
-
-
+    [Fact]
+    public void lexInputNewLineAndTab()
+    {
+        var expectedToken = new List<Token> {
+            new TokenNumber(12),
+            new TokenPlus(),
+            new TokenNumber(12)
+         };
+        var tokens = shisoku.Lexer.lex("12\n\t+\n\t12");
+    }
+    [Fact]
+    public void lexInputInSemicolon()
+    {
+        var expectedToken = new List<Token> {
+            new TokenNumber(12),
+            new TokenPlus(),
+            new TokenNumber(12),
+            new TokenSemicolon(),
+         };
+        var tokens = shisoku.Lexer.lex("12+12;");
+    }
+    [Fact]
+    public void lexInputInComma()
+    {
+        var expectedToken = new List<Token> {
+            new TokenNumber(12),
+            new TokenPlus(),
+            new TokenNumber(12),
+            new TokenComma(),
+         };
+        var tokens = shisoku.Lexer.lex("12+12,");
+    }
+    [Fact]
+    public void lexInputInPipe()
+    {
+        var expectedToken = new List<Token> {
+            new TokenNumber(12),
+            new TokenPlus(),
+            new TokenNumber(12),
+            new TokenPipe(),
+         };
+        var tokens = shisoku.Lexer.lex("12+12|");
+        //TODO Pipeを使う構文ができたら、テストを改変する
+    }
+    [Fact]
+    public void lexInputInColon()
+    {
+        var expectedToken = new List<Token> {
+            new TokenNumber(12),
+            new TokenPlus(),
+            new TokenNumber(12),
+            new TokenColon(),
+         };
+        var tokens = shisoku.Lexer.lex("12+12:");
+        //TODO Colonを使う構文ができたら、テストを改変する
+    }
+    [Fact]
+    public void lexInputArrow()
+    {
+        var expectedToken = new List<Token> {
+            new TokenNumber(12),
+            new TokenPlus(),
+            new TokenNumber(12),
+            new TokenArrow(),
+         };
+        var tokens = shisoku.Lexer.lex("12+12->");
+        //TODO Arrowを使う構文ができたら、テストを改変する
+    }
+    [Fact]
+    public void lexInputPipeAndArrow()
+    {
+        var expectedToken = new List<Token> {
+            new TokenNumber(12),
+            new TokenPlus(),
+            new TokenNumber(12),
+            new TokenPipe(),
+            new TokenArrow(),
+         };
+        var tokens = shisoku.Lexer.lex("12+12|->");
+        //TODO PipeとArrowを使う構文ができたら、テストを改変する
+    }
+    [Fact]
+    public void lexInputBracket()
+    {
+        var expectedToken = new List<Token> {
+            new TokenNumber(12),
+            new TokenPlus(),
+            new TokenNumber(12),
+            new TokenCurlyBracket(),
+            new TokenNumber(12),
+            new TokenCurlyBracketClose(),
+         };
+        var tokens = shisoku.Lexer.lex("12+12{12}");
+        //TODO Bracketを使う構文ができたら、テストを改変する
+    }
+    [Fact]
+    public void lexInputEndHyphen()
+    {
+        var expectedToken = new List<Token> {
+            new TokenNumber(12),
+            new TokenMinus(),
+         };
+        var tokens = shisoku.Lexer.lex("12-");
+    }
+    [Fact]
+    public void lexInputQuestion()
+    {
+        var expectedToken = new List<Token> {
+            new TokenNumber(12),
+            new TokenQuestion(),
+        };
+        var tokens = shisoku.Lexer.lex("12?");
+    }
 }

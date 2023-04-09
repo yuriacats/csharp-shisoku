@@ -54,9 +54,9 @@ public class Parser
         {
             case [TokenNumber(var num), .. var rest]:
                 return (new AstNumber(num), rest);
-            case [TokenStartSection, .. var target]:
+            case [TokenBracketOpen, .. var target]:
                 (var inner_ast, var token_rest) = parseAddSub(target);
-                if (token_rest[0] is TokenEndSection)
+                if (token_rest[0] is TokenBracketClose)
                 {
                     return (inner_ast, token_rest[1..]);
                 }
@@ -80,8 +80,8 @@ public class Parser
             TokenMinus => "-",
             TokenAsterisk => "*",
             TokenSlash => "/",
-            TokenStartSection => "(",
-            TokenEndSection => ")",
+            TokenBracketOpen => "(",
+            TokenBracketClose => ")",
             _ => throw new Exception("Token is not found")
         };
     }

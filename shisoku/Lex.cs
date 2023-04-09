@@ -13,12 +13,6 @@ public class Lexer
                 tokens.Add(new TokenPlus());
                 input = input[(1)..];
             }
-            else if (input[0] == '-')
-            {
-                tokens.Add(new TokenMinus());
-                input = input[(1)..];
-
-            }
             else if (input[0] == '/')
             {
                 tokens.Add(new TokenSlash());
@@ -31,13 +25,13 @@ public class Lexer
             }
             else if (input[0] == '(')
             {
-                tokens.Add(new TokenStartSection());
+                tokens.Add(new TokenBracketOpen());
                 input = input[(1)..];
 
             }
             else if (input[0] == ')')
             {
-                tokens.Add(new TokenEndSection());
+                tokens.Add(new TokenBracketClose());
                 input = input[(1)..];
 
             }
@@ -46,6 +40,55 @@ public class Lexer
                 tokens.Add(new TokenEqual());
                 input = input[(1)..];
 
+            }
+            else if (input[0] == ';')
+            {
+                tokens.Add(new TokenSemicolon());
+                input = input[(1)..];
+            }
+            else if (input[0] == ':')
+            {
+                tokens.Add(new TokenColon());
+                input = input[(1)..];
+            }
+            else if (input[0] == ',')
+            {
+                tokens.Add(new TokenComma());
+                input = input[(1)..];
+            }
+            else if (input[0] == '?')
+            {
+                tokens.Add(new TokenQuestion());
+                input = input[(1)..];
+            }
+            else if (input[0] == '|')
+            {
+                tokens.Add(new TokenPipe());
+                input = input[(1)..];
+            }
+            else if (input[0] == '-')
+            {
+                if (input.Length >= 2 && input[1] == '>')
+                {
+                    tokens.Add(new TokenArrow());
+                    input = input[(2)..];
+                }
+                else
+                {
+                    tokens.Add(new TokenMinus());
+                    input = input[(1)..];
+                }
+                // TODO 記号関係は別な関数にまとめた方が良いかも？
+            }
+            else if (input[0] == '{')
+            {
+                tokens.Add(new TokenCurlyBracket());
+                input = input[(1)..];
+            }
+            else if (input[0] == '}')
+            {
+                tokens.Add(new TokenCurlyBracketClose());
+                input = input[(1)..];
             }
             else if (Char.IsWhiteSpace(input[0]) || Char.IsControl(input[0]))
             {
