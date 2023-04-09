@@ -13,7 +13,7 @@ public class CalcStatement
                     Console.WriteLine(CalcExpression.toInt(expr));
                     break;
                 case AstConst(var name, var expr):
-                    Console.WriteLine($"{name} =");
+                    Console.Write($"{name} = ");
                     Console.WriteLine(CalcExpression.toInt(expr));
                     break;
                 default:
