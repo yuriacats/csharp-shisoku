@@ -97,14 +97,14 @@ public class ParserTest
             new TokenNumber(13),
             new TokenSemicolon()
         };
-        var expectedAst = new AstExpression(
-            new AstSub(
-                new AstNumber(12),
-                new AstNumber(13)
-            )
-        );
+        var expectedAst = new Statement[]{
+            new AstExpression(
+                new AstSub(
+                    new AstNumber(12), new AstNumber(13)
+                )
+        )};
         var (outputAst, _) = ParseStatement.parse(inputToken.ToArray());
-        Assert.Equal(outputAst, expectedAst);
+        Assert.Equal(expectedAst, outputAst);
     }
     [Fact]
     public void CannotParseExpressionStatementWithoutSemicolon()
@@ -126,10 +126,12 @@ public class ParserTest
         new TokenNumber(12),
         new TokenSemicolon()
     };
-        var expectedAst = new AstConst(
-            "test",
-            new AstNumber(12)
-        );
+        var expectedAst = new Statement[] {
+            new AstConst(
+                "test",
+                new AstNumber(12)
+            )
+        };
         (var outputAst, _) = ParseStatement.parse(inputToken.ToArray());
     }
     [Fact]
@@ -144,4 +146,30 @@ public class ParserTest
         Assert.Throws<Exception>(() => ParseStatement.parse(inputToken.ToArray()));
     }
 
+    [Fact]
+    public void CanParseTwoConst()
+    {
+        var inputToken = new List<Token>{
+        new TokenConst(),
+        new TokenIdentifier("test"),
+        new TokenEqual(),
+        new TokenNumber(12),
+        new TokenSemicolon(),
+        new TokenConst(),
+        new TokenIdentifier("test2"),
+        new TokenEqual(),
+        new TokenNumber(12),
+        new TokenSemicolon()
+    };
+        var expectedAst = new Statement[] {
+            new AstConst(
+                "test",
+                new AstNumber(12)
+            ), new AstConst(
+                "test2",
+                new AstNumber(12)
+            )
+        };
+        (var outputAst, _) = ParseStatement.parse(inputToken.ToArray());
+    }
 }
