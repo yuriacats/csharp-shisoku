@@ -25,13 +25,13 @@ public class Lexer
             }
             else if (input[0] == '(')
             {
-                tokens.Add(new TokenSectionOpen());
+                tokens.Add(new TokenBracketOpen());
                 input = input[(1)..];
 
             }
             else if (input[0] == ')')
             {
-                tokens.Add(new TokenSectionClose());
+                tokens.Add(new TokenBracketClose());
                 input = input[(1)..];
 
             }
@@ -82,12 +82,12 @@ public class Lexer
             }
             else if (input[0] == '{')
             {
-                tokens.Add(new TokenBracketOpen());
+                tokens.Add(new TokenCurlyBracket());
                 input = input[(1)..];
             }
             else if (input[0] == '}')
             {
-                tokens.Add(new TokenBracketClose());
+                tokens.Add(new TokenCurlyBracketClose());
                 input = input[(1)..];
             }
             else if (Char.IsWhiteSpace(input[0]) || Char.IsControl(input[0]))

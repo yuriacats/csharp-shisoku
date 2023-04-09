@@ -6,8 +6,8 @@ public record TokenPlus() : TokenSymbol;
 public record TokenSlash() : TokenSymbol;
 public record TokenMinus() : TokenSymbol;
 public record TokenAsterisk() : TokenSymbol;
-public record TokenSectionOpen() : Token;
-public record TokenSectionClose() : Token;
+public record TokenBracketOpen() : Token;
+public record TokenBracketClose() : Token;
 // 変数追加機能で加えたToken
 public record TokenConst() : Token;
 public record TokenVariable() : Token;
@@ -18,7 +18,7 @@ public record TokenColon() : Token;
 public record TokenComma() : Token;
 public record TokenPipe() : Token;
 public record TokenArrow() : Token;
-public record TokenBracketOpen() : Token;
-public record TokenBracketClose() : Token;
+public record TokenCurlyBracket() : Token;
+public record TokenCurlyBracketClose() : Token;
 public record TokenQuestion() : Token;
 // TODO 必要なSyntaxのリストをドキュメント化

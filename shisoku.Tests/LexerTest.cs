@@ -267,9 +267,9 @@ public class LexerTest
             new TokenNumber(12),
             new TokenPlus(),
             new TokenNumber(12),
-            new TokenBracketOpen(),
+            new TokenCurlyBracket(),
             new TokenNumber(12),
-            new TokenBracketClose(),
+            new TokenCurlyBracketClose(),
          };
         var tokens = shisoku.Lexer.lex("12+12{12}");
         //TODO Bracketを使う構文ができたら、テストを改変する
