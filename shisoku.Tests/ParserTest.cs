@@ -107,7 +107,7 @@ public class ParserTest
         Assert.Equal(outputAst, expectedAst);
     }
     [Fact]
-    public void CannotParseStatementWithoutSemicolon()
+    public void CannotParseExpressionStatementWithoutSemicolon()
     {
         var inputToken = new List<Token>{
             new TokenNumber(12),
