@@ -55,7 +55,7 @@ class Program
     {
         var tokens = Lexer.lex(input);
 
-        var (tree, _) = Parser.parse(tokens.ToArray());
+        var (tree, _) = ParseExpression.parse(tokens.ToArray());
         if (isVerboseOption)
         {
             Console.WriteLine("木構造イメージ図");
@@ -75,7 +75,7 @@ public static class PrettyPrinter
     {
         return string.Join('\n', str.Split("\n").Where(s => s.Length != 0).Select(s => "  " + s)) + '\n';
     }
-    public static string PrettyPrint(Ast e)
+    public static string PrettyPrint(Expression e)
     {
         return e switch
         {

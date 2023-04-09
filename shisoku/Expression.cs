@@ -1,12 +1,12 @@
 
 namespace shisoku;
-public class Parser
+public class ParseExpression
 {
-    public static (Ast, shisoku.Token[]) parse(shisoku.Token[] input)
+    public static (Expression, shisoku.Token[]) parse(shisoku.Token[] input)
     {
         return parseAddSub(input);
     }
-    public static (Ast, shisoku.Token[]) parseAddSub(shisoku.Token[] input)
+    public static (Expression, shisoku.Token[]) parseAddSub(shisoku.Token[] input)
     {
         (var result, var rest) = parseMulDiv(input);
         while (rest is [TokenPlus or TokenMinus, .. var rest2])
@@ -27,7 +27,7 @@ public class Parser
         }
         return (result, rest);
     }
-    public static (Ast, shisoku.Token[]) parseMulDiv(shisoku.Token[] input)
+    public static (Expression, shisoku.Token[]) parseMulDiv(shisoku.Token[] input)
     {
         (var result, var rest) = parseNumOrSection(input);
         while (rest is [TokenSlash or TokenAsterisk, .. var rest2])
@@ -48,7 +48,7 @@ public class Parser
         }
         return (result, rest);
     }
-    public static (Ast, shisoku.Token[]) parseNumOrSection(shisoku.Token[] input)
+    public static (Expression, shisoku.Token[]) parseNumOrSection(shisoku.Token[] input)
     {
         switch (input)
         {
