@@ -1,9 +1,20 @@
 namespace shisoku;
 public class ParseStatement
 {
-    public static (Statement, Token[]) parse(Token[] tokens)
+    public static (Statement[], Token[]) parse(Token[] tokens)
     {
-        return parseStatement(tokens);
+        return parseStatements(tokens);
+    }
+    private static (Statement[], Token[]) parseStatements(Token[] tokens)
+    {
+        var statements = new Statement[] { };
+        while (tokens is not [])
+        {
+            var (statement, restToken) = parseStatement(tokens);
+            statements = statements.Append(statement).ToArray();
+            tokens = restToken;
+        }
+        return (statements, tokens);
     }
 
     private static (Statement, Token[]) parseStatement(Token[] tokens)
