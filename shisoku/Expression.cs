@@ -6,6 +6,7 @@ public class ParseExpression
     {
         return parseAddSub(input);
     }
+    //TODO PublicクラスになってるのをPrivateにする
     public static (Expression, shisoku.Token[]) parseAddSub(shisoku.Token[] input)
     {
         (var result, var rest) = parseMulDiv(input);

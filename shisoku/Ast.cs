@@ -8,5 +8,5 @@ public record AstMul(Expression left, Expression right) : Expression;
 public record AstDiv(Expression left, Expression right) : Expression;
 
 public abstract record Statement();
-public record AsrExpression(Expression Expression) : Statement;
-public record AstConst(string Name, Expression Value) : Statement;
+public record AstExpression(Expression expr) : Statement;
+public record AstConst(string name, Expression expr) : Statement;

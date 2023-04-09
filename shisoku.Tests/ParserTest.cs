@@ -88,4 +88,60 @@ public class ParserTest
         };
         Assert.Throws<Exception>(() => ParseExpression.parse(inputToken.ToArray()));
     }
+    [Fact]
+    public void ShouldSemicolonTokenEndOfStatement()
+    {
+        var inputToken = new List<Token>{
+            new TokenNumber(12),
+            new TokenMinus(),
+            new TokenNumber(13),
+            new TokenSemicolon()
+        };
+        var expectedAst = new AstExpression(
+            new AstSub(
+                new AstNumber(12),
+                new AstNumber(13)
+            )
+        );
+        var (outputAst, _) = ParseStatement.parse(inputToken.ToArray());
+        Assert.Equal(outputAst, expectedAst);
+    }
+    [Fact]
+    public void CantNotStatementParse()
+    {
+        var inputToken = new List<Token>{
+            new TokenNumber(12),
+            new TokenMinus(),
+            new TokenNumber(13),
+        };
+        Assert.Throws<Exception>(() => ParseStatement.parse(inputToken.ToArray()));
+    }
+    [Fact]
+    public void CanParseConst()
+    {
+        var inputToken = new List<Token>{
+        new TokenConst(),
+        new TokenIdentifier("test"),
+        new TokenEqual(),
+        new TokenNumber(12),
+        new TokenSemicolon()
+    };
+        var expectedAst = new AstConst(
+            "test",
+            new AstNumber(12)
+        );
+        (var outputAst, _) = ParseStatement.parse(inputToken.ToArray());
+    }
+    [Fact]
+    public void CanNotParseConstNotWithSemicolon()
+    {
+        var inputToken = new List<Token>{
+        new TokenConst(),
+        new TokenIdentifier("test"),
+        new TokenEqual(),
+        new TokenNumber(12),
+    };
+        Assert.Throws<Exception>(() => ParseStatement.parse(inputToken.ToArray()));
+    }
+
 }
