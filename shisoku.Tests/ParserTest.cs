@@ -10,7 +10,7 @@ public class ParserTest
         var inputToken = new List<Token> {
             new TokenNumber(12)
         };
-        var (outputAst, _) = Parser.parse(inputToken.ToArray());
+        var (outputAst, _) = ParseExpression.parse(inputToken.ToArray());
         var expectedAst = new AstNumber(12);
         Assert.Equal(expectedAst, outputAst);
     }
@@ -23,7 +23,7 @@ public class ParserTest
             new TokenPlus(),
             new TokenNumber(13)
         };
-        var (outputAst, _) = Parser.parse(inputToken.ToArray());
+        var (outputAst, _) = ParseExpression.parse(inputToken.ToArray());
         var expectedAst = new AstAdd(new AstNumber(12), new AstNumber(13));
         Assert.Equal(expectedAst, outputAst);
     }
@@ -35,7 +35,7 @@ public class ParserTest
             new TokenAsterisk(),
             new TokenNumber(13)
         };
-        var (outputAst, _) = Parser.parse(inputToken.ToArray());
+        var (outputAst, _) = ParseExpression.parse(inputToken.ToArray());
         var expectedAst = new AstMul(new AstNumber(12), new AstNumber(13));
         Assert.Equal(expectedAst, outputAst);
     }
@@ -47,7 +47,7 @@ public class ParserTest
             new TokenMinus(),
             new TokenNumber(13)
         };
-        var (outputAst, _) = Parser.parse(inputToken.ToArray());
+        var (outputAst, _) = ParseExpression.parse(inputToken.ToArray());
         var expectedAst = new AstSub(new AstNumber(12), new AstNumber(13));
         Assert.Equal(expectedAst, outputAst);
     }
@@ -59,7 +59,7 @@ public class ParserTest
             new TokenSlash(),
             new TokenNumber(13)
         };
-        var (outputAst, _) = Parser.parse(inputToken.ToArray());
+        var (outputAst, _) = ParseExpression.parse(inputToken.ToArray());
         var expectedAst = new AstDiv(new AstNumber(12), new AstNumber(13));
         Assert.Equal(expectedAst, outputAst);
     }
@@ -73,7 +73,7 @@ public class ParserTest
             new TokenMinus(),
             new TokenNumber(14)
         };
-        var (outputAst, _) = Parser.parse(inputToken.ToArray());
+        var (outputAst, _) = ParseExpression.parse(inputToken.ToArray());
         var expectedAst = new AstSub(
             new AstSub(new AstNumber(12), new AstNumber(13)),
             new AstNumber(14)
@@ -86,6 +86,6 @@ public class ParserTest
         var inputToken = new List<Token> {
             new TokenMinus()
         };
-        Assert.Throws<Exception>(() => Parser.parse(inputToken.ToArray()));
+        Assert.Throws<Exception>(() => ParseExpression.parse(inputToken.ToArray()));
     }
 }

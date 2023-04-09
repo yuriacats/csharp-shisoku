@@ -2,7 +2,7 @@ namespace shisoku;
 
 public class MyCalc
 {
-    public static int toInt(Ast input)
+    public static int toInt(Expression input)
     {
         switch (input)
         {
