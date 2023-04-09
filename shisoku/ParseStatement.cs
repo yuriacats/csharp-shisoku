@@ -14,12 +14,12 @@ public class ParseStatement
             _ => parseExpressionStatement(tokens)
         };
 
-        if (token is [TokenSemicolon, .. var rest2])
+        if (token is not [TokenSemicolon, ..])
         {
-            return (statement, rest2);
+            throw new Exception($"Token undefined: {token}");
         }
 
-        throw new Exception($"Token undefined: {token}");
+        return (statement, token[1..]);
     }
     private static (Statement, Token[]) parseExpressionStatement(Token[] tokens)
     {
@@ -28,9 +28,9 @@ public class ParseStatement
     }
     private static (Statement, Token[]) parseConst(Token[] tokens)
     {
-        if (tokens is [TokenConst, TokenIdentifier(var exprName), TokenEqual, .. var rest2])
+        if (tokens is [TokenConst, TokenIdentifier(var exprName), TokenEqual, .. var rest_token])
         {
-            (var expression, var rest) = ParseExpression.parse(rest2);
+            (var expression, var rest) = ParseExpression.parse(rest_token);
             return (new AstConst(exprName, expression), rest);
         }
         throw new Exception($"Token undefined: {tokens}");
