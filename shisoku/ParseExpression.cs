@@ -67,7 +67,7 @@ public class ParseExpression
                     throw new Exception($"Token undefined: {input}");
                 }
             default:
-                input.ToList().ForEach(Console.WriteLine);
+                //input.ToList().ForEach(Console.WriteLine);
                 throw new Exception($"Token undefined: {input}");
         }
 
