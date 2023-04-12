@@ -1,8 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using shisoku;
+global using VariableEnvironment = System.Collections.Generic.Dictionary<string, int>;
+namespace shisoku;
 using System.CommandLine;
-using VariableEnvironment = System.Collections.Generic.Dictionary<string, int>;
-
 class Program
 {
     static Task<int> Main(string[] args)

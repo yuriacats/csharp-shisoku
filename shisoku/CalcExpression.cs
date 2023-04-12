@@ -2,7 +2,7 @@ namespace shisoku;
 
 public class CalcExpression
 {
-    public static int toInt(Expression input, Dictionary<string, int> env)
+    public static int toInt(Expression input, VariableEnvironment env)
     {
         switch (input)
         {

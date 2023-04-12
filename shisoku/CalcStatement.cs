@@ -2,7 +2,7 @@ namespace shisoku;
 public class CalcStatement
 {
     //TODO ToIntの命名の変換を行う
-    public static void toInt(Statement[] input, Dictionary<string, int> env)
+    public static void toInt(Statement[] input, VariableEnvironment env)
     {
         foreach (Statement statement in input)
         {
