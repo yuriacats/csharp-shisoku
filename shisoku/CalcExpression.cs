@@ -2,30 +2,34 @@ namespace shisoku;
 
 public class CalcExpression
 {
-    public static int toInt(Expression input)
+    public static int toInt(Expression input, Dictionary<string, int> env)
     {
         switch (input)
         {
-            case AstNumber(var n):
+            case NumberExpression(var n):
                 {
 
                     return n;
                 }
-            case AstAdd(var n, var v):
+            case ConstExpression(var name):
                 {
-                    return toInt(n) + toInt(v);
+                    return env[name];
                 }
-            case AstSub(var n, var v):
+            case AddExpression(var n, var v):
                 {
-                    return toInt(n) - toInt(v);
+                    return toInt(n, env) + toInt(v, env);
                 }
-            case AstMul(var n, var v):
+            case SubExpression(var n, var v):
                 {
-                    return toInt(n) * toInt(v);
+                    return toInt(n, env) - toInt(v, env);
                 }
-            case AstDiv(var n, var v):
+            case MulExpression(var n, var v):
                 {
-                    return toInt(n) / toInt(v);
+                    return toInt(n, env) * toInt(v, env);
+                }
+            case DivExpression(var n, var v):
+                {
+                    return toInt(n, env) / toInt(v, env);
                 }
             default:
                 throw new Exception("AST parse Error");

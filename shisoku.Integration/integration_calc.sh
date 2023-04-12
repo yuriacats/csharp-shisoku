@@ -24,6 +24,10 @@ function main() {
     sum_exit_code=$((sum_exit_code + $?))
     run_test_case "正解が負の数になっても失敗しない" "1-2;" -1
     sum_exit_code=$((sum_exit_code + $?))
+    run_test_case "変数の定義をしても問題ない" "const a=1;" ""
+    sum_exit_code=$((sum_exit_code + $?))
+    run_test_case "変数の計算をしても問題ない" "const a=1;a+1;" "2"
+    sum_exit_code=$((sum_exit_code + $?))
     run_test_case "複数の計算を出せる" "1-2;1;" "-1
 1"
     sum_exit_code=$((sum_exit_code + $?))

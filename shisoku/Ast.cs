@@ -1,11 +1,12 @@
 
 namespace shisoku;
 public abstract record Expression();
-public record AstNumber(int Number) : Expression;
-public record AstAdd(Expression left, Expression right) : Expression;
-public record AstSub(Expression left, Expression right) : Expression;
-public record AstMul(Expression left, Expression right) : Expression;
-public record AstDiv(Expression left, Expression right) : Expression;
+public record NumberExpression(int number) : Expression;
+public record ConstExpression(string name) : Expression;
+public record AddExpression(Expression left, Expression right) : Expression;
+public record SubExpression(Expression left, Expression right) : Expression;
+public record MulExpression(Expression left, Expression right) : Expression;
+public record DivExpression(Expression left, Expression right) : Expression;
 
 public abstract record Statement();
 public record AstExpression(Expression expr) : Statement;

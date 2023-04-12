@@ -16,12 +16,12 @@ public class ParseExpression
             {
                 case TokenPlus:
                     var (addRhs, addRest) = parseMulDiv(rest2);
-                    result = new AstAdd(result, addRhs);
+                    result = new AddExpression(result, addRhs);
                     rest = addRest;
                     break;
                 case TokenMinus:
                     var (subRhs, subRest) = parseMulDiv(rest2);
-                    result = new AstSub(result, subRhs);
+                    result = new SubExpression(result, subRhs);
                     rest = subRest;
                     break;
             }
@@ -37,12 +37,12 @@ public class ParseExpression
             {
                 case TokenAsterisk:
                     var (malRhs, malRest) = parseNumOrSection(rest2);
-                    result = new AstMul(result, malRhs);
+                    result = new MulExpression(result, malRhs);
                     rest = malRest;
                     break;
                 case TokenSlash:
                     var (divRhs, divRest) = parseNumOrSection(rest2);
-                    result = new AstDiv(result, divRhs);
+                    result = new DivExpression(result, divRhs);
                     rest = divRest;
                     break;
             }
@@ -54,7 +54,9 @@ public class ParseExpression
         switch (input)
         {
             case [TokenNumber(var num), .. var rest]:
-                return (new AstNumber(num), rest);
+                return (new NumberExpression(num), rest);
+            case [TokenIdentifier(var name), .. var rest]:
+                return (new ConstExpression(name), rest);
             case [TokenBracketOpen, .. var target]:
                 (var inner_ast, var token_rest) = parseAddSub(target);
                 if (token_rest[0] is TokenBracketClose)
