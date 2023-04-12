@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using shisoku;
 using System.CommandLine;
+using VariableEnvironment = System.Collections.Generic.Dictionary<string, int>;
 
 class Program
 {
@@ -23,7 +24,7 @@ class Program
         {
             if (input != null)
             {
-                Calculate(input, isVerbose, new Dictionary<string, int>());
+                Calculate(input, isVerbose, new VariableEnvironment());
             }
             else
             {
@@ -35,7 +36,7 @@ class Program
     }
     static void Repl(bool isVerboseOption)
     {
-        var env = new Dictionary<string, int>();
+        var env = new VariableEnvironment();
         while (true)
         {
             try
@@ -55,7 +56,7 @@ class Program
         }
 
     }
-    static void Calculate(string input, bool isVerboseOption, Dictionary<string, int> env)
+    static void Calculate(string input, bool isVerboseOption, VariableEnvironment env)
     {
         var tokens = Lexer.lex(input);
 
