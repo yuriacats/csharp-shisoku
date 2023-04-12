@@ -11,7 +11,7 @@ public class ParserTest
             new TokenNumber(12)
         };
         var (outputAst, _) = ParseExpression.parse(inputToken.ToArray());
-        var expectedAst = new AstNumber(12);
+        var expectedAst = new NumberExpression(12);
         Assert.Equal(expectedAst, outputAst);
     }
 
@@ -24,7 +24,7 @@ public class ParserTest
             new TokenNumber(13)
         };
         var (outputAst, _) = ParseExpression.parse(inputToken.ToArray());
-        var expectedAst = new AstAdd(new AstNumber(12), new AstNumber(13));
+        var expectedAst = new AddExpression(new NumberExpression(12), new NumberExpression(13));
         Assert.Equal(expectedAst, outputAst);
     }
     [Fact]
@@ -36,7 +36,7 @@ public class ParserTest
             new TokenNumber(13)
         };
         var (outputAst, _) = ParseExpression.parse(inputToken.ToArray());
-        var expectedAst = new AstMul(new AstNumber(12), new AstNumber(13));
+        var expectedAst = new MulExpression(new NumberExpression(12), new NumberExpression(13));
         Assert.Equal(expectedAst, outputAst);
     }
     [Fact]
@@ -48,7 +48,7 @@ public class ParserTest
             new TokenNumber(13)
         };
         var (outputAst, _) = ParseExpression.parse(inputToken.ToArray());
-        var expectedAst = new AstSub(new AstNumber(12), new AstNumber(13));
+        var expectedAst = new SubExpression(new NumberExpression(12), new NumberExpression(13));
         Assert.Equal(expectedAst, outputAst);
     }
     [Fact]
@@ -60,7 +60,7 @@ public class ParserTest
             new TokenNumber(13)
         };
         var (outputAst, _) = ParseExpression.parse(inputToken.ToArray());
-        var expectedAst = new AstDiv(new AstNumber(12), new AstNumber(13));
+        var expectedAst = new DivExpression(new NumberExpression(12), new NumberExpression(13));
         Assert.Equal(expectedAst, outputAst);
     }
     [Fact]
@@ -74,9 +74,9 @@ public class ParserTest
             new TokenNumber(14)
         };
         var (outputAst, _) = ParseExpression.parse(inputToken.ToArray());
-        var expectedAst = new AstSub(
-            new AstSub(new AstNumber(12), new AstNumber(13)),
-            new AstNumber(14)
+        var expectedAst = new SubExpression(
+            new SubExpression(new NumberExpression(12), new NumberExpression(13)),
+            new NumberExpression(14)
         );
         Assert.Equal(expectedAst, outputAst);
     }
@@ -99,8 +99,8 @@ public class ParserTest
         };
         var expectedAst = new Statement[]{
             new AstExpression(
-                new AstSub(
-                    new AstNumber(12), new AstNumber(13)
+                new SubExpression(
+                    new NumberExpression(12), new NumberExpression(13)
                 )
         )};
         var (outputAst, _) = ParseStatement.parse(inputToken.ToArray());
@@ -129,7 +129,7 @@ public class ParserTest
         var expectedAst = new Statement[] {
             new AstConst(
                 "test",
-                new AstNumber(12)
+                new NumberExpression(12)
             )
         };
         (var outputAst, _) = ParseStatement.parse(inputToken.ToArray());
@@ -164,10 +164,10 @@ public class ParserTest
         var expectedAst = new Statement[] {
             new AstConst(
                 "test",
-                new AstNumber(12)
+                new NumberExpression(12)
             ), new AstConst(
                 "test2",
-                new AstNumber(12)
+                new NumberExpression(12)
             )
         };
         (var outputAst, _) = ParseStatement.parse(inputToken.ToArray());

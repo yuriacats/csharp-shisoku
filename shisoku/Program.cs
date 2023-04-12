@@ -1,7 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using shisoku;
+global using VariableEnvironment = System.Collections.Generic.Dictionary<string, int>;
+namespace shisoku;
 using System.CommandLine;
-
 class Program
 {
     static Task<int> Main(string[] args)
@@ -23,7 +23,7 @@ class Program
         {
             if (input != null)
             {
-                Calculate(input, isVerbose);
+                Calculate(input, isVerbose, new VariableEnvironment());
             }
             else
             {
@@ -35,6 +35,7 @@ class Program
     }
     static void Repl(bool isVerboseOption)
     {
+        var env = new VariableEnvironment();
         while (true)
         {
             try
@@ -45,16 +46,16 @@ class Program
                     Console.Write("> ");
                     input = Console.ReadLine();
                 } while (input is null || input.Length == 0);
-                Calculate(input, isVerboseOption);
+                Calculate(input, isVerboseOption, env);
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error: {e.Message}");
+                Console.WriteLine($"Error {e.Message}");
             }
         }
 
     }
-    static void Calculate(string input, bool isVerboseOption)
+    static void Calculate(string input, bool isVerboseOption, VariableEnvironment env)
     {
         var tokens = Lexer.lex(input);
 
@@ -68,27 +69,27 @@ class Program
             Console.WriteLine("データ構造");
             Console.WriteLine(tree);
         }
-        CalcStatement.toInt(tree);
+        CalcStatement.toInt(tree, env);
     }
 }
 // -eの時のみ省略して行う
 
-public static class PrettyPrinter
-{
-    public static string Indent(string str)
-    {
-        return string.Join('\n', str.Split("\n").Where(s => s.Length != 0).Select(s => "  " + s)) + '\n';
-    }
-    public static string PrettyPrint(Expression e)
-    {
-        return e switch
-        {
-            AstNumber(var n) => $"{n}\n",
-            AstAdd(var lhs, var rhs) => "+\n" + Indent("左:" + PrettyPrint(lhs)) + Indent("右:" + PrettyPrint(rhs)),
-            AstSub(var lhs, var rhs) => "-\n" + Indent("左:" + PrettyPrint(lhs)) + Indent("右:" + PrettyPrint(rhs)),
-            AstMul(var lhs, var rhs) => "*\n" + Indent("左:" + PrettyPrint(lhs)) + Indent("右:" + PrettyPrint(rhs)),
-            AstDiv(var lhs, var rhs) => "/\n" + Indent("左:" + PrettyPrint(lhs)) + Indent("右:" + PrettyPrint(rhs)),
-            _ => throw new NotImplementedException(),
-        };
-    }
-}
+//public static class PrettyPrinter
+//{
+//    public static string Indent(string str)
+//    {
+//        return string.Join('\n', str.Split("\n").Where(s => s.Length != 0).Select(s => "  " + s)) + '\n';
+//    }
+//    public static string PrettyPrint(Expression e)
+//    {
+//        return e switch
+//        {
+//            AstNumber(var n) => $"{n}\n",
+//            AstAdd(var lhs, var rhs) => "+\n" + Indent("左:" + PrettyPrint(lhs)) + Indent("右:" + PrettyPrint(rhs)),
+//            AstSub(var lhs, var rhs) => "-\n" + Indent("左:" + PrettyPrint(lhs)) + Indent("右:" + PrettyPrint(rhs)),
+//            AstMul(var lhs, var rhs) => "*\n" + Indent("左:" + PrettyPrint(lhs)) + Indent("右:" + PrettyPrint(rhs)),
+//            AstDiv(var lhs, var rhs) => "/\n" + Indent("左:" + PrettyPrint(lhs)) + Indent("右:" + PrettyPrint(rhs)),
+//            _ => throw new NotImplementedException(),
+//        };
+//    }
+//}

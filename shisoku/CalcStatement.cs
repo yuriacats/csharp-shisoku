@@ -1,8 +1,8 @@
 namespace shisoku;
-
 public class CalcStatement
 {
-    public static void toInt(Statement[] input)
+    //TODO ToIntの命名の変換を行う
+    public static void toInt(Statement[] input, VariableEnvironment env)
     {
         foreach (Statement statement in input)
         {
@@ -10,11 +10,10 @@ public class CalcStatement
             switch (statement)
             {
                 case AstExpression(var expr):
-                    Console.WriteLine(CalcExpression.toInt(expr));
+                    Console.WriteLine(CalcExpression.toInt(expr, env));
                     break;
                 case AstConst(var name, var expr):
-                    Console.Write($"{name} = ");
-                    Console.WriteLine(CalcExpression.toInt(expr));
+                    env.Add(name, CalcExpression.toInt(expr, env));
                     break;
                 default:
                     throw new Exception("AST parse Error");
