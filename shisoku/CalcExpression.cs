@@ -6,30 +6,56 @@ public class CalcExpression
     {
         switch (input)
         {
+            case IntValue(var n):
+                return n;
+            default:
+                throw new Exception("AST parse Error");
+        }
+    }
+
+    public static Value Calc(Expression input)
+    {
+        switch (input)
+        {
             case NumberExpression(var n):
                 {
 
-                    return n;
+                    return new IntValue(n);
+                }
+            case BoolExpression(var n):
+                {
+                    return new BoolValue(n);
                 }
             case ConstExpression(var name):
                 {
-                    return env[name];
+                    return new IntValue(toInt(Calc(n)) + toInt(Calc(v)));
+
                 }
             case AddExpression(var n, var v):
                 {
-                    return toInt(n, env) + toInt(v, env);
+                    return new IntValue(toInt(Calc(n)) - toInt(Calc(v)));
                 }
             case SubExpression(var n, var v):
                 {
-                    return toInt(n, env) - toInt(v, env);
+                    return new IntValue(toInt(Calc(n)) * toInt(Calc(v)));
                 }
             case MulExpression(var n, var v):
                 {
-                    return toInt(n, env) * toInt(v, env);
+                    return new IntValue(toInt(Calc(n)) / toInt(Calc(v)));
                 }
-            case DivExpression(var n, var v):
+            case AstEqual(var n, var v):
                 {
-                    return toInt(n, env) / toInt(v, env);
+                    var calked_n = Calc(n);
+                    var calked_v = Calc(v);
+                    switch (calked_n, calked_v)
+                    {
+                        case (IntValue(var i), IntValue(var j)):
+                            return new BoolValue(i == j);
+                        case (BoolValue(var i), BoolValue(var j)):
+                            return new BoolValue(i == j);
+                        default:
+                            throw new Exception("AST parse Error");
+                    }
                 }
             default:
                 throw new Exception("AST parse Error");

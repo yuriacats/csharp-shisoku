@@ -19,11 +19,13 @@ public class ParseStatement
 
     private static (Statement, Token[]) parseStatement(Token[] tokens)
     {
+
         var (statement, token) = tokens switch
         {
             [TokenConst, ..] => parseConst(tokens),
             _ => parseExpressionStatement(tokens)
         };
+
 
         if (token is not [TokenSemicolon, ..])
         {

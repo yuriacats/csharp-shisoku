@@ -30,24 +30,42 @@ public class ParseExpression
     }
     public static (Expression, shisoku.Token[]) parseMulDiv(shisoku.Token[] input)
     {
-        (var result, var rest) = parseNumOrSection(input);
-        while (rest is [TokenSlash or TokenAsterisk, .. var rest2])
+        (var result, var rest) = parseEqual(input);
+        while (rest is [TokenSlash or TokenAsterisk or TokenEqualEqual, .. var rest2])
         {
             switch (rest[0])
             {
                 case TokenAsterisk:
-                    var (malRhs, malRest) = parseNumOrSection(rest2);
+                    var (malRhs, malRest) = parseEqual(rest2);
                     result = new MulExpression(result, malRhs);
                     rest = malRest;
                     break;
                 case TokenSlash:
-                    var (divRhs, divRest) = parseNumOrSection(rest2);
+                    var (divRhs, divRest) = parseEqual(rest2);
                     result = new DivExpression(result, divRhs);
                     rest = divRest;
                     break;
             }
         }
         return (result, rest);
+    }
+    public static (Expression, shisoku.Token[]) parseEqual(shisoku.Token[] input)
+    {
+        (var result, var rest) = parseNumOrSection(input);
+        while (rest is [TokenEqualEqual, .. var rest2])
+        {
+            switch (rest[0])
+            {
+                case TokenEqualEqual:
+                    var (eqRhs, eqRest) = parseNumOrSection(rest2);
+                    result = new AstEqual(result, eqRhs);
+                    rest = eqRest;
+                    break;
+
+            }
+        }
+        return (result, rest);
+
     }
     public static (Expression, shisoku.Token[]) parseNumOrSection(shisoku.Token[] input)
     {
@@ -68,6 +86,11 @@ public class ParseExpression
                     input.ToList().ForEach(Console.WriteLine);
                     throw new Exception($"Token undefined: {input}");
                 }
+            case [TokenTrue, .. var rest]:
+                return (new BoolExpression(true), rest);
+            case [TokenFalse, .. var rest]:
+                return (new BoolExpression(false), rest);
+
             default:
                 //input.ToList().ForEach(Console.WriteLine);
                 throw new Exception($"Token undefined: {input}");

@@ -1,7 +1,7 @@
 namespace shisoku;
 public abstract record Token();
 public abstract record TokenSymbol() : Token;
-public record TokenNumber(int Number) : Token;
+public record TokenNumber(int number) : Token;
 public record TokenPlus() : TokenSymbol;
 public record TokenSlash() : TokenSymbol;
 public record TokenMinus() : TokenSymbol;
@@ -12,6 +12,8 @@ public record TokenBracketClose() : Token;
 public record TokenConst() : Token;
 public record TokenVariable() : Token;
 public record TokenEqual() : Token;
+public record TokenTrue() : Token;
+public record TokenFalse() : Token;
 public record TokenIdentifier(string Name) : Token;
 public record TokenSemicolon() : Token;
 public record TokenColon() : Token;
@@ -21,4 +23,5 @@ public record TokenArrow() : Token;
 public record TokenCurlyBracket() : Token;
 public record TokenCurlyBracketClose() : Token;
 public record TokenQuestion() : Token;
+public record TokenEqualEqual() : Token;
 // TODO 必要なSyntaxのリストをドキュメント化

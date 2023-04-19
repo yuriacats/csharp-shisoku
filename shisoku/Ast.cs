@@ -2,6 +2,7 @@
 namespace shisoku;
 public abstract record Expression();
 public record NumberExpression(int number) : Expression;
+public record BoolExpression(bool Bool) : Expression;
 public record ConstExpression(string name) : Expression;
 public record AddExpression(Expression left, Expression right) : Expression;
 public record SubExpression(Expression left, Expression right) : Expression;
