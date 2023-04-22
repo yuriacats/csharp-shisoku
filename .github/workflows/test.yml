@@ -48,8 +48,8 @@ jobs:
             path: code-coverage-results.md
         - name: output html
           run: |
-          dotnet tool install -g dotnet-reportgenerator-globaltool
-          reportgenerator -reports:"coverage.cobertura.xml" -targetdir:"report" -reporttypes:"Html"
+            dotnet tool install -g dotnet-reportgenerator-globaltool
+            reportgenerator -reports:"coverage.cobertura.xml" -targetdir:"report" -reporttypes:"Html"
         - name: Upload coverage report
           uses: actions/upload-artifact@v2
           with:
