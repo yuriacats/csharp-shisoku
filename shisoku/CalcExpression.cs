@@ -17,51 +17,51 @@ public class CalcExpression
     {
         switch (input)
         {
-            case NumberExpression(var n):
+            case NumberExpression(var value):
                 {
 
-                    return new IntValue(n);
+                    return new IntValue(value);
                 }
             case VariableExpression(var name):
                 {
                     return new IntValue(env[name]);
                 }
-            case BoolExpression(var n):
+            case BoolExpression(var value):
                 {
-                    return new BoolValue(n);
+                    return new BoolValue(value);
                 }
-            case AddExpression(var n, var v):
+            case AddExpression(var lhs, var rhs):
                 {
-                    return new IntValue(toInt(Calc(n, env)) + toInt(Calc(v, env)));
+                    return new IntValue(toInt(Calc(lhs, env)) + toInt(Calc(rhs, env)));
                 }
-            case SubExpression(var n, var v):
+            case SubExpression(var lhs, var rhs):
                 {
-                    return new IntValue(toInt(Calc(n, env)) - toInt(Calc(v, env)));
+                    return new IntValue(toInt(Calc(lhs, env)) - toInt(Calc(rhs, env)));
                 }
-            case MulExpression(var n, var v):
+            case MulExpression(var lhs, var rhs):
                 {
-                    return new IntValue(toInt(Calc(n, env)) * toInt(Calc(v, env)));
+                    return new IntValue(toInt(Calc(lhs, env)) * toInt(Calc(rhs, env)));
                 }
-            case DivExpression(var n, var v):
+            case DivExpression(var lhs, var rhs):
                 {
-                    return new IntValue(toInt(Calc(n, env)) / toInt(Calc(v, env)));
+                    return new IntValue(toInt(Calc(lhs, env)) / toInt(Calc(rhs, env)));
                 }
-            case EqualExpression(var n, var v):
+            case EqualExpression(var lhs, var rhs):
                 {
-                    var calked_n = Calc(n, env);
-                    var calked_v = Calc(v, env);
-                    switch (calked_n, calked_v)
+                    var valueOfLhs = Calc(lhs, env);
+                    var valueOfRhs = Calc(rhs, env);
+                    switch (valueOfLhs, valueOfRhs)
                     {
-                        case (IntValue(var i), IntValue(var j)):
-                            return new BoolValue(i == j);
-                        case (BoolValue(var i), BoolValue(var j)):
-                            return new BoolValue(i == j);
+                        case (IntValue, IntValue):
+                            return new BoolValue(valueOfLhs == valueOfRhs);
+                        case (BoolValue, BoolValue):
+                            return new BoolValue(valueOfLhs == valueOfRhs);
                         default:
-                            throw new Exception("AST parse Error");
+                            throw new Exception($"Evaluation Error:Argment types differ.({lhs.ToString},{rhs.ToString})");
                     }
                 }
             default:
-                throw new Exception("AST parse Error");
+                throw new Exception($"Evaluation Error:{input}");
         }
 
     }
