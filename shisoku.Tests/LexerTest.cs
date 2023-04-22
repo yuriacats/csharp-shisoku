@@ -5,7 +5,7 @@ using shisoku;
 public class LexerTest
 {
     [Fact]
-    public void lexInputOnlyNumber()
+    public void NumberCanBeTokenized()
     {
         var expectedToken = new List<Token> {
             new TokenNumber(12)
@@ -15,7 +15,7 @@ public class LexerTest
 
     }
     [Fact]
-    public void lexInputFirstNumberAndAdd()
+    public void PlusCanBeTokenized()
     {
         var expectedToken = new List<Token> {
             new TokenNumber(12),
@@ -27,7 +27,7 @@ public class LexerTest
 
     }
     [Fact]
-    public void lexInputFirstNumberAndSub()
+    public void MinusCanBeTokenized()
     {
         var expectedToken = new List<Token> {
             new TokenNumber(12),
@@ -39,7 +39,7 @@ public class LexerTest
 
     }
     [Fact]
-    public void lexInputFirstNumberAndMul()
+    public void AsteriskCanbeTokenized()
     {
         var expectedToken = new List<Token> {
             new TokenNumber(12),
@@ -50,7 +50,7 @@ public class LexerTest
         Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
-    public void lexInputFirstNumberAndDiv()
+    public void SlashCanBeTokenized()
     {
         var expectedToken = new List<Token> {
             new TokenNumber(12),
@@ -61,7 +61,7 @@ public class LexerTest
         Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
-    public void lexInputNotEndNumber()
+    public void SlashOfEndCanBeTokenized()
     {
         var expectedToken = new List<Token> {
             new TokenNumber(12),
@@ -71,7 +71,7 @@ public class LexerTest
         Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
-    public void lexInputOtherChars()
+    public void WordsCanBeTokenized()
     {
         var expectedToken = new List<Token> {
             new TokenNumber(12),
@@ -83,7 +83,7 @@ public class LexerTest
         Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
-    public void lexInputOnlyOtherChars()
+    public void AWordCanBeTokenized()
     {
         var expectedToken = new List<Token> {
             new TokenIdentifier("aaaa"),
@@ -92,7 +92,7 @@ public class LexerTest
         Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
-    public void lexInputOnlyStringAndNumber()
+    public void NumberAndIdentifierTokenizedSeparatedlyWhenANumberIsGivenBeforString()
     {
         var expectedToken = new List<Token> {
             new TokenNumber(12),
@@ -102,7 +102,7 @@ public class LexerTest
         Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
-    public void lexInputWithWhiteSpace()
+    public void TokenizedIgnoringSpaces()
     {
         var expectedToken = new List<Token> {
             new TokenNumber(12),
@@ -113,7 +113,7 @@ public class LexerTest
         Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
-    public void lexInputConst()
+    public void ConstCanBeTokernized()
     {
         var expectedToken = new List<Token> {
             new TokenConst()
@@ -122,7 +122,7 @@ public class LexerTest
         Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
-    public void lexInputConstAndIdentifier()
+    public void WordStartingWithConstCanBeTokernizedasIdentifier()
     {
         var expectedToken = new List<Token> {
             new TokenConst(),
@@ -132,7 +132,7 @@ public class LexerTest
         Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
-    public void lexInputVarAndIdentifier()
+    public void varCanBeTokernized()
     {
         var expectedToken = new List<Token> {
             new TokenVariable(),
@@ -142,7 +142,7 @@ public class LexerTest
         Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
-    public void lexInputTrue()
+    public void TrueCanBeTokernized()
     {
         var expectedToken = new List<Token> {
             new TokenVariable(),
@@ -153,7 +153,7 @@ public class LexerTest
         Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
-    public void lexInputFalse()
+    public void FalseCanBeTokenized()
     {
         var expectedToken = new List<Token> {
             new TokenVariable(),
@@ -164,7 +164,7 @@ public class LexerTest
         Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
-    public void lexInputEqualEqual()
+    public void EqualEqualCanBeTokenized()
     {
         var expectedToken = new List<Token> {
             new TokenTrue(),
@@ -176,7 +176,7 @@ public class LexerTest
         Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
-    public void lexInputIdentifierInNumber()
+    public void WordWithNumberCanBeTokernizedasIdentifier()
     {
         var expectedToken = new List<Token> {
             new TokenIdentifier("const12")
@@ -185,7 +185,7 @@ public class LexerTest
         Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
-    public void lexInputDefinition()
+    public void EqualCanbeTokenized()
     {
         var expectedToken = new List<Token> {
             new TokenEqual(),
@@ -194,7 +194,7 @@ public class LexerTest
         Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
-    public void lexInputTab()
+    public void TokenizedIgnoringTab()
     {
         var expectedToken = new List<Token> {
             new TokenNumber(12),
@@ -205,7 +205,7 @@ public class LexerTest
         Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
-    public void lexInputNewLine()
+    public void TokenizedIgnoringNewLine()
     {
         var expectedToken = new List<Token> {
             new TokenNumber(12),
@@ -215,7 +215,7 @@ public class LexerTest
         var tokens = shisoku.Lexer.lex("12\n+\n12");
     }
     [Fact]
-    public void lexInputNewLineAndTab()
+    public void TokenizedIgnoringNewLineAndTab()
     {
         var expectedToken = new List<Token> {
             new TokenNumber(12),
@@ -225,7 +225,7 @@ public class LexerTest
         var tokens = shisoku.Lexer.lex("12\n\t+\n\t12");
     }
     [Fact]
-    public void lexInputInSemicolon()
+    public void SemicolonCanBeTokernized()
     {
         var expectedToken = new List<Token> {
             new TokenNumber(12),
@@ -236,7 +236,7 @@ public class LexerTest
         var tokens = shisoku.Lexer.lex("12+12;");
     }
     [Fact]
-    public void lexInputInComma()
+    public void CommaCanBeTokernized()
     {
         var expectedToken = new List<Token> {
             new TokenNumber(12),
@@ -247,7 +247,7 @@ public class LexerTest
         var tokens = shisoku.Lexer.lex("12+12,");
     }
     [Fact]
-    public void lexInputInPipe()
+    public void PipeCanBeTokenized()
     {
         var expectedToken = new List<Token> {
             new TokenNumber(12),
@@ -259,7 +259,7 @@ public class LexerTest
         //TODO Pipeを使う構文ができたら、テストを改変する
     }
     [Fact]
-    public void lexInputInColon()
+    public void ColonCanBeTokernized()
     {
         var expectedToken = new List<Token> {
             new TokenNumber(12),
@@ -271,7 +271,7 @@ public class LexerTest
         //TODO Colonを使う構文ができたら、テストを改変する
     }
     [Fact]
-    public void lexInputArrow()
+    public void ArrowCanBeTokenized()
     {
         var expectedToken = new List<Token> {
             new TokenNumber(12),
@@ -283,26 +283,27 @@ public class LexerTest
         //TODO Arrowを使う構文ができたら、テストを改変する
     }
     [Fact]
-    public void lexInputPipeAndArrow()
+    public void BracketCanBeTokernized()
     {
         var expectedToken = new List<Token> {
             new TokenNumber(12),
             new TokenPlus(),
             new TokenNumber(12),
-            new TokenPipe(),
-            new TokenArrow(),
+            new TokenBracketOpen(),
+            new TokenNumber(12),
+            new TokenBracketClose(),
          };
-        var tokens = shisoku.Lexer.lex("12+12|->");
-        //TODO PipeとArrowを使う構文ができたら、テストを改変する
+        var tokens = shisoku.Lexer.lex("12+12{12}");
+        //TODO Bracketを使う構文ができたら、テストを改変する
     }
     [Fact]
-    public void lexInputBracket()
+    public void CurlyBracketCanBeTokernized()
     {
         var expectedToken = new List<Token> {
             new TokenNumber(12),
             new TokenPlus(),
             new TokenNumber(12),
-            new TokenCurlyBracket(),
+            new TokenCurlyBracketOpen(),
             new TokenNumber(12),
             new TokenCurlyBracketClose(),
          };
@@ -310,16 +311,7 @@ public class LexerTest
         //TODO Bracketを使う構文ができたら、テストを改変する
     }
     [Fact]
-    public void lexInputEndHyphen()
-    {
-        var expectedToken = new List<Token> {
-            new TokenNumber(12),
-            new TokenMinus(),
-         };
-        var tokens = shisoku.Lexer.lex("12-");
-    }
-    [Fact]
-    public void lexInputQuestion()
+    public void QuestionCanBeTokenized()
     {
         var expectedToken = new List<Token> {
             new TokenNumber(12),

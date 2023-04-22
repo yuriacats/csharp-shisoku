@@ -91,7 +91,7 @@ public class Lexer
             }
             else if (input[0] == '{')
             {
-                tokens.Add(new TokenCurlyBracket());
+                tokens.Add(new TokenCurlyBracketOpen());
                 input = input[(1)..];
             }
             else if (input[0] == '}')
