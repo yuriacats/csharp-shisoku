@@ -20,8 +20,13 @@ public record TokenColon() : Token;
 public record TokenComma() : Token;
 public record TokenPipe() : Token;
 public record TokenArrow() : Token;
-public record TokenCurlyBracket() : Token;
+public record TokenCurlyBracketOpen() : Token;
 public record TokenCurlyBracketClose() : Token;
+// TODO SquareBracketの実装ができたら、テストを改変する
+public record TokenSquareBracketOpen() : Token;
+public record TokenSquareBracketClose() : Token;
+// TODO AngleBracketの実装ができたら、テストを改変する
+public record TokenAngleBracketOpen() : Token;
+public record TokenAngleBracketClose() : Token;
 public record TokenQuestion() : Token;
 public record TokenEqualEqual() : Token;
-// TODO 必要なSyntaxのリストをドキュメント化
