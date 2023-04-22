@@ -37,6 +37,8 @@ function main() {
     sum_exit_code=$((sum_exit_code + $?))
     run_test_case "Booleanが扱える(bool同士)" "true==true;" True 
     sum_exit_code=$((sum_exit_code + $?))
+    run_test_case "Booleanが混ざった複合演算ができる" "true== (1+1 == 2);" True 
+    sum_exit_code=$((sum_exit_code + $?))
 
     if [ ${sum_exit_code} == "0" ]; then
         return 0
