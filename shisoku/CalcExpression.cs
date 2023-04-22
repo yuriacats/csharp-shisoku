@@ -2,7 +2,7 @@ namespace shisoku;
 
 public class CalcExpression
 {
-    public static int toInt(Expression input, VariableEnvironment env)
+    public static int toInt(Value input)
     {
         switch (input)
         {
@@ -13,7 +13,7 @@ public class CalcExpression
         }
     }
 
-    public static Value Calc(Expression input)
+    public static Value Calc(Expression input, VariableEnvironment env)
     {
         switch (input)
         {
@@ -22,31 +22,34 @@ public class CalcExpression
 
                     return new IntValue(n);
                 }
+            case VariableExpression(var name):
+                {
+                    return new IntValue(env[name]);
+                }
             case BoolExpression(var n):
                 {
                     return new BoolValue(n);
                 }
-            case ConstExpression(var name):
-                {
-                    return new IntValue(toInt(Calc(n)) + toInt(Calc(v)));
-
-                }
             case AddExpression(var n, var v):
                 {
-                    return new IntValue(toInt(Calc(n)) - toInt(Calc(v)));
+                    return new IntValue(toInt(Calc(n, env)) + toInt(Calc(v, env)));
                 }
             case SubExpression(var n, var v):
                 {
-                    return new IntValue(toInt(Calc(n)) * toInt(Calc(v)));
+                    return new IntValue(toInt(Calc(n, env)) - toInt(Calc(v, env)));
                 }
             case MulExpression(var n, var v):
                 {
-                    return new IntValue(toInt(Calc(n)) / toInt(Calc(v)));
+                    return new IntValue(toInt(Calc(n, env)) * toInt(Calc(v, env)));
                 }
-            case AstEqual(var n, var v):
+            case DivExpression(var n, var v):
                 {
-                    var calked_n = Calc(n);
-                    var calked_v = Calc(v);
+                    return new IntValue(toInt(Calc(n, env)) / toInt(Calc(v, env)));
+                }
+            case EqualExpression(var n, var v):
+                {
+                    var calked_n = Calc(n, env);
+                    var calked_v = Calc(v, env);
                     switch (calked_n, calked_v)
                     {
                         case (IntValue(var i), IntValue(var j)):

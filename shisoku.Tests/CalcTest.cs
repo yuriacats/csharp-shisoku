@@ -1,90 +1,89 @@
 namespace shisoku.Tests;
 using Xunit;
+using VariableEnvironment = System.Collections.Generic.Dictionary<string, int>;
 using shisoku;
 
 public class CalcTest
 {
     [Fact]
-    public void calcInputOnlyNumber()
+    public void calcInputOnlyNumberExpression()
     {
         var expectedValue = new IntValue(12);
-        var value = shisoku.CalcExpression.Calc(new AstNumber(12));
+        var value = shisoku.CalcExpression.Calc(new NumberExpression(12), new VariableEnvironment());
         Assert.Equal<Value>(expectedValue, value);
     }
     [Fact]
     public void calcInputAdd()
     {
         var expectedValue = new IntValue(12);
-        var value = shisoku.CalcExpression.Calc(new AstAdd(new AstNumber(5), new AstNumber(7)));
+        var value = shisoku.CalcExpression.Calc(new AddExpression(new NumberExpression(5), new NumberExpression(7)), new VariableEnvironment());
         Assert.Equal<Value>(expectedValue, value);
     }
     [Fact]
-    public void calcInputSub()
+    public void calcInputSubExpression()
     {
         var expectedValue = new IntValue(12);
-        var value = shisoku.CalcExpression.Calc(new AstSub(new AstNumber(19), new AstNumber(7)));
+        var value = shisoku.CalcExpression.Calc(new SubExpression(new NumberExpression(16), new NumberExpression(4)), new VariableEnvironment());
         Assert.Equal<Value>(expectedValue, value);
     }
     [Fact]
-    public void calcInputMul()
+    public void calcInputMulExpression()
     {
         var expectedValue = new IntValue(12);
-        var value = shisoku.CalcExpression.Calc(new AstMul(new AstNumber(3), new AstNumber(4)));
+        var value = shisoku.CalcExpression.Calc(new MulExpression(new NumberExpression(3), new NumberExpression(4)), new VariableEnvironment());
         Assert.Equal<Value>(expectedValue, value);
     }
     [Fact]
-    public void calcInputDiv()
+    public void calcInputDivExpression()
     {
         var expectedValue = new IntValue(12);
-        var value = shisoku.CalcExpression.Calc(new AstDiv(new AstNumber(24), new AstNumber(2)));
+        var value = shisoku.CalcExpression.Calc(new DivExpression(new NumberExpression(24), new NumberExpression(2)), new VariableEnvironment());
         Assert.Equal<Value>(expectedValue, value);
     }
     [Fact]
     public void calcInputEqual()
     {
         var expectedValue = new BoolValue(true);
-        var value = shisoku.CalcExpression.Calc(new AstEqual(new AstNumber(12), new AstNumber(12)));
+        var value = shisoku.CalcExpression.Calc(new EqualExpression(new NumberExpression(12), new NumberExpression(12)), new VariableEnvironment());
         Assert.Equal<Value>(expectedValue, value);
     }
     [Fact]
     public void calcInputEqualFailed()
     {
         var expectedValue = new BoolValue(false);
-        var value = shisoku.CalcExpression.Calc(new AstEqual(new AstNumber(11), new AstNumber(12)));
+        var value = shisoku.CalcExpression.Calc(new EqualExpression(new NumberExpression(11), new NumberExpression(12)), new VariableEnvironment());
         Assert.Equal<Value>(expectedValue, value);
     }
     [Fact]
     public void calcInputEqualBool()
     {
         var expectedValue = new BoolValue(true);
-        var value = shisoku.CalcExpression.Calc(new AstEqual(new BoolExpression(true), new BoolExpression(true)));
+        var value = shisoku.CalcExpression.Calc(new EqualExpression(new BoolExpression(true), new BoolExpression(true)), new VariableEnvironment());
         Assert.Equal<Value>(expectedValue, value);
     }
     [Fact]
     public void calcInputEqualOtherTypes()
     {
-        Assert.Throws<Exception>(() => shisoku.CalcExpression.Calc(new AstEqual(new BoolExpression(true), new AstNumber(12))));
+        Assert.Throws<Exception>(() => shisoku.CalcExpression.Calc(new EqualExpression(new BoolExpression(true), new NumberExpression(12)), new VariableEnvironment()));
     }
     [Fact]
     public void calcInputAddCannotBool()
     {
-        Assert.Throws<Exception>(() => shisoku.CalcExpression.Calc(new AstAdd(new BoolExpression(true), new BoolExpression(true))));
+        Assert.Throws<Exception>(() => shisoku.CalcExpression.Calc(new AddExpression(new BoolExpression(true), new BoolExpression(true)), new VariableEnvironment()));
     }
     [Fact]
     public void calcInputSubCannotBool()
     {
-        Assert.Throws<Exception>(() => shisoku.CalcExpression.Calc(new AstSub(new BoolExpression(true), new BoolExpression(true))));
+        Assert.Throws<Exception>(() => shisoku.CalcExpression.Calc(new SubExpression(new BoolExpression(true), new BoolExpression(true)), new VariableEnvironment()));
     }
     [Fact]
     public void calcInputMulCannotBool()
     {
-        Assert.Throws<Exception>(() => shisoku.CalcExpression.Calc(new AstMul(new BoolExpression(true), new BoolExpression(true))));
+        Assert.Throws<Exception>(() => shisoku.CalcExpression.Calc(new MulExpression(new BoolExpression(true), new BoolExpression(true)), new VariableEnvironment()));
     }
     [Fact]
     public void calcInputDivCannotBool()
     {
-        Assert.Throws<Exception>(() => shisoku.CalcExpression.Calc(new AstDiv(new BoolExpression(true), new BoolExpression(true))));
+        Assert.Throws<Exception>(() => shisoku.CalcExpression.Calc(new DivExpression(new BoolExpression(true), new BoolExpression(true)), new VariableEnvironment()));
     }
 }
-
-

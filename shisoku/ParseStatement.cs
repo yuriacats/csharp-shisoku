@@ -29,7 +29,7 @@ public class ParseStatement
 
         if (token is not [TokenSemicolon, ..])
         {
-            throw new Exception($"Token undefined: {token}");
+            throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', token)}");
         }
 
         return (statement, token[1..]);
@@ -46,6 +46,6 @@ public class ParseStatement
             (var expression, var rest) = ParseExpression.parse(rest_token);
             return (new AstConst(exprName, expression), rest);
         }
-        throw new Exception($"Token undefined: {tokens}");
+        throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', tokens)}");
     }
 }

@@ -31,11 +31,11 @@ function main() {
     run_test_case "複数の計算を出せる" "1-2;1;" "-1
 1"
     sum_exit_code=$((sum_exit_code + $?))
-    run_test_case "Boolianが扱える" "1==1;" True
+    run_test_case "Booleanが扱える" "1==1;" True
     sum_exit_code=$((sum_exit_code + $?))
-    run_test_case "Boolianが扱える(False)" "2==1;" False 
+    run_test_case "Booleanが扱える(False)" "2==1;" False 
     sum_exit_code=$((sum_exit_code + $?))
-    run_test_case "Boolianが扱える(bool同士)" "true==true;" True 
+    run_test_case "Booleanが扱える(bool同士)" "true==true;" True 
     sum_exit_code=$((sum_exit_code + $?))
 
     if [ ${sum_exit_code} == "0" ]; then

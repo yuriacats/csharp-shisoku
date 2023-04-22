@@ -58,7 +58,7 @@ public class ParseExpression
             {
                 case TokenEqualEqual:
                     var (eqRhs, eqRest) = parseNumOrSection(rest2);
-                    result = new AstEqual(result, eqRhs);
+                    result = new EqualExpression(result, eqRhs);
                     rest = eqRest;
                     break;
 
@@ -73,8 +73,6 @@ public class ParseExpression
         {
             case [TokenNumber(var num), .. var rest]:
                 return (new NumberExpression(num), rest);
-            case [TokenIdentifier(var name), .. var rest]:
-                return (new ConstExpression(name), rest);
             case [TokenBracketOpen, .. var target]:
                 (var inner_ast, var token_rest) = parseAddSub(target);
                 if (token_rest[0] is TokenBracketClose)
@@ -84,16 +82,18 @@ public class ParseExpression
                 else
                 {
                     input.ToList().ForEach(Console.WriteLine);
-                    throw new Exception($"Token undefined: {input}");
+                    throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
                 }
             case [TokenTrue, .. var rest]:
                 return (new BoolExpression(true), rest);
             case [TokenFalse, .. var rest]:
                 return (new BoolExpression(false), rest);
+            case [TokenIdentifier(var name), .. var rest]:
+                return (new VariableExpression(name), rest);
 
             default:
                 //input.ToList().ForEach(Console.WriteLine);
-                throw new Exception($"Token undefined: {input}");
+                throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
         }
 
     }
