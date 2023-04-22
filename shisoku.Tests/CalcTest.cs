@@ -55,10 +55,31 @@ public class CalcTest
         Assert.Equal<Value>(expectedValue, value);
     }
     [Fact]
-    public void calcInputEqualBool()
+    public void calcInputEqualTrue()
     {
         var expectedValue = new BoolValue(true);
         var value = shisoku.CalcExpression.Calc(new EqualExpression(new BoolExpression(true), new BoolExpression(true)), new VariableEnvironment());
+        Assert.Equal<Value>(expectedValue, value);
+    }
+    [Fact]
+    public void calcInputEqualFalse()
+    {
+        var expectedValue = new BoolValue(true);
+        var value = shisoku.CalcExpression.Calc(new EqualExpression(new BoolExpression(false), new BoolExpression(false)), new VariableEnvironment());
+        Assert.Equal<Value>(expectedValue, value);
+    }
+    [Fact]
+    public void calcInputEqualTrueFalse()
+    {
+        var expectedValue = new BoolValue(false);
+        var value = shisoku.CalcExpression.Calc(new EqualExpression(new BoolExpression(false), new BoolExpression(true)), new VariableEnvironment());
+        Assert.Equal<Value>(expectedValue, value);
+    }
+    [Fact]
+    public void calcInputEqualFalseTrue()
+    {
+        var expectedValue = new BoolValue(false);
+        var value = shisoku.CalcExpression.Calc(new EqualExpression(new BoolExpression(true), new BoolExpression(false)), new VariableEnvironment());
         Assert.Equal<Value>(expectedValue, value);
     }
     [Fact]
