@@ -2,37 +2,66 @@ namespace shisoku;
 
 public class CalcExpression
 {
-    public static int toInt(Expression input, VariableEnvironment env)
+    public static int toInt(Value input)
     {
         switch (input)
         {
-            case NumberExpression(var n):
+            case IntValue(var n):
+                return n;
+            default:
+                throw new Exception($"Evaluation Error:augment type is not int({input})");
+        }
+    }
+
+    public static Value Calc(Expression input, VariableEnvironment env)
+    {
+        switch (input)
+        {
+            case NumberExpression(var value):
                 {
 
-                    return n;
+                    return new IntValue(value);
                 }
-            case ConstExpression(var name):
+            case VariableExpression(var name):
                 {
-                    return env[name];
+                    return new IntValue(env[name]);
                 }
-            case AddExpression(var n, var v):
+            case BoolExpression(var value):
                 {
-                    return toInt(n, env) + toInt(v, env);
+                    return new BoolValue(value);
                 }
-            case SubExpression(var n, var v):
+            case AddExpression(var lhs, var rhs):
                 {
-                    return toInt(n, env) - toInt(v, env);
+                    return new IntValue(toInt(Calc(lhs, env)) + toInt(Calc(rhs, env)));
                 }
-            case MulExpression(var n, var v):
+            case SubExpression(var lhs, var rhs):
                 {
-                    return toInt(n, env) * toInt(v, env);
+                    return new IntValue(toInt(Calc(lhs, env)) - toInt(Calc(rhs, env)));
                 }
-            case DivExpression(var n, var v):
+            case MulExpression(var lhs, var rhs):
                 {
-                    return toInt(n, env) / toInt(v, env);
+                    return new IntValue(toInt(Calc(lhs, env)) * toInt(Calc(rhs, env)));
+                }
+            case DivExpression(var lhs, var rhs):
+                {
+                    return new IntValue(toInt(Calc(lhs, env)) / toInt(Calc(rhs, env)));
+                }
+            case EqualExpression(var lhs, var rhs):
+                {
+                    var valueOfLhs = Calc(lhs, env);
+                    var valueOfRhs = Calc(rhs, env);
+                    switch (valueOfLhs, valueOfRhs)
+                    {
+                        case (IntValue, IntValue):
+                            return new BoolValue(valueOfLhs == valueOfRhs);
+                        case (BoolValue, BoolValue):
+                            return new BoolValue(valueOfLhs == valueOfRhs);
+                        default:
+                            throw new Exception($"Evaluation Error:Argment types differ.({lhs.ToString},{rhs.ToString})");
+                    }
                 }
             default:
-                throw new Exception("AST parse Error");
+                throw new Exception($"Evaluation Error:{input}");
         }
 
     }

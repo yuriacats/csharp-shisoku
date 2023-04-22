@@ -1,6 +1,7 @@
 namespace shisoku.Tests;
 using Xunit;
 using shisoku;
+//TODO Lexerのテストの命名を全体的に変更する
 public class LexerTest
 {
     [Fact]
@@ -138,6 +139,40 @@ public class LexerTest
             new TokenIdentifier("constA")
          };
         var tokens = shisoku.Lexer.lex("var constA");
+        Assert.Equal<Token>(expectedToken, tokens);
+    }
+    [Fact]
+    public void lexInputTrue()
+    {
+        var expectedToken = new List<Token> {
+            new TokenVariable(),
+            new TokenIdentifier("constA"),
+            new TokenTrue()
+         };
+        var tokens = shisoku.Lexer.lex("var constA true");
+        Assert.Equal<Token>(expectedToken, tokens);
+    }
+    [Fact]
+    public void lexInputFalse()
+    {
+        var expectedToken = new List<Token> {
+            new TokenVariable(),
+            new TokenIdentifier("constA"),
+            new TokenFalse()
+         };
+        var tokens = shisoku.Lexer.lex("var constA false");
+        Assert.Equal<Token>(expectedToken, tokens);
+    }
+    [Fact]
+    public void lexInputEqualEqual()
+    {
+        var expectedToken = new List<Token> {
+            new TokenTrue(),
+            new TokenEqualEqual(),
+            new TokenTrue()
+
+         };
+        var tokens = shisoku.Lexer.lex("true == true");
         Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]

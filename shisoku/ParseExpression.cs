@@ -4,9 +4,26 @@ public class ParseExpression
 {
     public static (Expression, shisoku.Token[]) parse(shisoku.Token[] input)
     {
-        return parseAddSub(input);
+        return parseComparator(input);
     }
     //TODO PublicクラスになってるのをPrivateにする
+    public static (Expression, shisoku.Token[]) parseComparator(shisoku.Token[] input)
+    {
+        (var result, var rest) = parseAddSub(input);
+        while (rest is [TokenEqualEqual, .. var rest2])
+        {
+            switch (rest[0])
+            {
+                case TokenEqualEqual:
+                    var (eqRhs, eqRest) = parseAddSub(rest2);
+                    result = new EqualExpression(result, eqRhs);
+                    rest = eqRest;
+                    break;
+            }
+        }
+        return (result, rest);
+
+    }
     public static (Expression, shisoku.Token[]) parseAddSub(shisoku.Token[] input)
     {
         (var result, var rest) = parseMulDiv(input);
@@ -49,16 +66,15 @@ public class ParseExpression
         }
         return (result, rest);
     }
+
     public static (Expression, shisoku.Token[]) parseNumOrSection(shisoku.Token[] input)
     {
         switch (input)
         {
             case [TokenNumber(var num), .. var rest]:
                 return (new NumberExpression(num), rest);
-            case [TokenIdentifier(var name), .. var rest]:
-                return (new ConstExpression(name), rest);
             case [TokenBracketOpen, .. var target]:
-                (var inner_ast, var token_rest) = parseAddSub(target);
+                (var inner_ast, var token_rest) = parseComparator(target);
                 if (token_rest[0] is TokenBracketClose)
                 {
                     return (inner_ast, token_rest[1..]);
@@ -66,11 +82,18 @@ public class ParseExpression
                 else
                 {
                     input.ToList().ForEach(Console.WriteLine);
-                    throw new Exception($"Token undefined: {input}");
+                    throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
                 }
+            case [TokenTrue, .. var rest]:
+                return (new BoolExpression(true), rest);
+            case [TokenFalse, .. var rest]:
+                return (new BoolExpression(false), rest);
+            case [TokenIdentifier(var name), .. var rest]:
+                return (new VariableExpression(name), rest);
+
             default:
                 //input.ToList().ForEach(Console.WriteLine);
-                throw new Exception($"Token undefined: {input}");
+                throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
         }
 
     }

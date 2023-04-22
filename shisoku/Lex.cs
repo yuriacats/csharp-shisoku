@@ -37,8 +37,17 @@ public class Lexer
             }
             else if (input[0] == '=')
             {
-                tokens.Add(new TokenEqual());
-                input = input[(1)..];
+                if (input.Length >= 2 && input[1] == '=')
+                {
+                    tokens.Add(new TokenEqualEqual());
+                    input = input[(2)..];
+                }
+                else
+                {
+
+                    tokens.Add(new TokenEqual());
+                    input = input[(1)..];
+                }
 
             }
             else if (input[0] == ';')
@@ -136,6 +145,10 @@ public class Lexer
                 return (new TokenConst(), targetWord.Length);
             case "var":
                 return (new TokenVariable(), targetWord.Length);
+            case "true":
+                return (new TokenTrue(), targetWord.Length);
+            case "false":
+                return (new TokenFalse(), targetWord.Length);
             default:
                 return (new TokenIdentifier(targetWord), targetWord.Length);
         }

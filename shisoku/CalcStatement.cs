@@ -10,10 +10,10 @@ public class CalcStatement
             switch (statement)
             {
                 case AstExpression(var expr):
-                    Console.WriteLine(CalcExpression.toInt(expr, env));
+                    Console.WriteLine(CalcExpression.Calc(expr, env));
                     break;
                 case AstConst(var name, var expr):
-                    env.Add(name, CalcExpression.toInt(expr, env));
+                    env.Add(name, CalcExpression.toInt(CalcExpression.Calc(expr, env)));
                     break;
                 default:
                     throw new Exception("AST parse Error");
