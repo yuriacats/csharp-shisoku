@@ -4,9 +4,26 @@ public class ParseExpression
 {
     public static (Expression, shisoku.Token[]) parse(shisoku.Token[] input)
     {
-        return parseAddSub(input);
+        return parseComparator(input);
     }
     //TODO PublicクラスになってるのをPrivateにする
+    public static (Expression, shisoku.Token[]) parseComparator(shisoku.Token[] input)
+    {
+        (var result, var rest) = parseAddSub(input);
+        while (rest is [TokenEqualEqual, .. var rest2])
+        {
+            switch (rest[0])
+            {
+                case TokenEqualEqual:
+                    var (eqRhs, eqRest) = parseAddSub(rest2);
+                    result = new EqualExpression(result, eqRhs);
+                    rest = eqRest;
+                    break;
+            }
+        }
+        return (result, rest);
+
+    }
     public static (Expression, shisoku.Token[]) parseAddSub(shisoku.Token[] input)
     {
         (var result, var rest) = parseMulDiv(input);
@@ -30,18 +47,18 @@ public class ParseExpression
     }
     public static (Expression, shisoku.Token[]) parseMulDiv(shisoku.Token[] input)
     {
-        (var result, var rest) = parseEqual(input);
-        while (rest is [TokenSlash or TokenAsterisk or TokenEqualEqual, .. var rest2])
+        (var result, var rest) = parseNumOrSection(input);
+        while (rest is [TokenSlash or TokenAsterisk, .. var rest2])
         {
             switch (rest[0])
             {
                 case TokenAsterisk:
-                    var (malRhs, malRest) = parseEqual(rest2);
+                    var (malRhs, malRest) = parseNumOrSection(rest2);
                     result = new MulExpression(result, malRhs);
                     rest = malRest;
                     break;
                 case TokenSlash:
-                    var (divRhs, divRest) = parseEqual(rest2);
+                    var (divRhs, divRest) = parseNumOrSection(rest2);
                     result = new DivExpression(result, divRhs);
                     rest = divRest;
                     break;
@@ -49,24 +66,7 @@ public class ParseExpression
         }
         return (result, rest);
     }
-    public static (Expression, shisoku.Token[]) parseEqual(shisoku.Token[] input)
-    {
-        (var result, var rest) = parseNumOrSection(input);
-        while (rest is [TokenEqualEqual, .. var rest2])
-        {
-            switch (rest[0])
-            {
-                case TokenEqualEqual:
-                    var (eqRhs, eqRest) = parseNumOrSection(rest2);
-                    result = new EqualExpression(result, eqRhs);
-                    rest = eqRest;
-                    break;
 
-            }
-        }
-        return (result, rest);
-
-    }
     public static (Expression, shisoku.Token[]) parseNumOrSection(shisoku.Token[] input)
     {
         switch (input)
@@ -74,7 +74,7 @@ public class ParseExpression
             case [TokenNumber(var num), .. var rest]:
                 return (new NumberExpression(num), rest);
             case [TokenBracketOpen, .. var target]:
-                (var inner_ast, var token_rest) = parseAddSub(target);
+                (var inner_ast, var token_rest) = parseComparator(target);
                 if (token_rest[0] is TokenBracketClose)
                 {
                     return (inner_ast, token_rest[1..]);
