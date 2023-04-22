@@ -9,7 +9,7 @@ public class CalcExpression
             case IntValue(var n):
                 return n;
             default:
-                throw new Exception("AST parse Error");
+                throw new Exception($"Evaluation Error:augment type is not int({input})");
         }
     }
 
