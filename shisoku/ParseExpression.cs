@@ -84,6 +84,19 @@ public class ParseExpression
                     input.ToList().ForEach(Console.WriteLine);
                     throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
                 }
+            case [TokenCurlyBracketOpen, TokenPipe, .. var target]:
+                (var argumentName, var bodyTokens) = argumentPaser(target);
+                (var body, var token_rest) = ParseStatement.parse(bodyTokens);
+                if (token_rest[0] is TokenCurlyBracketClose)
+                {
+                    return (new FunctionExpression(argumentName, body), token_rest[1..]);
+                }
+                else
+                {
+                    input.ToList().ForEach(Console.WriteLine);
+                    throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
+
+                }
             case [TokenTrue, .. var rest]:
                 return (new BoolExpression(true), rest);
             case [TokenFalse, .. var rest]:
@@ -96,6 +109,31 @@ public class ParseExpression
                 throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
         }
 
+    }
+
+    static (List<string>, shisoku.Token[]) argumentPaser(shisoku[Token] input)
+    {
+        var target = input;
+        var result = new List<string>();
+        while (target is [TokenArrow, .. var body])
+        {
+            switch (target[0])
+            {
+                case [TokenIdentifier(var name), .. var rest]:
+                    result.Append(name);
+                    target = rest;
+                    break;
+                case [TokenPipe, .. var rest]:
+                    target = rest;
+                    break;
+                case [TokenColon, .. var rest]:
+                    target = rest;
+                    break;
+                default:
+                    throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
+            }
+        }
+        return (result, body);
     }
     static string ViewToken(Token token)
     {
