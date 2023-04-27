@@ -9,7 +9,7 @@ public record SubExpression(Expression left, Expression right) : Expression;
 public record MulExpression(Expression left, Expression right) : Expression;
 public record DivExpression(Expression left, Expression right) : Expression;
 public record EqualExpression(Expression left, Expression right) : Expression;
-public record FunctionExpression(List<String> arguments, List<Statement> body) : Expression;
+public record FunctionExpression(List<String> arguments, Statement[] body) : Expression;
 // TODO 型の実装が終わったらFunctionの定義もそれに合わせて変更する。
 
 

@@ -86,10 +86,10 @@ public class ParseExpression
                 }
             case [TokenCurlyBracketOpen, TokenPipe, .. var target]:
                 (var argumentName, var bodyTokens) = argumentPaser(target);
-                (var body, var token_rest) = ParseStatement.parse(bodyTokens);
-                if (token_rest[0] is TokenCurlyBracketClose)
+                (var body, var otherTokens) = ParseStatement.parse(bodyTokens);
+                if (otherTokens[0] is TokenCurlyBracketClose)
                 {
-                    return (new FunctionExpression(argumentName, body), token_rest[1..]);
+                    return (new FunctionExpression(argumentName, body), otherTokens[1..]);
                 }
                 else
                 {
@@ -111,13 +111,13 @@ public class ParseExpression
 
     }
 
-    static (List<string>, shisoku.Token[]) argumentPaser(shisoku[Token] input)
+    static (List<string>, shisoku.Token[]) argumentPaser(shisoku.Token[] input)
     {
         var target = input;
         var result = new List<string>();
-        while (target is [TokenArrow, .. var body])
+        while (target is not [])
         {
-            switch (target[0])
+            switch (target)
             {
                 case [TokenIdentifier(var name), .. var rest]:
                     result.Append(name);
@@ -129,11 +129,13 @@ public class ParseExpression
                 case [TokenColon, .. var rest]:
                     target = rest;
                     break;
+                case [TokenArrow, .. var body]:
+                    return (result, body);
                 default:
                     throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
             }
         }
-        return (result, body);
+        throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
     }
     static string ViewToken(Token token)
     {
