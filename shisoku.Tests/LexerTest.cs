@@ -213,6 +213,7 @@ public class LexerTest
             new TokenNumber(12)
          };
         var tokens = shisoku.Lexer.lex("12\n+\n12");
+        Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
     public void TokenizedIgnoringNewLineAndTab()
@@ -223,6 +224,7 @@ public class LexerTest
             new TokenNumber(12)
          };
         var tokens = shisoku.Lexer.lex("12\n\t+\n\t12");
+        Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
     public void SemicolonCanBeTokernized()
@@ -234,6 +236,7 @@ public class LexerTest
             new TokenSemicolon(),
          };
         var tokens = shisoku.Lexer.lex("12+12;");
+        Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
     public void CommaCanBeTokernized()
@@ -245,6 +248,7 @@ public class LexerTest
             new TokenComma(),
          };
         var tokens = shisoku.Lexer.lex("12+12,");
+        Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
     public void PipeCanBeTokenized()
@@ -256,6 +260,7 @@ public class LexerTest
             new TokenPipe(),
          };
         var tokens = shisoku.Lexer.lex("12+12|");
+        Assert.Equal<Token>(expectedToken, tokens);
         //TODO Pipeを使う構文ができたら、テストを改変する
     }
     [Fact]
@@ -268,6 +273,7 @@ public class LexerTest
             new TokenColon(),
          };
         var tokens = shisoku.Lexer.lex("12+12:");
+        Assert.Equal<Token>(expectedToken, tokens);
         //TODO Colonを使う構文ができたら、テストを改変する
     }
     [Fact]
@@ -280,6 +286,7 @@ public class LexerTest
             new TokenArrow(),
          };
         var tokens = shisoku.Lexer.lex("12+12->");
+        Assert.Equal<Token>(expectedToken, tokens);
         //TODO Arrowを使う構文ができたら、テストを改変する
     }
     [Fact]
@@ -294,6 +301,7 @@ public class LexerTest
             new TokenBracketClose(),
          };
         var tokens = shisoku.Lexer.lex("12+12{12}");
+        Assert.Equal<Token>(expectedToken, tokens);
         //TODO Bracketを使う構文ができたら、テストを改変する
     }
     [Fact]
@@ -308,6 +316,7 @@ public class LexerTest
             new TokenCurlyBracketClose(),
          };
         var tokens = shisoku.Lexer.lex("12+12{12}");
+        Assert.Equal<Token>(expectedToken, tokens);
         //TODO Bracketを使う構文ができたら、テストを改変する
     }
     [Fact]
@@ -318,5 +327,21 @@ public class LexerTest
             new TokenQuestion(),
         };
         var tokens = shisoku.Lexer.lex("12?");
+        Assert.Equal<Token>(expectedToken, tokens);
+    }
+    [Fact]
+    public void returnCanBeTokenized()
+    {
+        // Given
+        var expectedToken = new List<Token>{
+            new TokenReturn(),
+            new TokenNumber(12),
+        };
+
+        // When
+        var tokens = shisoku.Lexer.lex("return 12");
+        Assert.Equal<Token>(expectedToken, tokens);
+
+        // Then
     }
 }
