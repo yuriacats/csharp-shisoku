@@ -300,7 +300,7 @@ public class LexerTest
             new TokenNumber(12),
             new TokenBracketClose(),
          };
-        var tokens = shisoku.Lexer.lex("12+12{12}");
+        var tokens = shisoku.Lexer.lex("12+12(12)");
         Assert.Equal<Token>(expectedToken, tokens);
         //TODO Bracketを使う構文ができたら、テストを改変する
     }
