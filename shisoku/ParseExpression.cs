@@ -138,21 +138,4 @@ public class ParseExpression
         }
         throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
     }
-    static string ViewToken(Token token)
-    {
-        return token switch
-        {
-            TokenNumber(var n) => n.ToString(),
-            TokenPlus => "+",
-            TokenMinus => "-",
-            TokenAsterisk => "*",
-            TokenSlash => "/",
-            TokenBracketOpen => "(",
-            TokenBracketClose => ")",
-            _ => throw new Exception("Token is not found")
-        };
-    }
-
-    static string ViewTokens(Token[] tokens) =>
-        string.Join("", tokens.Select(ViewToken));
 }
