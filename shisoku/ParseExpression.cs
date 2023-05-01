@@ -81,22 +81,24 @@ public class ParseExpression
                 }
                 else
                 {
-                    input.ToList().ForEach(Console.WriteLine);
                     throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
                 }
             case [TokenCurlyBracketOpen, TokenPipe, .. var target]:
                 (var argumentName, var bodyTokens) = argumentPaser(target);
-                (var body, var otherTokens) = ParseStatement.parse(bodyTokens);
-                if (otherTokens[0] is TokenCurlyBracketClose)
+                var bodyRest = new Token[] { };
+                var bodys = new Statement[] { };
+                while (true)
                 {
-                    return (new FunctionExpression(argumentName, body), otherTokens[1..]);
-                }
-                else
-                {
-                    input.ToList().ForEach(Console.WriteLine);
-                    throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
+                    (var body, var otherTokens) = ParseStatement.parseStatement(bodyTokens);
+                    bodyRest = otherTokens;
+                    bodys = bodys.Append(body).ToArray();
 
+                    if (bodyRest[0] is TokenCurlyBracketClose)
+                    {
+                        return (new FunctionExpression(argumentName, bodys), otherTokens.Length > 2 ? otherTokens[1..] : new Token[] { });
+                    }
                 }
+                throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
             case [TokenTrue, .. var rest]:
                 return (new BoolExpression(true), rest);
             case [TokenFalse, .. var rest]:
@@ -105,7 +107,6 @@ public class ParseExpression
                 return (new VariableExpression(name), rest);
 
             default:
-                //input.ToList().ForEach(Console.WriteLine);
                 throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
         }
 
