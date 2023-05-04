@@ -17,7 +17,7 @@ public class ParseStatement
         return (statements, tokens);
     }
 
-    private static (Statement, Token[]) parseStatement(Token[] tokens)
+    public static (Statement, Token[]) parseStatement(Token[] tokens)
     {
 
         var (statement, token) = tokens switch

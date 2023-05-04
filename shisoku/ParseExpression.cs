@@ -81,9 +81,24 @@ public class ParseExpression
                 }
                 else
                 {
-                    input.ToList().ForEach(Console.WriteLine);
                     throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
                 }
+            case [TokenCurlyBracketOpen, TokenPipe, .. var target]:
+                (var argumentName, var bodyTokens) = argumentPaser(target);
+                var bodyRest = new Token[] { };
+                var bodys = new Statement[] { };
+                while (true)
+                {
+                    (var body, var otherTokens) = ParseStatement.parseStatement(bodyTokens);
+                    bodyRest = otherTokens;
+                    bodys = bodys.Append(body).ToArray();
+
+                    if (bodyRest[0] is TokenCurlyBracketClose)
+                    {
+                        return (new FunctionExpression(argumentName, bodys),  otherTokens[1..]);
+                    }
+                }
+                throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
             case [TokenTrue, .. var rest]:
                 return (new BoolExpression(true), rest);
             case [TokenFalse, .. var rest]:
@@ -92,26 +107,36 @@ public class ParseExpression
                 return (new VariableExpression(name), rest);
 
             default:
-                //input.ToList().ForEach(Console.WriteLine);
                 throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
         }
 
     }
-    static string ViewToken(Token token)
-    {
-        return token switch
-        {
-            TokenNumber(var n) => n.ToString(),
-            TokenPlus => "+",
-            TokenMinus => "-",
-            TokenAsterisk => "*",
-            TokenSlash => "/",
-            TokenBracketOpen => "(",
-            TokenBracketClose => ")",
-            _ => throw new Exception("Token is not found")
-        };
-    }
 
-    static string ViewTokens(Token[] tokens) =>
-        string.Join("", tokens.Select(ViewToken));
+    static (List<string>, shisoku.Token[]) argumentPaser(shisoku.Token[] input)
+    {
+        var target = input;
+        var result = new List<string>();
+        while (target is not [])
+        {
+            switch (target)
+            {
+                case [TokenIdentifier(var name), .. var rest]:
+                    result.Add(name);
+                    target = rest;
+
+                    continue;
+                case [TokenPipe, .. var rest]:
+                    target = rest;
+                    continue;
+                case [TokenComma, .. var rest]:
+                    target = rest;
+                    continue;
+                case [TokenArrow, .. var body]:
+                    return (result, body);
+                default:
+                    throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
+            }
+        }
+        throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
+    }
 }
