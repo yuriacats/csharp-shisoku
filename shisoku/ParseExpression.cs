@@ -121,15 +121,16 @@ public class ParseExpression
             switch (target)
             {
                 case [TokenIdentifier(var name), .. var rest]:
-                    result.Append(name);
+                    result.Add(name);
                     target = rest;
-                    break;
+
+                    continue;
                 case [TokenPipe, .. var rest]:
                     target = rest;
-                    break;
-                case [TokenColon, .. var rest]:
+                    continue;
+                case [TokenComma, .. var rest]:
                     target = rest;
-                    break;
+                    continue;
                 case [TokenArrow, .. var body]:
                     return (result, body);
                 default:

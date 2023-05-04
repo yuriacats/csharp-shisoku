@@ -215,5 +215,43 @@ public class ParserTest
         };
         Assert.Throws<Exception>(() => ParseExpression.parse(inputToken.ToArray()));
     }
+    [Fact]
+    public void towArgumentsCanParse()
+    {
+        var inputToken = new List<Token>{
+                new TokenCurlyBracketOpen(),
+                new TokenPipe(),
+                new TokenIdentifier("hoge"),
+                new TokenComma(),
+                new TokenIdentifier("huga"),
+                new TokenPipe(),
+                new TokenArrow(),
+                new TokenConst(),
+                new TokenIdentifier("test"),
+                new TokenEqual(),
+                new TokenNumber(12),
+                new TokenSemicolon(),
+                new TokenCurlyBracketClose()
+            };
+        var expectedArguments = new List<String>();
+        expectedArguments.Add("hoge");
+        expectedArguments.Add("huga");
+        var expectedAst = new FunctionExpression(expectedArguments, new Statement[]{
+                new AstConst("test", new NumberExpression(12))
+            });
+        (var result, _) = ParseExpression.parse(inputToken.ToArray());
+        switch (result)
+        {
+            case FunctionExpression(var arguments, var body):
+                Console.WriteLine(String.Join<Statement>(',', body));
+                Assert.Equal(expectedAst.body, body);
+                Assert.Equal(expectedAst.arguments, arguments);
+                break;
+
+            default:
+                Assert.Fail("result is not make FunctionExpression");
+                break;
+        }
+    }
 }
 
