@@ -95,7 +95,7 @@ public class ParseExpression
 
                     if (bodyRest[0] is TokenCurlyBracketClose)
                     {
-                        return (new FunctionExpression(argumentName, bodys), otherTokens.Length > 2 ? otherTokens[1..] : new Token[] { });
+                        return (new FunctionExpression(argumentName, bodys),  otherTokens[1..]);
                     }
                 }
                 throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
