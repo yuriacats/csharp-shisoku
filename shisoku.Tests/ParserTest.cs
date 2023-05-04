@@ -216,15 +216,15 @@ public class ParserTest
         Assert.Throws<Exception>(() => ParseExpression.parse(inputToken.ToArray()));
     }
     [Fact]
-    public void towArgumentsCanParse()
+    public void twoArgumentsCanParse()
     {
         var inputToken = new List<Token>{
                 new TokenCurlyBracketOpen(),
                 new TokenPipe(),
+                new TokenComma(),
                 new TokenIdentifier("hoge"),
                 new TokenComma(),
                 new TokenIdentifier("huga"),
-                new TokenPipe(),
                 new TokenArrow(),
                 new TokenConst(),
                 new TokenIdentifier("test"),
