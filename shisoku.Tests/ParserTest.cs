@@ -204,4 +204,16 @@ public class ParserTest
                 break;
         }
     }
+    [Fact]
+    public void CanNotParseFunction()
+    {
+        var inputToken = new List<Token>{
+            new TokenCurlyBracketOpen(),
+            new TokenPipe(),
+            new TokenPipe(),
+            new TokenArrow(),
+        };
+        Assert.Throws<Exception>(() => ParseExpression.parse(inputToken.ToArray()));
+    }
 }
+
