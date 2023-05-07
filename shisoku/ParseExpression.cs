@@ -8,17 +8,31 @@ public class ParseExpression
     }
     static (Expression, shisoku.Token[]) parseCall(shisoku.Token[] input)
     {
-        switch (input)
+        (var result, var restWithBracket) = parseComparator(input);
+        while (restWithBracket is [TokenBracketOpen, .. var rest])
         {
-            case [TokenBracketOpen, .. var rest]:
-                return parseComparator(rest);
-
-            default:
-                return parseComparator(input);
+            var arguments = new Expression[] { };
+            while (rest[0] is not TokenBracketClose)
+            {
+                (var argument, var otherTokens) = parse(rest);
+                switch (otherTokens[0])
+                {
+                    case TokenComma:
+                        rest = otherTokens[1..];
+                        break;
+                    case TokenBracketClose:
+                        rest = otherTokens;
+                        break;
+                    default:
+                        throw new Exception("関数の引数の区切りが不正です。");
+                }
+                arguments = arguments.Append(argument).ToArray();
+                rest = otherTokens;
+            }
+            result = new CallExpression(arguments, result);
         }
-
+        return (result, restWithBracket);
     }
-    //TODO PublicクラスになってるのをPrivateにする
     static (Expression, shisoku.Token[]) parseComparator(shisoku.Token[] input)
     {
         (var result, var rest) = parseAddSub(input);
@@ -115,15 +129,6 @@ public class ParseExpression
                 return (new BoolExpression(true), rest);
             case [TokenFalse, .. var rest]:
                 return (new BoolExpression(false), rest);
-            case [TokenIdentifier(var name), TokenBracketOpen, .. var rest]:
-                var arguments = new Expression[] { };
-                while (rest[0] is not TokenBracketClose)
-                {
-                    (var argument, var otherTokens) = parseComparator(rest);
-                    arguments = arguments.Append(argument).ToArray();
-                    rest = otherTokens;
-                }
-                return (new CallExpression(arguments, new VariableExpression(name)), rest);
             case [TokenIdentifier(var name), .. var rest]:
                 return (new VariableExpression(name), rest);
 
