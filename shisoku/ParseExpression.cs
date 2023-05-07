@@ -4,34 +4,34 @@ public class ParseExpression
 {
     public static (Expression, shisoku.Token[]) parse(shisoku.Token[] input)
     {
-        return parseComparator(input);
+        return parseCall(input);
     }
     static (Expression, shisoku.Token[]) parseCall(shisoku.Token[] input)
     {
-        (var result, var restWithBracket) = parseComparator(input);
-        while (restWithBracket is [TokenBracketOpen, .. var rest])
+        (var result, var rest) = parseComparator(input);
+        while (rest is [TokenBracketOpen, .. var innerRest])
         {
             var arguments = new Expression[] { };
-            while (rest[0] is not TokenBracketClose)
+            while (innerRest[0] is not TokenBracketClose)
             {
-                (var argument, var otherTokens) = parse(rest);
+                (var argument, var otherTokens) = parse(innerRest);
                 switch (otherTokens[0])
                 {
                     case TokenComma:
-                        rest = otherTokens[1..];
+                        innerRest = otherTokens[1..];
                         break;
                     case TokenBracketClose:
-                        rest = otherTokens;
+                        innerRest = otherTokens;
                         break;
                     default:
                         throw new Exception("関数の引数の区切りが不正です。");
                 }
                 arguments = arguments.Append(argument).ToArray();
-                rest = otherTokens;
             }
             result = new CallExpression(arguments, result);
+            rest = innerRest;
         }
-        return (result, restWithBracket);
+        return (result, rest);
     }
     static (Expression, shisoku.Token[]) parseComparator(shisoku.Token[] input)
     {
