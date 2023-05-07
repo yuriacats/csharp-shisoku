@@ -196,7 +196,7 @@ public class ParserTest
             case FunctionExpression(var arguments, var body):
                 Console.WriteLine(String.Join<Statement>(',', body));
                 Assert.Equal(expectedAst.body, body);
-                Assert.Equal(expectedAst.arguments, arguments);
+                Assert.Equal(expectedAst.argumentNames, arguments);
                 break;
 
             default:
@@ -245,7 +245,7 @@ public class ParserTest
             case FunctionExpression(var arguments, var body):
                 Console.WriteLine(String.Join<Statement>(',', body));
                 Assert.Equal(expectedAst.body, body);
-                Assert.Equal(expectedAst.arguments, arguments);
+                Assert.Equal(expectedAst.argumentNames, arguments);
                 break;
 
             default:

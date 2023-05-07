@@ -6,8 +6,20 @@ public class ParseExpression
     {
         return parseComparator(input);
     }
+    static (Expression, shisoku.Token[]) parseCall(shisoku.Token[] input)
+    {
+        switch (input)
+        {
+            case [TokenBracketOpen, .. var rest]:
+                return parseComparator(rest);
+
+            default:
+                return parseComparator(input);
+        }
+
+    }
     //TODO PublicクラスになってるのをPrivateにする
-    public static (Expression, shisoku.Token[]) parseComparator(shisoku.Token[] input)
+    static (Expression, shisoku.Token[]) parseComparator(shisoku.Token[] input)
     {
         (var result, var rest) = parseAddSub(input);
         while (rest is [TokenEqualEqual, .. var rest2])
@@ -24,7 +36,7 @@ public class ParseExpression
         return (result, rest);
 
     }
-    public static (Expression, shisoku.Token[]) parseAddSub(shisoku.Token[] input)
+    static (Expression, shisoku.Token[]) parseAddSub(shisoku.Token[] input)
     {
         (var result, var rest) = parseMulDiv(input);
         while (rest is [TokenPlus or TokenMinus, .. var rest2])
@@ -45,7 +57,7 @@ public class ParseExpression
         }
         return (result, rest);
     }
-    public static (Expression, shisoku.Token[]) parseMulDiv(shisoku.Token[] input)
+    static (Expression, shisoku.Token[]) parseMulDiv(shisoku.Token[] input)
     {
         (var result, var rest) = parseNumOrSection(input);
         while (rest is [TokenSlash or TokenAsterisk, .. var rest2])
@@ -67,7 +79,7 @@ public class ParseExpression
         return (result, rest);
     }
 
-    public static (Expression, shisoku.Token[]) parseNumOrSection(shisoku.Token[] input)
+    static (Expression, shisoku.Token[]) parseNumOrSection(shisoku.Token[] input)
     {
         switch (input)
         {
@@ -95,7 +107,7 @@ public class ParseExpression
 
                     if (bodyRest[0] is TokenCurlyBracketClose)
                     {
-                        return (new FunctionExpression(argumentName, bodys),  otherTokens[1..]);
+                        return (new FunctionExpression(argumentName, bodys), otherTokens[1..]);
                     }
                 }
                 throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
@@ -103,6 +115,15 @@ public class ParseExpression
                 return (new BoolExpression(true), rest);
             case [TokenFalse, .. var rest]:
                 return (new BoolExpression(false), rest);
+            case [TokenIdentifier(var name), TokenBracketOpen, .. var rest]:
+                var arguments = new Expression[] { };
+                while (rest[0] is not TokenBracketClose)
+                {
+                    (var argument, var otherTokens) = parseComparator(rest);
+                    arguments = arguments.Append(argument).ToArray();
+                    rest = otherTokens;
+                }
+                return (new CallExpression(arguments, new VariableExpression(name)), rest);
             case [TokenIdentifier(var name), .. var rest]:
                 return (new VariableExpression(name), rest);
 
