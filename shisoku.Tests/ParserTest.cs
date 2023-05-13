@@ -194,9 +194,8 @@ public class ParserTest
         switch (result)
         {
             case FunctionExpression(var arguments, var body):
-                Console.WriteLine(String.Join<Statement>(',', body));
                 Assert.Equal(expectedAst.body, body);
-                Assert.Equal(expectedAst.arguments, arguments);
+                Assert.Equal(expectedAst.argumentNames, arguments);
                 break;
 
             default:
@@ -243,15 +242,38 @@ public class ParserTest
         switch (result)
         {
             case FunctionExpression(var arguments, var body):
-                Console.WriteLine(String.Join<Statement>(',', body));
                 Assert.Equal(expectedAst.body, body);
-                Assert.Equal(expectedAst.arguments, arguments);
+                Assert.Equal(expectedAst.argumentNames, arguments);
                 break;
 
             default:
                 Assert.Fail("result is not make FunctionExpression");
                 break;
         }
+    }
+    [Fact]
+    public void functionExecuteCanParse()
+    {
+        var inputToken = new List<Token>{
+                new TokenIdentifier("hoge"),
+                new TokenBracketOpen(),
+                new TokenBracketClose()
+            };
+        var expectedAst = new CallExpression(new Expression[] { }, new VariableExpression("hoge"));
+        (var result, _) = ParseExpression.parse(inputToken.ToArray());
+        Console.WriteLine(result);
+        switch (result)
+        {
+            case CallExpression(var arguments, var body):
+                Assert.Equal(expectedAst.arguments, arguments);
+                Assert.Equal(expectedAst.functionBody, body);
+                break;
+
+            default:
+                Assert.Fail("result is not make CallExpression");
+                break;
+        }
+
     }
 }
 

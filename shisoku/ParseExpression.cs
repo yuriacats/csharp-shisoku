@@ -4,10 +4,36 @@ public class ParseExpression
 {
     public static (Expression, shisoku.Token[]) parse(shisoku.Token[] input)
     {
-        return parseComparator(input);
+        return parseCall(input);
     }
-    //TODO PublicクラスになってるのをPrivateにする
-    public static (Expression, shisoku.Token[]) parseComparator(shisoku.Token[] input)
+    static (Expression, shisoku.Token[]) parseCall(shisoku.Token[] input)
+    {
+        (var result, var rest) = parseComparator(input);
+        while (rest is [TokenBracketOpen, .. var innerRest])
+        {
+            var arguments = new Expression[] { };
+            while (innerRest[0] is not TokenBracketClose)
+            {
+                (var argument, var otherTokens) = parse(innerRest);
+                switch (otherTokens[0])
+                {
+                    case TokenComma:
+                        innerRest = otherTokens[1..];
+                        break;
+                    case TokenBracketClose:
+                        innerRest = otherTokens;
+                        break;
+                    default:
+                        throw new Exception("関数の引数の区切りが不正です。");
+                }
+                arguments = arguments.Append(argument).ToArray();
+            }
+            result = new CallExpression(arguments, result);
+            rest = innerRest;
+        }
+        return (result, rest);
+    }
+    static (Expression, shisoku.Token[]) parseComparator(shisoku.Token[] input)
     {
         (var result, var rest) = parseAddSub(input);
         while (rest is [TokenEqualEqual, .. var rest2])
@@ -24,7 +50,7 @@ public class ParseExpression
         return (result, rest);
 
     }
-    public static (Expression, shisoku.Token[]) parseAddSub(shisoku.Token[] input)
+    static (Expression, shisoku.Token[]) parseAddSub(shisoku.Token[] input)
     {
         (var result, var rest) = parseMulDiv(input);
         while (rest is [TokenPlus or TokenMinus, .. var rest2])
@@ -45,7 +71,7 @@ public class ParseExpression
         }
         return (result, rest);
     }
-    public static (Expression, shisoku.Token[]) parseMulDiv(shisoku.Token[] input)
+    static (Expression, shisoku.Token[]) parseMulDiv(shisoku.Token[] input)
     {
         (var result, var rest) = parseNumOrSection(input);
         while (rest is [TokenSlash or TokenAsterisk, .. var rest2])
@@ -67,7 +93,7 @@ public class ParseExpression
         return (result, rest);
     }
 
-    public static (Expression, shisoku.Token[]) parseNumOrSection(shisoku.Token[] input)
+    static (Expression, shisoku.Token[]) parseNumOrSection(shisoku.Token[] input)
     {
         switch (input)
         {
@@ -95,7 +121,7 @@ public class ParseExpression
 
                     if (bodyRest[0] is TokenCurlyBracketClose)
                     {
-                        return (new FunctionExpression(argumentName, bodys),  otherTokens[1..]);
+                        return (new FunctionExpression(argumentName, bodys), otherTokens[1..]);
                     }
                 }
                 throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
