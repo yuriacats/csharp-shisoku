@@ -26,10 +26,9 @@ function main() {
     sum_exit_code=$((sum_exit_code + $?))
     run_test_case "変数の定義をしても問題ない" "const a=1;" ""
     sum_exit_code=$((sum_exit_code + $?))
-    run_test_case "変数の計算をしても問題ない" "const a=1;a+1;" "2"
+    run_test_case "変数の計算をしても問題ない" "const a=1;a+1;" error
     sum_exit_code=$((sum_exit_code + $?))
-    run_test_case "複数の計算を出せる" "1-2;1;" "-1
-1"
+    run_test_case "複数の計算を出せる" "1-2;1;" error
     sum_exit_code=$((sum_exit_code + $?))
     run_test_case "Booleanが扱える" "1==1;" True
     sum_exit_code=$((sum_exit_code + $?))
@@ -58,7 +57,7 @@ function run_test_case() {
     if [ "${output}" = "${expected}" ]; then
         echo "${case_name}:Pass"
         return 0
-    elif [ ${expected} = "error" ] && [ ${error_code} -ne '0' ]; then
+    elif [ "${expected}" = "error" ] && [ "${error_code}" -ne '0' ]; then
         echo "${case_name}:Pass"
         return 0
     else
