@@ -9,10 +9,10 @@ public class CalcStatement
 
             switch (statement)
             {
-                case AstExpression(var expr):
+                case StatementExpression(var expr):
                     Console.WriteLine(CalcExpression.Calc(expr, env));
                     break;
-                case AstConst(var name, var expr):
+                case StatementConst(var name, var expr):
                     env.Add(name, CalcExpression.toInt(CalcExpression.Calc(expr, env)));
                     break;
                 default:

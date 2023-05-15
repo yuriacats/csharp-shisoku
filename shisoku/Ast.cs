@@ -15,6 +15,7 @@ public record CallExpression(Expression[] arguments, Expression functionBody) : 
 
 
 public abstract record Statement();
-public record AstExpression(Expression expr) : Statement;
-public record AstConst(string name, Expression expr) : Statement;
+public record StatementExpression(Expression expr) : Statement;
+public record StatementConst(string name, Expression expr) : Statement;
+public record StatementReturn(Expression expr) : Statement;
 
