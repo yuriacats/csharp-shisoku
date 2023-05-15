@@ -60,6 +60,10 @@ public class CalcExpression
                             throw new Exception($"Evaluation Error:Argment types differ.({lhs.ToString},{rhs.ToString})");
                     }
                 }
+            case FunctionExpression(var argumentNames, var body):
+                {
+                    return new FunctionValue(argumentNames, body);
+                }
             default:
                 throw new Exception($"Evaluation Error:{input}");
         }

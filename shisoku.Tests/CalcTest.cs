@@ -107,4 +107,21 @@ public class CalcTest
     {
         Assert.Throws<Exception>(() => shisoku.CalcExpression.Calc(new DivExpression(new BoolExpression(true), new BoolExpression(true)), new VariableEnvironment()));
     }
+    [Fact]
+    public void functionExpressionCanEvaluate()
+    {
+        var expectedValue = new FunctionValue(new List<string>(), new Statement[] { });
+        var result = shisoku.CalcExpression.Calc(new FunctionExpression(new List<string>(), new Statement[] { }), new VariableEnvironment());
+        switch (result)
+        {
+            case FunctionValue(var arguments, var body):
+                Assert.Equal(expectedValue.argumentNames, arguments);
+                Assert.Equal(expectedValue.body, body);
+                break;
+
+            default:
+                Assert.Fail("result is not make CallExpression");
+                break;
+        }
+    }
 }
