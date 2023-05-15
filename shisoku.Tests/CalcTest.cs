@@ -124,4 +124,22 @@ public class CalcTest
                 break;
         }
     }
+    [Fact]
+    public void FunctionCallCanEvaluate()
+    {
+        var expression = new CallExpression(
+            new Expression[] { },
+                new FunctionExpression(new List<string>(),
+                new Statement[] {
+                    new AstExpression(new AddExpression(
+                        new NumberExpression(1),new NumberExpression(2)
+                        ))
+            }
+            )
+        );
+        var expectedValue = new IntValue(3);
+        var result = shisoku.CalcExpression.Calc(expression, new VariableEnvironment());
+        Assert.Equal(expectedValue, result);
+
+    }
 }
