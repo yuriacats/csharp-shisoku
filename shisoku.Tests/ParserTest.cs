@@ -252,6 +252,40 @@ public class ParserTest
         }
     }
     [Fact]
+    public void CanParseFunctionWithReturn()
+    {
+        var inputToken = new List<Token>{
+            new TokenCurlyBracketOpen(),
+            new TokenPipe(),
+            new TokenPipe(),
+            new TokenArrow(),
+            new TokenConst(),
+            new TokenIdentifier("test"),
+            new TokenEqual(),
+            new TokenNumber(12),
+            new TokenSemicolon(),
+            new TokenReturn(),
+            new TokenNumber(12),
+            new TokenCurlyBracketClose()
+        };
+        var expectedAst = new FunctionExpression(new List<string>(), new Statement[]{
+            new StatementConst("test", new NumberExpression(12)),
+            new StatementReturn(new NumberExpression(12))
+        });
+        (var result, _) = ParseExpression.parse(inputToken.ToArray());
+        switch (result)
+        {
+            case FunctionExpression(var arguments, var body):
+                Assert.Equal(expectedAst.body, body);
+                Assert.Equal(expectedAst.argumentNames, arguments);
+                break;
+
+            default:
+                Assert.Fail("result is not make FunctionExpression");
+                break;
+        }
+    }
+    [Fact]
     public void functionExecuteCanParse()
     {
         var inputToken = new List<Token>{
