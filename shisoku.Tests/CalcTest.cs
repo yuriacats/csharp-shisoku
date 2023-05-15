@@ -140,6 +140,5 @@ public class CalcTest
         var expectedValue = new IntValue(3);
         var result = shisoku.CalcExpression.Calc(expression, new VariableEnvironment());
         Assert.Equal(expectedValue, result);
-
     }
 }
