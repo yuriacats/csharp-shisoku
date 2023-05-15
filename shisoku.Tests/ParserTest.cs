@@ -98,7 +98,7 @@ public class ParserTest
             new TokenSemicolon()
         };
         var expectedAst = new Statement[]{
-            new AstExpression(
+            new StatementExpression(
                 new SubExpression(
                     new NumberExpression(12), new NumberExpression(13)
                 )
@@ -127,7 +127,7 @@ public class ParserTest
         new TokenSemicolon()
     };
         var expectedAst = new Statement[] {
-            new AstConst(
+            new StatementConst(
                 "test",
                 new NumberExpression(12)
             )
@@ -162,10 +162,10 @@ public class ParserTest
         new TokenSemicolon()
     };
         var expectedAst = new Statement[] {
-            new AstConst(
+            new StatementConst(
                 "test",
                 new NumberExpression(12)
-            ), new AstConst(
+            ), new StatementConst(
                 "test2",
                 new NumberExpression(12)
             )
@@ -188,7 +188,7 @@ public class ParserTest
             new TokenCurlyBracketClose()
         };
         var expectedAst = new FunctionExpression(new List<string>(), new Statement[]{
-            new AstConst("test", new NumberExpression(12))
+            new StatementConst("test", new NumberExpression(12))
         });
         (var result, _) = ParseExpression.parse(inputToken.ToArray());
         switch (result)
@@ -236,7 +236,7 @@ public class ParserTest
         expectedArguments.Add("hoge");
         expectedArguments.Add("huga");
         var expectedAst = new FunctionExpression(expectedArguments, new Statement[]{
-                new AstConst("test", new NumberExpression(12))
+                new StatementConst("test", new NumberExpression(12))
             });
         (var result, _) = ParseExpression.parse(inputToken.ToArray());
         switch (result)
@@ -250,6 +250,21 @@ public class ParserTest
                 Assert.Fail("result is not make FunctionExpression");
                 break;
         }
+    }
+    [Fact]
+    public void CanParseFunctionWithReturn()
+    {
+        var inputToken = new List<Token>{
+            new TokenReturn(),
+            new TokenNumber(12),
+            new TokenSemicolon()
+        };
+        var expectedAst = new Statement[]{
+            new StatementReturn(new NumberExpression(12))
+        };
+
+        (var result, _) = ParseStatement.parse(inputToken.ToArray());
+        Assert.Equal(expectedAst, result);
     }
     [Fact]
     public void functionExecuteCanParse()
@@ -273,7 +288,6 @@ public class ParserTest
                 Assert.Fail("result is not make CallExpression");
                 break;
         }
-
     }
 }
 

@@ -23,6 +23,7 @@ public class ParseStatement
         var (statement, token) = tokens switch
         {
             [TokenConst, ..] => parseConst(tokens),
+            [TokenReturn, ..] => parseReturn(tokens),
             _ => parseExpressionStatement(tokens)
         };
 
@@ -37,14 +38,23 @@ public class ParseStatement
     private static (Statement, Token[]) parseExpressionStatement(Token[] tokens)
     {
         var (expression, rest) = ParseExpression.parse(tokens);
-        return (new AstExpression(expression), rest);
+        return (new StatementExpression(expression), rest);
     }
     private static (Statement, Token[]) parseConst(Token[] tokens)
     {
-        if (tokens is [TokenConst, TokenIdentifier(var exprName), TokenEqual, .. var rest_token])
+        if (tokens is [TokenConst, TokenIdentifier(var exprName), TokenEqual, .. var restToken])
         {
-            (var expression, var rest) = ParseExpression.parse(rest_token);
-            return (new AstConst(exprName, expression), rest);
+            (var expression, var rest) = ParseExpression.parse(restToken);
+            return (new StatementConst(exprName, expression), rest);
+        }
+        throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', tokens)}");
+    }
+    private static (Statement, Token[]) parseReturn(Token[] tokens)
+    {
+        if (tokens is [TokenReturn, .. var restToken])
+        {
+            (var expression, var rest) = ParseExpression.parse(restToken);
+            return (new StatementReturn(expression), rest);
         }
         throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', tokens)}");
     }

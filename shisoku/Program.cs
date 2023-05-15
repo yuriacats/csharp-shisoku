@@ -23,7 +23,7 @@ class Program
         {
             if (input != null)
             {
-                Calculate(input, isVerbose, new VariableEnvironment());
+                Console.WriteLine(Calculate(input, isVerbose, new VariableEnvironment()));
             }
             else
             {
@@ -46,7 +46,7 @@ class Program
                     Console.Write("> ");
                     input = Console.ReadLine();
                 } while (input is null || input.Length == 0);
-                Calculate(input, isVerboseOption, env);
+                Console.WriteLine(Calculate(input, isVerboseOption, env));
             }
             catch (Exception e)
             {
@@ -55,11 +55,14 @@ class Program
         }
 
     }
-    static void Calculate(string input, bool isVerboseOption, VariableEnvironment env)
+    static Value Calculate(string input, bool isVerboseOption, VariableEnvironment env)
     {
         var tokens = Lexer.lex(input);
-
-        var (tree, _) = ParseStatement.parse(tokens.ToArray());
+        if (tokens[0] is not TokenConst)
+        {
+            tokens.Insert(0, new TokenReturn());
+        }
+        var (statements, _) = ParseStatement.parse(tokens.ToArray());
         //TODO 諸々仕様固まってから考える
         if (isVerboseOption)
         {
@@ -67,9 +70,13 @@ class Program
             //Console.WriteLine(PrettyPrinter.PrettyPrint(tree));
             //TODO PrettyPrintのStatement対応
             Console.WriteLine("データ構造");
-            Console.WriteLine(tree);
+            Console.WriteLine(statements);
         }
-        CalcStatement.toInt(tree, env);
+        if (statements.Length > 1)
+        {
+            throw new Exception("複数文は受け付けられません");
+        }
+        return CalcFunctionBody.Calc(statements, env);
     }
 }
 // -eの時のみ省略して行う
