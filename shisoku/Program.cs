@@ -34,7 +34,7 @@ class Program
                 var input = File.ReadAllText(fileName);
                 Console.WriteLine(Calculate(input, new VariableEnvironment()));
             }
-            if (expinput != null)
+            else if (expinput != null)
             {
                 Console.WriteLine(CalculateFromInput(expinput, new VariableEnvironment()));
             }
