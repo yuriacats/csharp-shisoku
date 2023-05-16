@@ -76,6 +76,7 @@ public class CalcExpression
                 }
             case CallExpression(var argumentExpressions, var functionExpression):
                 {
+                    var argumentValues = argumentExpressions.Select(x => Calc(x, env)).ToList();
                     return toFunc(Calc(functionExpression, env));
                 }
             default:
