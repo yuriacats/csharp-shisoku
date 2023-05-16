@@ -1,5 +1,4 @@
 ﻿// See https://aka.ms/new-console-template for more information
-global using VariableEnvironment = System.Collections.Generic.Dictionary<string, int>;
 namespace shisoku;
 using System.CommandLine;
 using System.IO;

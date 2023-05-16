@@ -12,6 +12,16 @@ public class CalcExpression
                 throw new Exception($"Evaluation Error:augment type is not int({input})");
         }
     }
+    public static FunctionValue toFunc(Value input)
+    {
+        switch (input)
+        {
+            case FunctionValue(var argumentNames, var body):
+                return new FunctionValue(argumentNames, body);
+            default:
+                throw new Exception($"Evaluation Error:augment type is not FunctionValue({input})");
+        }
+    }
 
     public static Value Calc(Expression input, VariableEnvironment env)
     {
@@ -24,7 +34,7 @@ public class CalcExpression
                 }
             case VariableExpression(var name):
                 {
-                    return new IntValue(env[name]);
+                    return env[name];
                 }
             case BoolExpression(var value):
                 {
@@ -63,6 +73,10 @@ public class CalcExpression
             case FunctionExpression(var argumentNames, var body):
                 {
                     return new FunctionValue(argumentNames, body);
+                }
+            case CallExpression(var argumentExpressions, var functionExpression):
+                {
+                    return toFunc(Calc(functionExpression, env));
                 }
             default:
                 throw new Exception($"Evaluation Error:{input}");

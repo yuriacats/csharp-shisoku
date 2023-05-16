@@ -1,6 +1,5 @@
 namespace shisoku.Tests;
 using Xunit;
-using VariableEnvironment = System.Collections.Generic.Dictionary<string, int>;
 using shisoku;
 
 public class CalcTest
@@ -131,7 +130,7 @@ public class CalcTest
             new Expression[] { },
                 new FunctionExpression(new List<string>(),
                 new Statement[] {
-                    new AstExpression(new AddExpression(
+                    new StatementReturn(new AddExpression(
                         new NumberExpression(1),new NumberExpression(2)
                         ))
             }
