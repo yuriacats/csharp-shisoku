@@ -2,6 +2,7 @@
 global using VariableEnvironment = System.Collections.Generic.Dictionary<string, int>;
 namespace shisoku;
 using System.CommandLine;
+using System.IO;
 class Program
 {
     static Task<int> Main(string[] args)
@@ -12,28 +13,36 @@ class Program
             description: "一つの式だけ評価する時に使います"
         );
 
-        var verboseOption = new Option<bool>(
-            name: "--verbose",
-            description: "詳しいAST構造等も表示します",
-            getDefaultValue: () => false
+        var fileOption = new Option<string>(
+            name: "--file",
+            description: "ファイルから式を読み込みます"
         );
         rootCommand.AddOption(expOption);
-        rootCommand.AddOption(verboseOption);
-        rootCommand.SetHandler((input, isVerbose) =>
+        rootCommand.AddOption(fileOption);
+        rootCommand.SetHandler((expinput, fileName) =>
         {
-            if (input != null)
+            if (expinput != null && fileName != null)
             {
-                Console.WriteLine(Calculate(input, isVerbose, new VariableEnvironment()));
+                throw new Exception("ファイルと式の同時指定はできません");
             }
-            else
+            if (fileName != null)
             {
-                Repl(isVerbose);
+                if (!File.Exists(fileName))
+                {
+                    throw new Exception("ファイルが存在しません");
+                }
+                var input = File.ReadAllText(fileName);
+                Console.WriteLine(Calculate(input, new VariableEnvironment()));
             }
-        }, expOption, verboseOption);
+            else if (expinput != null)
+            {
+                Console.WriteLine(CalculateFromInput(expinput, new VariableEnvironment()));
+            }
+        }, expOption, fileOption);
         return rootCommand.InvokeAsync(args);
 
     }
-    static void Repl(bool isVerboseOption)
+    static void Repl()
     {
         var env = new VariableEnvironment();
         while (true)
@@ -46,7 +55,7 @@ class Program
                     Console.Write("> ");
                     input = Console.ReadLine();
                 } while (input is null || input.Length == 0);
-                Console.WriteLine(Calculate(input, isVerboseOption, env));
+                Console.WriteLine(CalculateFromInput(input, env));
             }
             catch (Exception e)
             {
@@ -55,7 +64,7 @@ class Program
         }
 
     }
-    static Value Calculate(string input, bool isVerboseOption, VariableEnvironment env)
+    static Value CalculateFromInput(string input, VariableEnvironment env)
     {
         var tokens = Lexer.lex(input);
         if (tokens[0] is not TokenConst)
@@ -64,39 +73,17 @@ class Program
         }
         var (statements, _) = ParseStatement.parse(tokens.ToArray());
         //TODO 諸々仕様固まってから考える
-        if (isVerboseOption)
-        {
-            Console.WriteLine("木構造イメージ図");
-            //Console.WriteLine(PrettyPrinter.PrettyPrint(tree));
-            //TODO PrettyPrintのStatement対応
-            Console.WriteLine("データ構造");
-            Console.WriteLine(statements);
-        }
         if (statements.Length > 1)
         {
             throw new Exception("複数文は受け付けられません");
         }
         return CalcFunctionBody.Calc(statements, env);
     }
+    static Value Calculate(string input, VariableEnvironment env)
+    {
+        var tokens = Lexer.lex(input);
+        var (statements, _) = ParseStatement.parse(tokens.ToArray());
+        //TODO 諸々仕様固まってから考える
+        return CalcFunctionBody.Calc(statements, env);
+    }
 }
-// -eの時のみ省略して行う
-
-//public static class PrettyPrinter
-//{
-//    public static string Indent(string str)
-//    {
-//        return string.Join('\n', str.Split("\n").Where(s => s.Length != 0).Select(s => "  " + s)) + '\n';
-//    }
-//    public static string PrettyPrint(Expression e)
-//    {
-//        return e switch
-//        {
-//            AstNumber(var n) => $"{n}\n",
-//            AstAdd(var lhs, var rhs) => "+\n" + Indent("左:" + PrettyPrint(lhs)) + Indent("右:" + PrettyPrint(rhs)),
-//            AstSub(var lhs, var rhs) => "-\n" + Indent("左:" + PrettyPrint(lhs)) + Indent("右:" + PrettyPrint(rhs)),
-//            AstMul(var lhs, var rhs) => "*\n" + Indent("左:" + PrettyPrint(lhs)) + Indent("右:" + PrettyPrint(rhs)),
-//            AstDiv(var lhs, var rhs) => "/\n" + Indent("左:" + PrettyPrint(lhs)) + Indent("右:" + PrettyPrint(rhs)),
-//            _ => throw new NotImplementedException(),
-//        };
-//    }
-//}
