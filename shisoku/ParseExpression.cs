@@ -9,27 +9,25 @@ public class ParseExpression
     static (Expression, shisoku.Token[]) parseCall(shisoku.Token[] input)
     {
         (var result, var rest) = parseComparator(input);
+        var arguments = new (string, Expression)[] { };
         while (rest is [TokenBracketOpen, .. var innerRest])
         {
-            var arguments = new (string, Expression)[] { };
-            while (innerRest[0] is not TokenBracketClose)
+            switch (innerRest)
             {
-                (var argument, var otherTokens) = parse(innerRest);
-                switch (otherTokens[0])
-                {
-                    case TokenComma:
-                        innerRest = otherTokens[1..];
-                        break;
-                    case TokenBracketClose:
-                        innerRest = otherTokens;
-                        break;
-                    default:
-                        throw new Exception("関数の引数の区切りが不正です。");
-                }
-                arguments = arguments.Append(("hoge", argument)).ToArray();
+                case [TokenIdentifier(var argumentName), TokenEqual, .. var innerRest2]:
+                    var (argumentValue, rest2) = parse(innerRest2);
+                    arguments = arguments.Append((argumentName, argumentValue)).ToArray();
+                    innerRest = rest2;
+                    continue;
+                case [TokenComma, .. var innerRest2]:
+                    innerRest = innerRest2;
+                    continue;
+                case [TokenBracketClose, .. var innerRest2]:
+                    result = new CallExpression(arguments, result);
+                    return (result, innerRest2);
+                default:
+                    throw new Exception($"Cannot parse arguments in: {String.Join<Token>(',', innerRest)}");
             }
-            result = new CallExpression(arguments, result);
-            rest = innerRest;
         }
         return (result, rest);
     }
