@@ -127,7 +127,7 @@ public class CalcTest
     public void FunctionCallCanEvaluate()
     {
         var expression = new CallExpression(
-            new Expression[] { },
+            new (string, Expression)[] { },
                 new FunctionExpression(new List<string>(),
                 new Statement[] {
                     new StatementReturn(new AddExpression(
