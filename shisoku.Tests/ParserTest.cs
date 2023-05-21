@@ -267,7 +267,7 @@ public class ParserTest
         Assert.Equal(expectedAst, result);
     }
     [Fact]
-    public void functionExecuteCanParse()
+    public void CallExpressionWithoutArgumentsCanParse()
     {
         var inputToken = new List<Token>{
                 new TokenIdentifier("hoge"),
@@ -285,12 +285,12 @@ public class ParserTest
                 break;
 
             default:
-                Assert.Fail("result is not make CallExpression");
+                Assert.Fail("Tokens Can not parse CallExpression");
                 break;
         }
     }
     [Fact]
-    public void functionExecuteInArgmentCanParse()
+    public void CallExpressionWithArgumentCanParse()
     {
 
         var inputToken = new List<Token>{
@@ -312,13 +312,13 @@ public class ParserTest
                 break;
 
             default:
-                Assert.Fail("result is not make CallExpression");
+                Assert.Fail("Tokens Can not parse CallExpression");
                 break;
         }
 
     }
     [Fact]
-    public void functionExecuteInArgmentsCanParse()
+    public void CallExpressionWithArgumentsCanParse()
     {
 
         var inputToken = new List<Token>{
@@ -344,9 +344,26 @@ public class ParserTest
                 break;
 
             default:
-                Assert.Fail("result is not make CallExpression");
+                Assert.Fail("Tokens Cannot parse CallExpression");
                 break;
         }
+    }
+    [Fact]
+    public void CallExpressionWithArgumentsWithoutCommaCannotParse()
+    {
+
+        var inputToken = new List<Token>{
+                new TokenIdentifier("hoge"),
+                new TokenBracketOpen(),
+                new TokenIdentifier("huga"),
+                new TokenEqual(),
+                new TokenNumber(12),
+                new TokenIdentifier("piyo"),
+                new TokenEqual(),
+                new TokenNumber(13),
+                new TokenBracketClose()
+            };
+        Assert.Throws<Exception>(() => ParseExpression.parse(inputToken.ToArray()));
     }
 }
 

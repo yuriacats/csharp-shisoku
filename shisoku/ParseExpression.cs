@@ -30,11 +30,17 @@ public class ParseExpression
                 case [TokenIdentifier(var argumentName), TokenEqual, .. var target2]:
                     var (argumentExpression, rest2) = parse(target2);
                     arguments = arguments.Append((argumentName, argumentExpression)).ToArray();
-                    target = rest2;
-                    continue;
-                case [TokenComma, .. var target2]:
-                    target = target2;
-                    continue;
+                    switch (rest2)
+                    {
+                        case [TokenBracketClose, .. var rest3]:
+                            {
+                                return (arguments, rest3);
+                            }
+                        case [TokenComma, .. var rest3]:
+                            target = rest3;
+                            continue;
+                    }
+                    throw new Exception($"Cannot parse arguments in: {String.Join<Token>(',', target)}");
                 case [TokenBracketClose, .. var target2]:
                     return (arguments, target2);
                 default:
