@@ -11,7 +11,7 @@ public class ParseExpression
         (var result, var rest) = parseComparator(input);
         while (rest is [TokenBracketOpen, .. var innerRest])
         {
-            var arguments = new Expression[] { };
+            var arguments = new (string, Expression)[] { };
             while (innerRest[0] is not TokenBracketClose)
             {
                 (var argument, var otherTokens) = parse(innerRest);
@@ -26,7 +26,7 @@ public class ParseExpression
                     default:
                         throw new Exception("関数の引数の区切りが不正です。");
                 }
-                arguments = arguments.Append(argument).ToArray();
+                arguments = arguments.Append(("hoge", argument)).ToArray();
             }
             result = new CallExpression(arguments, result);
             rest = innerRest;

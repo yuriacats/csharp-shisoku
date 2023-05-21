@@ -274,7 +274,7 @@ public class ParserTest
                 new TokenBracketOpen(),
                 new TokenBracketClose()
             };
-        var expectedAst = new CallExpression(new Expression[] { }, new VariableExpression("hoge"));
+        var expectedAst = new CallExpression(new (string, Expression)[] { }, new VariableExpression("hoge"));
         (var result, _) = ParseExpression.parse(inputToken.ToArray());
         Console.WriteLine(result);
         switch (result)
