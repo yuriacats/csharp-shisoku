@@ -9,29 +9,45 @@ public class ParseExpression
     static (Expression, shisoku.Token[]) parseCall(shisoku.Token[] input)
     {
         (var result, var rest) = parseComparator(input);
+
         while (rest is [TokenBracketOpen, .. var innerRest])
         {
-            var arguments = new Expression[] { };
-            while (innerRest[0] is not TokenBracketClose)
-            {
-                (var argument, var otherTokens) = parse(innerRest);
-                switch (otherTokens[0])
-                {
-                    case TokenComma:
-                        innerRest = otherTokens[1..];
-                        break;
-                    case TokenBracketClose:
-                        innerRest = otherTokens;
-                        break;
-                    default:
-                        throw new Exception("関数の引数の区切りが不正です。");
-                }
-                arguments = arguments.Append(argument).ToArray();
-            }
+            (var arguments, rest) = parseArguments(innerRest);
             result = new CallExpression(arguments, result);
-            rest = innerRest;
+            break;
         }
         return (result, rest);
+    }
+
+    static ((string, Expression)[], shisoku.Token[]) parseArguments(shisoku.Token[] input)
+    {
+        var target = input;
+        var arguments = new (string, Expression)[] { };
+        while (target is not [])
+        {
+            switch (target)
+            {
+                case [TokenIdentifier(var argumentName), TokenEqual, .. var target2]:
+                    var (argumentExpression, rest2) = parse(target2);
+                    arguments = arguments.Append((argumentName, argumentExpression)).ToArray();
+                    switch (rest2)
+                    {
+                        case [TokenBracketClose, .. var rest3]:
+                            {
+                                return (arguments, rest3);
+                            }
+                        case [TokenComma, .. var rest3]:
+                            target = rest3;
+                            continue;
+                    }
+                    throw new Exception($"Cannot parse arguments in: {String.Join<Token>(',', target)}");
+                case [TokenBracketClose, .. var target2]:
+                    return (arguments, target2);
+                default:
+                    throw new Exception($"Cannot parse arguments in: {String.Join<Token>(',', target)}");
+            }
+        }
+        throw new Exception($"Cannot parse arguments in: {String.Join<Token>(',', target)}");
     }
     static (Expression, shisoku.Token[]) parseComparator(shisoku.Token[] input)
     {

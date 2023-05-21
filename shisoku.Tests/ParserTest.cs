@@ -267,14 +267,14 @@ public class ParserTest
         Assert.Equal(expectedAst, result);
     }
     [Fact]
-    public void functionExecuteCanParse()
+    public void CallExpressionWithoutArgumentsCanParse()
     {
         var inputToken = new List<Token>{
                 new TokenIdentifier("hoge"),
                 new TokenBracketOpen(),
                 new TokenBracketClose()
             };
-        var expectedAst = new CallExpression(new Expression[] { }, new VariableExpression("hoge"));
+        var expectedAst = new CallExpression(new (string, Expression)[] { }, new VariableExpression("hoge"));
         (var result, _) = ParseExpression.parse(inputToken.ToArray());
         Console.WriteLine(result);
         switch (result)
@@ -285,9 +285,85 @@ public class ParserTest
                 break;
 
             default:
-                Assert.Fail("result is not make CallExpression");
+                Assert.Fail("Tokens Can not parse CallExpression");
                 break;
         }
+    }
+    [Fact]
+    public void CallExpressionWithArgumentCanParse()
+    {
+
+        var inputToken = new List<Token>{
+                new TokenIdentifier("hoge"),
+                new TokenBracketOpen(),
+                new TokenIdentifier("huga"),
+                new TokenEqual(),
+                new TokenNumber(12),
+                new TokenBracketClose()
+            };
+        var expectedAst = new CallExpression(new (string, Expression)[] { ("huga", new NumberExpression(12)) }, new VariableExpression("hoge"));
+        (var result, _) = ParseExpression.parse(inputToken.ToArray());
+        Console.WriteLine(result);
+        switch (result)
+        {
+            case CallExpression(var arguments, var body):
+                Assert.Equal(expectedAst.arguments, arguments);
+                Assert.Equal(expectedAst.functionBody, body);
+                break;
+
+            default:
+                Assert.Fail("Tokens Can not parse CallExpression");
+                break;
+        }
+
+    }
+    [Fact]
+    public void CallExpressionWithArgumentsCanParse()
+    {
+
+        var inputToken = new List<Token>{
+                new TokenIdentifier("hoge"),
+                new TokenBracketOpen(),
+                new TokenIdentifier("huga"),
+                new TokenEqual(),
+                new TokenNumber(12),
+                new TokenComma(),
+                new TokenIdentifier("piyo"),
+                new TokenEqual(),
+                new TokenNumber(13),
+                new TokenBracketClose()
+            };
+        var expectedAst = new CallExpression(new (string, Expression)[] { ("huga", new NumberExpression(12)), ("piyo", new NumberExpression(13)) }, new VariableExpression("hoge"));
+        (var result, _) = ParseExpression.parse(inputToken.ToArray());
+        Console.WriteLine(result);
+        switch (result)
+        {
+            case CallExpression(var arguments, var body):
+                Assert.Equal(expectedAst.arguments, arguments);
+                Assert.Equal(expectedAst.functionBody, body);
+                break;
+
+            default:
+                Assert.Fail("Tokens Cannot parse CallExpression");
+                break;
+        }
+    }
+    [Fact]
+    public void CallExpressionWithArgumentsWithoutCommaCannotParse()
+    {
+
+        var inputToken = new List<Token>{
+                new TokenIdentifier("hoge"),
+                new TokenBracketOpen(),
+                new TokenIdentifier("huga"),
+                new TokenEqual(),
+                new TokenNumber(12),
+                new TokenIdentifier("piyo"),
+                new TokenEqual(),
+                new TokenNumber(13),
+                new TokenBracketClose()
+            };
+        Assert.Throws<Exception>(() => ParseExpression.parse(inputToken.ToArray()));
     }
 }
 
