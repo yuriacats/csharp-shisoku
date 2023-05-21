@@ -289,5 +289,64 @@ public class ParserTest
                 break;
         }
     }
+    [Fact]
+    public void functionExecuteInArgmentCanParse()
+    {
+
+        var inputToken = new List<Token>{
+                new TokenIdentifier("hoge"),
+                new TokenBracketOpen(),
+                new TokenIdentifier("huga"),
+                new TokenEqual(),
+                new TokenNumber(12),
+                new TokenBracketClose()
+            };
+        var expectedAst = new CallExpression(new (string, Expression)[] { ("huga", new NumberExpression(12)) }, new VariableExpression("hoge"));
+        (var result, _) = ParseExpression.parse(inputToken.ToArray());
+        Console.WriteLine(result);
+        switch (result)
+        {
+            case CallExpression(var arguments, var body):
+                Assert.Equal(expectedAst.arguments, arguments);
+                Assert.Equal(expectedAst.functionBody, body);
+                break;
+
+            default:
+                Assert.Fail("result is not make CallExpression");
+                break;
+        }
+
+    }
+    [Fact]
+    public void functionExecuteInArgmentsCanParse()
+    {
+
+        var inputToken = new List<Token>{
+                new TokenIdentifier("hoge"),
+                new TokenBracketOpen(),
+                new TokenIdentifier("huga"),
+                new TokenEqual(),
+                new TokenNumber(12),
+                new TokenComma(),
+                new TokenIdentifier("piyo"),
+                new TokenEqual(),
+                new TokenNumber(13),
+                new TokenBracketClose()
+            };
+        var expectedAst = new CallExpression(new (string, Expression)[] { ("huga", new NumberExpression(12)), ("piyo", new NumberExpression(13)) }, new VariableExpression("hoge"));
+        (var result, _) = ParseExpression.parse(inputToken.ToArray());
+        Console.WriteLine(result);
+        switch (result)
+        {
+            case CallExpression(var arguments, var body):
+                Assert.Equal(expectedAst.arguments, arguments);
+                Assert.Equal(expectedAst.functionBody, body);
+                break;
+
+            default:
+                Assert.Fail("result is not make CallExpression");
+                break;
+        }
+    }
 }
 
