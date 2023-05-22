@@ -40,9 +40,9 @@ public class VariableEnvironment
     {
         get
         {
-            for (var counter = 0; counter <= envDictionaries.Count; counter++)
+            for (var counter = envDictionaries.Count - 1; counter >= 0; counter--)
             {
-                var env = envDictionaries[envDictionaries.Count - counter];
+                var env = envDictionaries[counter];
                 if (env.ContainsKey(name))
                 {
                     return env[name];
