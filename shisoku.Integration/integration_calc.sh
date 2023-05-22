@@ -40,11 +40,11 @@ function main() {
     sum_exit_code=$((sum_exit_code + $?))
     run_test_file_case "複数分の入ったファイルを読み込んで実行できる" "shisoku.Integration/test.shisoku" "2" 
     sum_exit_code=$((sum_exit_code + $?))
-    run_test_file_case "名前なし関数の実行ができる" "shisoku.Integration/namelessFunctionTest.shisoku" "2" 
+    run_test_file_case "名前なし関数の実行ができる" "shisoku.Integration/namelessFunctionTest.shisoku" "8" 
     sum_exit_code=$((sum_exit_code + $?))
-    run_test_file_case "関数内で関数を定義できる" "shisoku.Integration/functionCunRerunFunction.shisoku" "2" 
+    run_test_file_case "関数内で関数を定義できる" "shisoku.Integration/functionCanReturnFunction.shisoku" "12" 
     sum_exit_code=$((sum_exit_code + $?))
-    run_test_file_case "関数ないで変数を定義できる" "shisoku.Integration/functionCanHaveConst.shisoku" "2" 
+    run_test_file_case "関数ないで変数を定義できる" "shisoku.Integration/functionCanHaveConstStatement.shisoku" "14" 
     sum_exit_code=$((sum_exit_code + $?))
 
     if [ ${sum_exit_code} == "0" ]; then
