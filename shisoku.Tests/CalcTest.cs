@@ -140,4 +140,95 @@ public class CalcTest
         var result = shisoku.CalcExpression.Calc(expression, new VariableEnvironment());
         Assert.Equal(expectedValue, result);
     }
+    [Fact]
+    public void functionCanHaveConst()
+    {
+        var expectedValue = new FunctionValue(
+            new List<string>(),
+            new Statement[] {
+                new StatementConst("x",new NumberExpression(12)),
+                new StatementReturn(new VariableExpression("x"))
+            },
+            new VariableEnvironment()
+        );
+        var result = shisoku.CalcExpression.Calc(new FunctionExpression(
+            new List<string>(),
+            new Statement[] {
+                new StatementConst("x",new NumberExpression(12)),
+                new StatementReturn(new VariableExpression("x"))
+            }),
+            new VariableEnvironment()
+        );
+        switch (result)
+        {
+            case FunctionValue(var arguments, var body, var env):
+                Assert.Equal(expectedValue.argumentNames, arguments);
+                Assert.Equal(expectedValue.body, body);
+                break;
+
+            default:
+                Assert.Fail("result is not make CallExpression");
+                break;
+        }
+    }
+    [Fact]
+    public void CallFunctionCanCalc()
+    {
+        var expectedValue = new IntValue(12);
+        var result = shisoku.CalcExpression.Calc(
+        new CallExpression(
+                new (string, Expression)[] { ("x", new NumberExpression(12)) },
+                new FunctionExpression(
+                    new List<string>() { "x" },
+                    new Statement[] {
+                            new StatementReturn(new VariableExpression("x"))
+                    }
+                )
+            ),
+            new VariableEnvironment()
+        );
+        Assert.Equal(expectedValue, result);
+    }
+    [Fact]
+    public void CallFunctionCannotCalcWithExcessiveArguments()
+    {
+        var expectedValue = new IntValue(12);
+        Assert.Throws<Exception>(() =>
+            shisoku.CalcExpression.Calc(
+            new CallExpression(
+                    new (string, Expression)[] { ("x", new NumberExpression(12)), ("y", new NumberExpression(13)) },
+                    new FunctionExpression(
+                        new List<string>() { "x" },
+                        new Statement[] {
+                                new StatementReturn(new VariableExpression("x"))
+                        }
+                    )
+                ),
+                new VariableEnvironment()
+            )
+        );
+    }
+    [Fact]
+    public void CallFunctionCannotCalcWithInsufficientArguments()
+    {
+        var expectedValue = new IntValue(12);
+        Assert.Throws<Exception>(() =>
+            shisoku.CalcExpression.Calc(
+            new CallExpression(
+                    new (string, Expression)[] { ("x", new NumberExpression(12)) },
+                    new FunctionExpression(
+                        new List<string>() { "x", "y" },
+                        new Statement[] {
+                                new StatementReturn(new AddExpression(
+                                    new VariableExpression("x"),
+                                    new VariableExpression("y")
+                                )
+                            )
+                        }
+                    )
+                ),
+                new VariableEnvironment()
+            )
+        );
+    }
 }
