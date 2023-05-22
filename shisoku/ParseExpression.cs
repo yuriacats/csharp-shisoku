@@ -126,21 +126,14 @@ public class ParseExpression
                     throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
                 }
             case [TokenCurlyBracketOpen, TokenPipe, .. var target]:
-                (var argumentName, var bodyTokens) = argumentPaser(target);
-                var bodyRest = new Token[] { };
-                var bodys = new Statement[] { };
-                while (true)
+                (var argumentNames, var bodyTokens) = argumentsPaser(target);
+                var bodys = new List<Statement> { };
+                while (bodyTokens is not [TokenCurlyBracketClose, ..])
                 {
-                    (var body, var otherTokens) = ParseStatement.parseStatement(bodyTokens);
-                    bodyRest = otherTokens;
-                    bodys = bodys.Append(body).ToArray();
-
-                    if (bodyRest[0] is TokenCurlyBracketClose)
-                    {
-                        return (new FunctionExpression(argumentName, bodys), otherTokens[1..]);
-                    }
+                    (var body, bodyTokens) = ParseStatement.parseStatement(bodyTokens);
+                    bodys.Add(body);
                 }
-                throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
+                return (new FunctionExpression(argumentNames, bodys.ToArray()), bodyTokens[1..]);
             case [TokenTrue, .. var rest]:
                 return (new BoolExpression(true), rest);
             case [TokenFalse, .. var rest]:
@@ -154,7 +147,7 @@ public class ParseExpression
 
     }
 
-    static (List<string>, shisoku.Token[]) argumentPaser(shisoku.Token[] input)
+    static (List<string>, shisoku.Token[]) argumentsPaser(shisoku.Token[] input)
     {
         var target = input;
         var result = new List<string>();
