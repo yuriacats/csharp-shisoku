@@ -9,7 +9,7 @@ public record BoolValue(bool Value) : Value
 {
     public override string ToString() => Value.ToString();
 };
-public record FunctionValue(List<string> argumentNames, Statement[] body) : Value
+public record FunctionValue(List<string> argumentNames, Statement[] body, VariableEnvironment env) : Value
 {
     public override string ToString() => $"FunctionValue({string.Join(", ", argumentNames)})";
 };

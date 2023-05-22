@@ -16,8 +16,8 @@ public class CalcExpression
     {
         switch (input)
         {
-            case FunctionValue(var argumentNames, var body):
-                return new FunctionValue(argumentNames, body);
+            case FunctionValue(var argumentNames, var body, var env):
+                return new FunctionValue(argumentNames, body, env);
             default:
                 throw new Exception($"Evaluation Error:augment type is not FunctionValue({input})");
         }
@@ -72,15 +72,15 @@ public class CalcExpression
                 }
             case FunctionExpression(var argumentNames, var body):
                 {
-                    return new FunctionValue(argumentNames, body);
+                    return new FunctionValue(argumentNames, body, env);
                 }
             case CallExpression(var arguments, var function):
                 {
-                    var newEnv = env.WithNewContext();
-                    var targetValue = Calc(function, newEnv);
+                    var targetValue = Calc(function, env);
                     switch (targetValue)
                     {
-                        case FunctionValue(var argumentNames, var body):
+                        case FunctionValue(var argumentNames, var body, var funcEnv):
+                            var newEnv = funcEnv.WithNewContext();
                             for (int i = 0; i < arguments.Length; i++)
                             {
                                 if (argumentNames.Contains(arguments[i].Item1))

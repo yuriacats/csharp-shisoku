@@ -109,11 +109,11 @@ public class CalcTest
     [Fact]
     public void functionExpressionCanEvaluate()
     {
-        var expectedValue = new FunctionValue(new List<string>(), new Statement[] { });
+        var expectedValue = new FunctionValue(new List<string>(), new Statement[] { }, new VariableEnvironment());
         var result = shisoku.CalcExpression.Calc(new FunctionExpression(new List<string>(), new Statement[] { }), new VariableEnvironment());
         switch (result)
         {
-            case FunctionValue(var arguments, var body):
+            case FunctionValue(var arguments, var body, var env):
                 Assert.Equal(expectedValue.argumentNames, arguments);
                 Assert.Equal(expectedValue.body, body);
                 break;

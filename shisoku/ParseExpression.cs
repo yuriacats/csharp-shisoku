@@ -14,7 +14,6 @@ public class ParseExpression
         {
             (var arguments, rest) = parseArguments(innerRest);
             result = new CallExpression(arguments, result);
-            break;
         }
         return (result, rest);
     }
