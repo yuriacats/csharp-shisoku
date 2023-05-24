@@ -1,0 +1,5 @@
+const f= {|a |->
+return{|b|-> return a+b;};
+};
+return f(a=5)(b=7);
+

@@ -13,7 +13,7 @@ public class CalcFunctionBody
                     CalcExpression.Calc(expr, env);
                     continue;
                 case StatementConst(var name, var expr):
-                    env.Add(name, CalcExpression.toInt(CalcExpression.Calc(expr, env)));
+                    env.Add(name, CalcExpression.Calc(expr, env));
                     continue;
                 case StatementReturn(var expr):
                     return (CalcExpression.Calc(expr, env));

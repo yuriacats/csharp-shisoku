@@ -12,6 +12,16 @@ public class CalcExpression
                 throw new Exception($"Evaluation Error:augment type is not int({input})");
         }
     }
+    public static FunctionValue toFunc(Value input)
+    {
+        switch (input)
+        {
+            case FunctionValue(var argumentNames, var body, var env):
+                return new FunctionValue(argumentNames, body, env);
+            default:
+                throw new Exception($"Evaluation Error:augment type is not FunctionValue({input})");
+        }
+    }
 
     public static Value Calc(Expression input, VariableEnvironment env)
     {
@@ -24,7 +34,7 @@ public class CalcExpression
                 }
             case VariableExpression(var name):
                 {
-                    return new IntValue(env[name]);
+                    return env[name];
                 }
             case BoolExpression(var value):
                 {
@@ -62,7 +72,23 @@ public class CalcExpression
                 }
             case FunctionExpression(var argumentNames, var body):
                 {
-                    return new FunctionValue(argumentNames, body);
+                    return new FunctionValue(argumentNames, body, env);
+                }
+            case CallExpression(var argumentsExpressions, var function):
+                {
+                    var targetValue = Calc(function, env);
+                    var givenArgumentNames = argumentsExpressions.Select(x => x.Item1).ToList();
+                    var givenArgumentNameSet = new HashSet<string>(givenArgumentNames);
+                    var (argumentNames, body, funcEnv) = toFunc(targetValue);
+                    var expectedArgumentNames = new HashSet<string>(argumentNames);
+                    if (!expectedArgumentNames.SetEquals(givenArgumentNames))
+                    {
+                        throw new Exception($"Method not implemented.");
+                    }
+                    var givenArgumentsValues = argumentsExpressions.Select(
+                    argument => (argument.Item1, Calc(argument.Item2, env))).ToList();
+                    var newEnv = funcEnv.WithNewContext(givenArgumentsValues.ToArray());
+                    return CalcFunctionBody.Calc(body, newEnv);
                 }
             default:
                 throw new Exception($"Evaluation Error:{input}");
