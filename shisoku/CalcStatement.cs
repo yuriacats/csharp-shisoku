@@ -13,7 +13,6 @@ public class CalcFunctionBody
                     CalcExpression.Calc(expr, env);
                     continue;
                 case StatementConst(var name, var expr):
-                    //Envのリストに対して思った通りの挿入をする関数を作る必要がある。
                     env.Add(name, CalcExpression.Calc(expr, env));
                     continue;
                 case StatementReturn(var expr):

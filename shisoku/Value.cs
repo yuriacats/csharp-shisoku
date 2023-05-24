@@ -36,6 +36,12 @@ public class VariableEnvironment
         newEnvDictionaries.Add(new Dictionary<string, Value>());
         return new VariableEnvironment(newEnvDictionaries);
     }
+    public VariableEnvironment WithNewContext((string, Value)[] givenEnvDictionaries)
+    {
+        var newEnvDictionaries = new List<Dictionary<string, Value>>(envDictionaries);
+        newEnvDictionaries.Add(givenEnvDictionaries.ToDictionary(x => x.Item1, x => x.Item2));
+        return new VariableEnvironment(newEnvDictionaries);
+    }
     public Value this[string name]
     {
         get
