@@ -344,4 +344,23 @@ public class LexerTest
 
         // Then
     }
+    [Fact]
+    public void switchCanBeTokenized()
+    {
+        // Given
+        var expectedToken = new List<Token>{
+            new TokenSwitch(),
+            new TokenBracketOpen(),
+            new TokenNumber(12),
+            new TokenEqualEqual(),
+            new TokenNumber(12),
+            new TokenBracketClose()
+        };
+
+        // When
+        var tokens = shisoku.Lexer.lex("switch (12==12)");
+        Assert.Equal<Token>(expectedToken, tokens);
+
+        // Then
+    }
 }

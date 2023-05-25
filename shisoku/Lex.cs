@@ -151,6 +151,8 @@ public class Lexer
                 return (new TokenFalse(), targetWord.Length);
             case "return":
                 return (new TokenReturn(), targetWord.Length);
+            case "switch":
+                return (new TokenSwitch(), targetWord.Length);
             default:
                 return (new TokenIdentifier(targetWord), targetWord.Length);
         }
