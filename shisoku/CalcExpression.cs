@@ -88,7 +88,7 @@ public class CalcExpression
                     var givenArgumentsValues = argumentsExpressions.Select(
                     argument => (argument.Item1, Calc(argument.Item2, env))).ToList();
                     var newEnv = funcEnv.WithNewContext(givenArgumentsValues.ToArray());
-                    return CalcFunctionBody.Calc(body, newEnv);
+                    return CalcFunctionBody.CalcFunction(body, newEnv);
                 }
             default:
                 throw new Exception($"Evaluation Error:{input}");

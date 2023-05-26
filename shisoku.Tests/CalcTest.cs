@@ -231,4 +231,35 @@ public class CalcTest
             )
         );
     }
+    [Fact]
+    public void CallSwitchCanCalclate()
+    {
+        var statement = new Statement[] {
+            new StatementConst("a",new NumberExpression(12)),
+            new StatementSwitch(
+                new EqualExpression(new VariableExpression("a"), new NumberExpression(12)),
+                new List<(Expression, Statement[])>{
+                new (new BoolExpression(true),new List<Statement>{new StatementReturn(new NumberExpression(12))}.ToArray()),
+                new (new VariableExpression("default"), new List<Statement>{new StatementReturn(new NumberExpression(13))}.ToArray()) }.ToArray()
+            ),
+            };
+        var expectedValue = new IntValue(12);
+        var value = CalcFunctionBody.CalcStatements(statement, new VariableEnvironment());
+        Assert.Equal(value, expectedValue);
+    }
+    [Fact]
+    public void CallSwitchCanCalclateNotRerurn()
+    {
+        var statement = new Statement[] {
+            new StatementConst("a",new NumberExpression(12)),
+            new StatementSwitch(
+                new EqualExpression(new VariableExpression("a"), new NumberExpression(12)),
+                new List<(Expression, Statement[])>{
+                new (new BoolExpression(true),new Statement[]{}),
+                new (new VariableExpression("default"), new List<Statement>{new StatementReturn(new NumberExpression(13))}.ToArray()) }.ToArray()
+            ),
+            };
+        var value = CalcFunctionBody.CalcStatements(statement, new VariableEnvironment());
+        Assert.Equal(null, value);
+    }
 }
