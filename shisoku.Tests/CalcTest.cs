@@ -260,6 +260,6 @@ public class CalcTest
             ),
             };
         var value = CalcFunctionBody.CalcStatements(statement, new VariableEnvironment());
-        Assert.Equal(null, value);
+        Assert.Null(value);
     }
 }
