@@ -276,7 +276,6 @@ public class ParserTest
             };
         var expectedAst = new CallExpression(new (string, Expression)[] { }, new VariableExpression("hoge"));
         (var result, _) = ParseExpression.parse(inputToken.ToArray());
-        Console.WriteLine(result);
         switch (result)
         {
             case CallExpression(var arguments, var body):
@@ -303,7 +302,6 @@ public class ParserTest
             };
         var expectedAst = new CallExpression(new (string, Expression)[] { ("huga", new NumberExpression(12)) }, new VariableExpression("hoge"));
         (var result, _) = ParseExpression.parse(inputToken.ToArray());
-        Console.WriteLine(result);
         switch (result)
         {
             case CallExpression(var arguments, var body):
@@ -335,7 +333,6 @@ public class ParserTest
             };
         var expectedAst = new CallExpression(new (string, Expression)[] { ("huga", new NumberExpression(12)), ("piyo", new NumberExpression(13)) }, new VariableExpression("hoge"));
         (var result, _) = ParseExpression.parse(inputToken.ToArray());
-        Console.WriteLine(result);
         switch (result)
         {
             case CallExpression(var arguments, var body):
@@ -364,6 +361,59 @@ public class ParserTest
                 new TokenBracketClose()
             };
         Assert.Throws<Exception>(() => ParseExpression.parse(inputToken.ToArray()));
+    }
+    [Fact]
+    public void switchCanParse()
+    {
+        var inputToken = new List<Token>{
+            new TokenSwitch(),
+            new TokenIdentifier("a"),
+            new TokenEqualEqual(),
+            new TokenNumber(12),
+            new TokenQuestion(),
+            new TokenTrue(),
+            new TokenColon(),
+            new TokenCurlyBracketOpen(),
+            new TokenReturn(),
+            new TokenNumber(12),
+            new TokenSemicolon(),
+            new TokenCurlyBracketClose(),
+            new TokenComma(),
+            new TokenIdentifier("default"),
+            new TokenColon(),
+            new TokenCurlyBracketOpen(),
+            new TokenReturn(),
+            new TokenNumber(13),
+            new TokenSemicolon(),
+            new TokenCurlyBracketClose(),
+            new TokenComma(),
+            new TokenSemicolon(),
+        };
+        (var result, _) = ParseStatement.parse(inputToken.ToArray());
+        var exprectedAst = new StatementSwitch(
+            new EqualExpression(new VariableExpression("a"), new NumberExpression(12)),
+            new List<(Expression, Statement[])>{
+            new (new BoolExpression(true),new List<Statement>{new StatementReturn(new NumberExpression(12))}.ToArray()),
+            new (new VariableExpression("default"), new List<Statement>{new StatementReturn(new NumberExpression(13))}.ToArray())
+            }.ToArray()
+        );
+        if (result.Length != 1)
+        {
+            Assert.Fail("Tokens Cannot parse SwitchStatement");
+        }
+        switch (result[0])
+        {
+            case StatementSwitch(var targetExpression, var cases):
+                Assert.Equal(exprectedAst.targetExpression, targetExpression);
+                Assert.Equal(exprectedAst.cases[0].Item1, cases[0].Item1);
+                Assert.Equal(exprectedAst.cases[0].Item2[0], cases[0].Item2[0]);
+                break;
+
+            default:
+                Assert.Fail("Tokens Cannot parse SwitchStatement");
+                break;
+        }
+
     }
 }
 

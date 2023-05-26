@@ -76,13 +76,13 @@ class Program
         {
             throw new Exception("複数文は受け付けられません");
         }
-        return CalcFunctionBody.Calc(statements, env);
+        return CalcFunctionBody.CalcFunction(statements, env);
     }
     static Value Calculate(string input, VariableEnvironment env)
     {
         var tokens = Lexer.lex(input);
         var (statements, _) = ParseStatement.parse(tokens.ToArray());
         //TODO 諸々仕様固まってから考える
-        return CalcFunctionBody.Calc(statements, env);
+        return CalcFunctionBody.CalcFunction(statements, env);
     }
 }

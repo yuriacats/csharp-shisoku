@@ -60,6 +60,7 @@ public class ParseExpression
                     result = new EqualExpression(result, eqRhs);
                     rest = eqRest;
                     break;
+
             }
         }
         return (result, rest);

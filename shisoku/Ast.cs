@@ -18,4 +18,5 @@ public abstract record Statement();
 public record StatementExpression(Expression expr) : Statement;
 public record StatementConst(string name, Expression expr) : Statement;
 public record StatementReturn(Expression expr) : Statement;
+public record StatementSwitch(Expression targetExpression, (Expression, Statement[])[] cases) : Statement;
 

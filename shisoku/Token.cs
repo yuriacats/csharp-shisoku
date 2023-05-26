@@ -10,6 +10,7 @@ public record TokenBracketOpen() : Token;
 public record TokenBracketClose() : Token;
 // 変数追加機能で加えたToken
 public record TokenConst() : Token;
+public record TokenSwitch() : Token;
 public record TokenVariable() : Token;
 public record TokenEqual() : Token;
 public record TokenTrue() : Token;
