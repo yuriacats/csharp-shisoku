@@ -136,7 +136,7 @@ public class CalcTest
         var env = new VariableEnvironment();
         env.Add("func", new FunctionValue(new List<string>(), new Statement[] { }, new VariableEnvironment()));
         var expectedValue = new FunctionValue(new List<string>(), new Statement[] { }, env);
-        var result = shisoku.CalcExpression.Calc(new RecursionFunctionExpression(new List<string>(), new Statement[] { }, "fanc"), new VariableEnvironment());
+        var result = shisoku.CalcExpression.Calc(new RecursiveFunctionExpression(new List<string>(), new Statement[] { }, "fanc"), new VariableEnvironment());
         switch (result)
         {
             case FunctionValue(var arguments, var body, _):

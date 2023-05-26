@@ -232,13 +232,13 @@ public class ParserTest
             new TokenSemicolon(),
             new TokenCurlyBracketClose()
         };
-        var expectedAst = new RecursionFunctionExpression(new List<string>(), new Statement[]{
+        var expectedAst = new RecursiveFunctionExpression(new List<string>(), new Statement[]{
             new StatementConst("test", new NumberExpression(12))
         }, "test");
         (var result, _) = ParseExpression.parse(inputToken.ToArray());
         switch (result)
         {
-            case RecursionFunctionExpression(var arguments, var body, var name):
+            case RecursiveFunctionExpression(var arguments, var body, var name):
                 Assert.Equal(expectedAst.body, body);
                 Assert.Equal(expectedAst.argumentNames, arguments);
                 Assert.Equal(expectedAst.funcName, name);

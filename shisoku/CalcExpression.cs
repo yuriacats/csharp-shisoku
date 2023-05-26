@@ -78,7 +78,7 @@ public class CalcExpression
                 {
                     return new FunctionValue(argumentNames, body, env);
                 }
-            case RecursionFunctionExpression(var argumentNames, var body, var ValueName):
+            case RecursiveFunctionExpression(var argumentNames, var body, var ValueName):
                 {
                     env.Add(ValueName, new FunctionValue(argumentNames, body, env));
                     return new FunctionValue(argumentNames, body, env);

@@ -46,6 +46,8 @@ function main() {
     sum_exit_code=$((sum_exit_code + $?))
     run_test_file_case "関数ないで変数を定義できる" "shisoku.Integration/functionCanHaveConstStatement.shisoku" "14" 
     sum_exit_code=$((sum_exit_code + $?))
+    run_test_file_case "再帰関数を定義できる" "shisoku.Integration/RecursionFunction.shisoku" "5050" 
+    sum_exit_code=$((sum_exit_code + $?))
 
     if [ ${sum_exit_code} == "0" ]; then
         return 0
