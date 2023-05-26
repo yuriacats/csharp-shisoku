@@ -130,6 +130,15 @@ public class ParseExpression
                 {
                     throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
                 }
+            case [TokenDef, TokenIdentifier(var name), TokenCurlyBracketOpen, TokenPipe, .. var target]:
+                (var defArgumentNames, var defBodyTokens) = argumentsPaser(target);
+                var defBodys = new List<Statement> { };
+                while (defBodyTokens is not [TokenCurlyBracketClose, ..])
+                {
+                    (var defBody, defBodyTokens) = ParseStatement.parseStatement(defBodyTokens);
+                    defBodys.Add(defBody);
+                }
+                return (new RecursionFunctionExpression(defArgumentNames, defBodys.ToArray(), name), defBodyTokens[1..]);
             case [TokenCurlyBracketOpen, TokenPipe, .. var target]:
                 (var argumentNames, var bodyTokens) = argumentsPaser(target);
                 var bodys = new List<Statement> { };
