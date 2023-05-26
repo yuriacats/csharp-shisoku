@@ -145,7 +145,7 @@ public class CalcTest
                 break;
 
             default:
-                Assert.Fail("result is not make CallExpression");
+                Assert.Fail("RecursiveFunctionExpression cannot calc to FunctionValue");
                 break;
         }
     }
