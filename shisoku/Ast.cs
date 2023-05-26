@@ -8,6 +8,7 @@ public record AddExpression(Expression left, Expression right) : Expression;
 public record SubExpression(Expression left, Expression right) : Expression;
 public record MulExpression(Expression left, Expression right) : Expression;
 public record DivExpression(Expression left, Expression right) : Expression;
+public record ModExpression(Expression left, Expression right) : Expression;
 public record EqualExpression(Expression left, Expression right) : Expression;
 public record FunctionExpression(List<String> argumentNames, Statement[] body) : Expression;
 public record CallExpression((string, Expression)[] arguments, Expression functionBody) : Expression;

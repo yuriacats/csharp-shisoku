@@ -32,3 +32,5 @@ public record TokenAngleBracketClose() : Token;
 public record TokenQuestion() : Token;
 public record TokenEqualEqual() : Token;
 public record TokenReturn() : Token;
+public record TokenPercent() : Token;
+public record TokenDef() : Token;

@@ -90,7 +90,7 @@ public class ParseExpression
     static (Expression, shisoku.Token[]) parseMulDiv(shisoku.Token[] input)
     {
         (var result, var rest) = parseNumOrSection(input);
-        while (rest is [TokenSlash or TokenAsterisk, .. var rest2])
+        while (rest is [TokenSlash or TokenAsterisk or TokenPercent, .. var rest2])
         {
             switch (rest[0])
             {
@@ -103,6 +103,11 @@ public class ParseExpression
                     var (divRhs, divRest) = parseNumOrSection(rest2);
                     result = new DivExpression(result, divRhs);
                     rest = divRest;
+                    break;
+                case TokenPercent:
+                    var (modRhs, modRest) = parseNumOrSection(rest2);
+                    result = new ModExpression(result, modRhs);
+                    rest = modRest;
                     break;
             }
         }
