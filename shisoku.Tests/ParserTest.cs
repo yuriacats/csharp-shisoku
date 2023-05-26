@@ -276,7 +276,6 @@ public class ParserTest
             };
         var expectedAst = new CallExpression(new (string, Expression)[] { }, new VariableExpression("hoge"));
         (var result, _) = ParseExpression.parse(inputToken.ToArray());
-        Console.WriteLine(result);
         switch (result)
         {
             case CallExpression(var arguments, var body):
@@ -303,7 +302,6 @@ public class ParserTest
             };
         var expectedAst = new CallExpression(new (string, Expression)[] { ("huga", new NumberExpression(12)) }, new VariableExpression("hoge"));
         (var result, _) = ParseExpression.parse(inputToken.ToArray());
-        Console.WriteLine(result);
         switch (result)
         {
             case CallExpression(var arguments, var body):
@@ -364,6 +362,7 @@ public class ParserTest
             };
         Assert.Throws<Exception>(() => ParseExpression.parse(inputToken.ToArray()));
     }
+    [Fact]
     public void switchCanParse()
     {
         var inputToken = new List<Token>{
@@ -385,7 +384,10 @@ public class ParserTest
             new TokenCurlyBracketOpen(),
             new TokenReturn(),
             new TokenNumber(13),
-            new TokenCurlyBracketClose()
+            new TokenSemicolon(),
+            new TokenCurlyBracketClose(),
+            new TokenComma(),
+            new TokenSemicolon(),
         };
         (var result, _) = ParseStatement.parse(inputToken.ToArray());
         var exprectedAst = new StatementSwitch(

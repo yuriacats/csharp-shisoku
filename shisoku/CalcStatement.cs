@@ -17,6 +17,20 @@ public class CalcFunctionBody
                     continue;
                 case StatementReturn(var expr):
                     return (CalcExpression.Calc(expr, env));
+                case StatementSwitch(var targetExpression, var cases):
+                    var target = CalcExpression.Calc(targetExpression, env);
+                    var newEnv = env.WithNewContext();
+                    foreach (var aCase in cases)
+                    {
+                        var caseExpression = CalcExpression.Calc(aCase.Item1, newEnv);
+                        if (caseExpression == target)
+                        {
+                            Calc(aCase.Item2, newEnv);
+                            break;
+                        }
+
+                    }
+                    continue;
                 default:
                     throw new Exception("Statemtnt parse Error");
             }

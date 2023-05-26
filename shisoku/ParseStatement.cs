@@ -24,6 +24,7 @@ public class ParseStatement
         {
             [TokenConst, ..] => parseConst(tokens),
             [TokenReturn, ..] => parseReturn(tokens),
+            [TokenSwitch, ..] => parseSwitch(tokens),
             _ => parseExpressionStatement(tokens)
         };
 
@@ -65,17 +66,16 @@ public class ParseStatement
             (var expression, var rest) = ParseExpression.parse(restToken);
             if (rest is [TokenQuestion, .. var rest2])
             {
-                (var targetExpression, var rest3) = ParseExpression.parse(rest2);
-                if (rest3[0] is not TokenQuestion)
-                {
-                    throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', rest3)}");
-                }
                 var cases = new (Expression, Statement[])[] { };
-                var (aCase, rest4) = ParseCase(rest3[1..]);
-                cases.Append(aCase);
-                if (aCase.Item1 is VariableExpression("default"))
+                while (rest2 is not [])
                 {
-                    return (new StatementSwitch(expression, cases), rest);
+                    var (aCase, rest4) = ParseCase(rest2);
+                    cases = cases.Append(aCase).ToArray();
+                    if (aCase.Item1 is VariableExpression("default"))
+                    {
+                        return (new StatementSwitch(expression, cases), rest4);
+                    }
+                    rest2 = rest4;
                 }
             }
         }
