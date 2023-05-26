@@ -58,4 +58,46 @@ public class ParseStatement
         }
         throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', tokens)}");
     }
+    private static (Statement, Token[]) parseSwitch(Token[] tokens)
+    {
+        if (tokens is [TokenSwitch, .. var restToken])
+        {
+            (var expression, var rest) = ParseExpression.parse(restToken);
+            if (rest is [TokenQuestion, .. var rest2])
+            {
+                (var targetExpression, var rest3) = ParseExpression.parse(rest2);
+                if (rest3[0] is not TokenQuestion)
+                {
+                    throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', rest3)}");
+                }
+                var cases = new (Expression, Statement[])[] { };
+                var (aCase, rest4) = ParseCase(rest3[1..]);
+                cases.Append(aCase);
+                if (aCase.Item1 is VariableExpression("default"))
+                {
+                    return (new StatementSwitch(expression, cases), rest);
+                }
+            }
+        }
+        throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', tokens)}");
+    }
+
+    private static ((Expression, Statement[]), Token[]) ParseCase(Token[] tokens)
+    {
+        (var CaseExpression, var rest) = ParseExpression.parse(tokens);
+        if (rest is not [TokenColon, TokenCurlyBracketOpen, ..])
+        {
+            throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', rest)}");
+        }
+        var rest2 = rest[2..];
+        var statements = new Statement[] { };
+        while (rest2 is not [TokenCurlyBracketClose, TokenComma, ..])
+        {
+            (var statement, var rest3) = parseStatement(rest2);
+            rest2 = rest3;
+            statements = statements.Append(statement).ToArray();
+        }
+        return ((CaseExpression, statements), rest2[2..]);
+    }
+
 }
