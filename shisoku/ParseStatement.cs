@@ -61,23 +61,27 @@ public class ParseStatement
     }
     private static (Statement, Token[]) parseSwitch(Token[] tokens)
     {
-        if (tokens is [TokenSwitch, .. var restToken])
+        if (tokens is not [TokenSwitch, .. var restToken])
         {
-            (var expression, var rest) = ParseExpression.parse(restToken);
-            if (rest is [TokenQuestion, .. var rest2])
+            throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', tokens)}");
+        }
+        (var expression, var rest) = ParseExpression.parse(tokens[1..]);
+        if (rest is not [TokenQuestion, ..])
+        {
+            throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', rest)}");
+        }
+        var cases = new (Expression, Statement[])[] { };
+        rest = rest[1..];
+        while (rest is not [])
+        {
+            var (aCase, rest4) = ParseCase(rest);
+            cases = cases.Append(aCase).ToArray();
+            if (aCase.Item1 is VariableExpression("default"))
+            // TODO defaultをキーワードとしてTokerneizerのところから特別扱いする。ちょっと処理が特殊になりそうなので一旦放置
             {
-                var cases = new (Expression, Statement[])[] { };
-                while (rest2 is not [])
-                {
-                    var (aCase, rest4) = ParseCase(rest2);
-                    cases = cases.Append(aCase).ToArray();
-                    if (aCase.Item1 is VariableExpression("default"))
-                    {
-                        return (new StatementSwitch(expression, cases), rest4);
-                    }
-                    rest2 = rest4;
-                }
+                return (new StatementSwitch(expression, cases), rest4);
             }
+            rest = rest4;
         }
         throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', tokens)}");
     }
@@ -89,15 +93,15 @@ public class ParseStatement
         {
             throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', rest)}");
         }
-        var rest2 = rest[2..];
+        rest = rest[2..];
         var statements = new Statement[] { };
-        while (rest2 is not [TokenCurlyBracketClose, TokenComma, ..])
+        while (rest is not [TokenCurlyBracketClose, TokenComma, ..])
         {
-            (var statement, var rest3) = parseStatement(rest2);
-            rest2 = rest3;
+            (var statement, var rest2) = parseStatement(rest);
+            rest = rest2;
             statements = statements.Append(statement).ToArray();
         }
-        return ((CaseExpression, statements), rest2[2..]);
+        return ((CaseExpression, statements), rest[2..]);
     }
 
 }
