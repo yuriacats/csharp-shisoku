@@ -75,6 +75,11 @@ public class Lexer
                 tokens.Add(new TokenPipe());
                 input = input[(1)..];
             }
+            else if (input[0] == '%')
+            {
+                tokens.Add(new TokenMod());
+                input = input[(1)..];
+            }
             else if (input[0] == '-')
             {
                 if (input.Length >= 2 && input[1] == '>')
@@ -153,6 +158,8 @@ public class Lexer
                 return (new TokenReturn(), targetWord.Length);
             case "switch":
                 return (new TokenSwitch(), targetWord.Length);
+            case "def":
+                return (new TokenDef(), targetWord.Length);
             default:
                 return (new TokenIdentifier(targetWord), targetWord.Length);
         }
