@@ -131,6 +131,25 @@ public class CalcTest
         }
     }
     [Fact]
+    public void FunctionExpressionCanEvaluate()
+    {
+        var env = new VariableEnvironment();
+        env.Add("func", new FunctionValue(new List<string>(), new Statement[] { }, new VariableEnvironment()));
+        var expectedValue = new FunctionValue(new List<string>(), new Statement[] { }, env);
+        var result = shisoku.CalcExpression.Calc(new RecursiveFunctionExpression(new List<string>(), new Statement[] { }, "fanc"), new VariableEnvironment());
+        switch (result)
+        {
+            case FunctionValue(var arguments, var body, _):
+                Assert.Equal(expectedValue.argumentNames, arguments);
+                Assert.Equal(expectedValue.body, body);
+                break;
+
+            default:
+                Assert.Fail("RecursiveFunctionExpression cannot calc to FunctionValue");
+                break;
+        }
+    }
+    [Fact]
     public void FunctionCallCanEvaluate()
     {
         var expression = new CallExpression(

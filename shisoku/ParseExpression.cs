@@ -4,49 +4,7 @@ public class ParseExpression
 {
     public static (Expression, shisoku.Token[]) parse(shisoku.Token[] input)
     {
-        return parseCall(input);
-    }
-    static (Expression, shisoku.Token[]) parseCall(shisoku.Token[] input)
-    {
-        (var result, var rest) = parseComparator(input);
-
-        while (rest is [TokenBracketOpen, .. var innerRest])
-        {
-            (var arguments, rest) = parseArguments(innerRest);
-            result = new CallExpression(arguments, result);
-        }
-        return (result, rest);
-    }
-
-    static ((string, Expression)[], shisoku.Token[]) parseArguments(shisoku.Token[] input)
-    {
-        var target = input;
-        var arguments = new (string, Expression)[] { };
-        while (target is not [])
-        {
-            switch (target)
-            {
-                case [TokenIdentifier(var argumentName), TokenEqual, .. var target2]:
-                    var (argumentExpression, rest2) = parse(target2);
-                    arguments = arguments.Append((argumentName, argumentExpression)).ToArray();
-                    switch (rest2)
-                    {
-                        case [TokenBracketClose, .. var rest3]:
-                            {
-                                return (arguments, rest3);
-                            }
-                        case [TokenComma, .. var rest3]:
-                            target = rest3;
-                            continue;
-                    }
-                    throw new Exception($"Cannot parse arguments in: {String.Join<Token>(',', target)}");
-                case [TokenBracketClose, .. var target2]:
-                    return (arguments, target2);
-                default:
-                    throw new Exception($"Cannot parse arguments in: {String.Join<Token>(',', target)}");
-            }
-        }
-        throw new Exception($"Cannot parse arguments in: {String.Join<Token>(',', target)}");
+        return parseComparator(input);
     }
     static (Expression, shisoku.Token[]) parseComparator(shisoku.Token[] input)
     {
@@ -89,23 +47,23 @@ public class ParseExpression
     }
     static (Expression, shisoku.Token[]) parseMulDiv(shisoku.Token[] input)
     {
-        (var result, var rest) = parseNumOrSection(input);
+        (var result, var rest) = parseCall(input);
         while (rest is [TokenSlash or TokenAsterisk or TokenPercent, .. var rest2])
         {
             switch (rest[0])
             {
                 case TokenAsterisk:
-                    var (malRhs, malRest) = parseNumOrSection(rest2);
+                    var (malRhs, malRest) = parseCall(rest2);
                     result = new MulExpression(result, malRhs);
                     rest = malRest;
                     break;
                 case TokenSlash:
-                    var (divRhs, divRest) = parseNumOrSection(rest2);
+                    var (divRhs, divRest) = parseCall(rest2);
                     result = new DivExpression(result, divRhs);
                     rest = divRest;
                     break;
                 case TokenPercent:
-                    var (modRhs, modRest) = parseNumOrSection(rest2);
+                    var (modRhs, modRest) = parseCall(rest2);
                     result = new ModExpression(result, modRhs);
                     rest = modRest;
                     break;
@@ -114,6 +72,48 @@ public class ParseExpression
         return (result, rest);
     }
 
+    static (Expression, shisoku.Token[]) parseCall(shisoku.Token[] input)
+    {
+        (var result, var rest) = parseNumOrSection(input);
+
+        while (rest is [TokenBracketOpen, .. var innerRest])
+        {
+            (var arguments, rest) = parseArguments(innerRest);
+            result = new CallExpression(arguments, result);
+        }
+        return (result, rest);
+    }
+
+    static ((string, Expression)[], shisoku.Token[]) parseArguments(shisoku.Token[] input)
+    {
+        var target = input;
+        var arguments = new (string, Expression)[] { };
+        while (target is not [])
+        {
+            switch (target)
+            {
+                case [TokenIdentifier(var argumentName), TokenEqual, .. var target2]:
+                    var (argumentExpression, rest2) = parse(target2);
+                    arguments = arguments.Append((argumentName, argumentExpression)).ToArray();
+                    switch (rest2)
+                    {
+                        case [TokenBracketClose, .. var rest3]:
+                            {
+                                return (arguments, rest3);
+                            }
+                        case [TokenComma, .. var rest3]:
+                            target = rest3;
+                            continue;
+                    }
+                    throw new Exception($"Cannot parse arguments in: {String.Join<Token>(',', target)}");
+                case [TokenBracketClose, .. var target2]:
+                    return (arguments, target2);
+                default:
+                    throw new Exception($"Cannot parse arguments in: {String.Join<Token>(',', target)}");
+            }
+        }
+        throw new Exception($"Cannot parse arguments in: {String.Join<Token>(',', target)}");
+    }
     static (Expression, shisoku.Token[]) parseNumOrSection(shisoku.Token[] input)
     {
         switch (input)
@@ -121,7 +121,7 @@ public class ParseExpression
             case [TokenNumber(var num), .. var rest]:
                 return (new NumberExpression(num), rest);
             case [TokenBracketOpen, .. var target]:
-                (var inner_ast, var token_rest) = parseComparator(target);
+                (var inner_ast, var token_rest) = parse(target);
                 if (token_rest[0] is TokenBracketClose)
                 {
                     return (inner_ast, token_rest[1..]);
@@ -130,6 +130,15 @@ public class ParseExpression
                 {
                     throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
                 }
+            case [TokenDef, TokenIdentifier(var name), TokenCurlyBracketOpen, TokenPipe, .. var target]:
+                (var defArgumentNames, var defBodyTokens) = argumentsPaser(target);
+                var defBodys = new List<Statement> { };
+                while (defBodyTokens is not [TokenCurlyBracketClose, ..])
+                {
+                    (var defBody, defBodyTokens) = ParseStatement.parseStatement(defBodyTokens);
+                    defBodys.Add(defBody);
+                }
+                return (new RecursiveFunctionExpression(defArgumentNames, defBodys.ToArray(), name), defBodyTokens[1..]);
             case [TokenCurlyBracketOpen, TokenPipe, .. var target]:
                 (var argumentNames, var bodyTokens) = argumentsPaser(target);
                 var bodys = new List<Statement> { };

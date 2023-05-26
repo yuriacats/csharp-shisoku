@@ -1,0 +1,7 @@
+def sumFromOneToN {| n |->
+    switch n == 1 ?
+        true: {return 1;},
+        default: {return n +sumFromOneToN(n=n-1);},;
+};
+return sumFromOneToN(n=100);
+

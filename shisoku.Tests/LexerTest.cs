@@ -341,6 +341,18 @@ public class LexerTest
         Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
+    public void defCanBeTokenized()
+    {
+        var expectedToken = new List<Token>{
+            new TokenDef(),
+            new TokenIdentifier("hoge"),
+            new TokenCurlyBracketOpen(),
+            new TokenCurlyBracketClose()
+        };
+        var tokens = shisoku.Lexer.lex("def hoge{}");
+        Assert.Equal<Token>(expectedToken, tokens);
+    }
+    [Fact]
     public void returnCanBeTokenized()
     {
         // Given
