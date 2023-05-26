@@ -77,7 +77,7 @@ public class Lexer
             }
             else if (input[0] == '%')
             {
-                tokens.Add(new TokenMod());
+                tokens.Add(new TokenPercent());
                 input = input[(1)..];
             }
             else if (input[0] == '-')

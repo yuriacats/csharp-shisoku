@@ -61,6 +61,17 @@ public class LexerTest
         Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
+    public void ModCanBeTokenized()
+    {
+        var expectedToken = new List<Token> {
+            new TokenNumber(12),
+            new TokenPercent(),
+            new TokenNumber(12)
+         };
+        var tokens = shisoku.Lexer.lex("12%12");
+        Assert.Equal<Token>(expectedToken, tokens);
+    }
+    [Fact]
     public void SlashOfEndCanBeTokenized()
     {
         var expectedToken = new List<Token> {

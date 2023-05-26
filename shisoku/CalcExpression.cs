@@ -56,6 +56,10 @@ public class CalcExpression
                 {
                     return new IntValue(toInt(Calc(lhs, env)) / toInt(Calc(rhs, env)));
                 }
+            case ModExpression(var lhs, var rhs):
+                {
+                    return new IntValue(toInt(Calc(lhs, env)) % toInt(Calc(rhs, env)));
+                }
             case EqualExpression(var lhs, var rhs):
                 {
                     var valueOfLhs = Calc(lhs, env);

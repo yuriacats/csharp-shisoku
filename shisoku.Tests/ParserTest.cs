@@ -64,6 +64,18 @@ public class ParserTest
         Assert.Equal(expectedAst, outputAst);
     }
     [Fact]
+    public void SimplePercentCanParse()
+    {
+        var inputToken = new List<Token> {
+            new TokenNumber(12),
+            new TokenPercent(),
+            new TokenNumber(13)
+        };
+        var (outputAst, _) = ParseExpression.parse(inputToken.ToArray());
+        var expectedAst = new ModExpression(new NumberExpression(12), new NumberExpression(13));
+        Assert.Equal(expectedAst, outputAst);
+    }
+    [Fact]
     public void MultipleSubCanParse()
     {
         var inputToken = new List<Token> {

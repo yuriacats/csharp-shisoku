@@ -40,6 +40,13 @@ public class CalcTest
         Assert.Equal<Value>(expectedValue, value);
     }
     [Fact]
+    public void ModEvaluates()
+    {
+        var expectedValue = new IntValue(1);
+        var value = shisoku.CalcExpression.Calc(new ModExpression(new NumberExpression(25), new NumberExpression(2)), new VariableEnvironment());
+        Assert.Equal<Value>(expectedValue, value);
+    }
+    [Fact]
     public void EqualEvaluatesToTrueWhenInputsAreSameNumbers()
     {
         var expectedValue = new BoolValue(true);
