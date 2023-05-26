@@ -11,7 +11,7 @@ public record DivExpression(Expression left, Expression right) : Expression;
 public record ModExpression(Expression left, Expression right) : Expression;
 public record EqualExpression(Expression left, Expression right) : Expression;
 public record FunctionExpression(List<String> argumentNames, Statement[] body) : Expression;
-public record RecursionFunctionExpression(List<String> argumentNames, Statement[] body, string FuncName) : Expression;
+public record RecursionFunctionExpression(List<String> argumentNames, Statement[] body, string funcName) : Expression;
 public record CallExpression((string, Expression)[] arguments, Expression functionBody) : Expression;
 // TODO 型の実装が終わったらFunctionの定義もそれに合わせて変更する。
 

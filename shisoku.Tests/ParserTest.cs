@@ -216,6 +216,40 @@ public class ParserTest
         }
     }
     [Fact]
+    public void CanParseRecursionFunction()
+    {
+        var inputToken = new List<Token>{
+            new TokenDef(),
+            new TokenIdentifier("test"),
+            new TokenCurlyBracketOpen(),
+            new TokenPipe(),
+            new TokenPipe(),
+            new TokenArrow(),
+            new TokenConst(),
+            new TokenIdentifier("test"),
+            new TokenEqual(),
+            new TokenNumber(12),
+            new TokenSemicolon(),
+            new TokenCurlyBracketClose()
+        };
+        var expectedAst = new RecursionFunctionExpression(new List<string>(), new Statement[]{
+            new StatementConst("test", new NumberExpression(12))
+        }, "test");
+        (var result, _) = ParseExpression.parse(inputToken.ToArray());
+        switch (result)
+        {
+            case RecursionFunctionExpression(var arguments, var body, var name):
+                Assert.Equal(expectedAst.body, body);
+                Assert.Equal(expectedAst.argumentNames, arguments);
+                Assert.Equal(expectedAst.funcName, name);
+                break;
+
+            default:
+                Assert.Fail("result is not make FunctionExpression");
+                break;
+        }
+    }
+    [Fact]
     public void CanNotParseFunction()
     {
         var inputToken = new List<Token>{
