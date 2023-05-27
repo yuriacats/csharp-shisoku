@@ -122,7 +122,7 @@ public class Lexer
             }
             else
             {
-                throw new Exception("不正な文字が入力されています");
+                throw new Exception($"不正な文字が入力されています:{input}");
             }
         }
         return tokens;
