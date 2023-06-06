@@ -94,6 +94,18 @@ public class LexerTest
         Assert.Equal<Token>(expectedToken, tokens);
     }
     [Fact]
+    public void WordsWithUnderbarCanBeTokenized()
+    {
+        var expectedToken = new List<Token> {
+            new TokenNumber(12),
+            new TokenIdentifier("a_a"),
+            new TokenSlash(),
+            new TokenIdentifier("a"),
+         };
+        var tokens = shisoku.Lexer.lex("12a_a/a");
+        Assert.Equal<Token>(expectedToken, tokens);
+    }
+    [Fact]
     public void AWordCanBeTokenized()
     {
         var expectedToken = new List<Token> {
