@@ -133,8 +133,7 @@ public class Lexer
         string targetWord = "";
         foreach (char i in input)
         {
-            if (Char.IsLetter(i) || Char.IsNumber(i))
-            // TODO ここでアンダーバーも許可する
+            if (Char.IsLetter(i) || Char.IsNumber(i) || input[i] == '_')
             {
                 targetWord += Char.ToString(i);
             }
