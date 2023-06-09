@@ -114,7 +114,7 @@ public class Lexer
                 tokens.Add(target);
                 input = input[(len)..];
             }
-            else if (Char.IsLetter(input[0]))
+            else if (Char.IsLetter(input[0]) || input[0] == '_')
             {
                 (Token target, int len) = lexString(input);
                 tokens.Add(target);
@@ -133,8 +133,7 @@ public class Lexer
         string targetWord = "";
         foreach (char i in input)
         {
-            if (Char.IsLetter(i) || Char.IsNumber(i))
-            // TODO ここでアンダーバーも許可する
+            if (Char.IsLetter(i) || Char.IsNumber(i) || i == '_')
             {
                 targetWord += Char.ToString(i);
             }
