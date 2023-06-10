@@ -13,6 +13,10 @@ public record FunctionValue(List<string> argumentNames, Statement[] body, Variab
 {
     public override string ToString() => $"FunctionValue({string.Join(", ", argumentNames)})";
 };
+public record BildlinFunctionValue(string FunctionName, List<string> argumentNames) : Value
+{
+
+}
 
 
 public class VariableEnvironment
