@@ -13,9 +13,9 @@ public record FunctionValue(List<string> argumentNames, Statement[] body, Variab
 {
     public override string ToString() => $"FunctionValue({string.Join(", ", argumentNames)})";
 };
-public record BildlinFunctionValue(string FunctionName, List<string> argumentNames) : Value
+public record BiltlinFunctionValue(string FunctionName, List<string> argumentNames) : Value
 {
-
+    public override string ToString() => $"{FunctionName}({string.Join(", ", argumentNames)})";
 }
 
 

@@ -22,6 +22,20 @@ public class CalcExpression
                 throw new Exception($"Evaluation Error:augment type is not FunctionValue({input})");
         }
     }
+    private static List<(string, Value)> argumentList((string, Expression)[] argumentsExpressions, List<string> argumentNames, VariableEnvironment env)
+    {
+        var givenArgumentNames = argumentsExpressions.Select(x => x.Item1).ToList();
+        var givenArgumentNameSet = new HashSet<string>(givenArgumentNames);
+        var expectedArgumentNames = new HashSet<string>(argumentNames);
+        if (!expectedArgumentNames.SetEquals(givenArgumentNames))
+        {
+            throw new Exception($"Method not implemented.");
+        }
+        var givenArgumentsValues = argumentsExpressions.Select(
+        argument => (argument.Item1, Calc(argument.Item2, env))).ToList();
+        return givenArgumentsValues;
+
+    }
 
     public static Value Calc(Expression input, VariableEnvironment env)
     {
@@ -85,19 +99,23 @@ public class CalcExpression
                 }
             case CallExpression(var argumentsExpressions, var function):
                 {
-                    var targetValue = Calc(function, env);
-                    var givenArgumentNames = argumentsExpressions.Select(x => x.Item1).ToList();
-                    var givenArgumentNameSet = new HashSet<string>(givenArgumentNames);
-                    var (argumentNames, body, funcEnv) = toFunc(targetValue);
-                    var expectedArgumentNames = new HashSet<string>(argumentNames);
-                    if (!expectedArgumentNames.SetEquals(givenArgumentNames))
+                    var functionValue = Calc(function, env);
+                    switch (functionValue)
                     {
-                        throw new Exception($"Method not implemented.");
+                        case FunctionValue(var argumentNames, var body, var funcEnv):
+                            {
+                                var givenArgumentsValues = argumentList(argumentsExpressions, argumentNames, env);
+                                var newEnv = funcEnv.WithNewContext(givenArgumentsValues.ToArray());
+                                return CalcFunctionBody.CalcFunction(body, newEnv);
+                            }
+                        case BiltlinFunctionValue(var functionName, var argumentNames):
+                            {
+                                var givenArgumentsValues = argumentList(argumentsExpressions, argumentNames, env);
+                                return BiltinFunctions.calc(functionName, givenArgumentsValues.ToArray(), env);
+                            }
+                        default:
+                            throw new Exception($"Method not implemented.");
                     }
-                    var givenArgumentsValues = argumentsExpressions.Select(
-                    argument => (argument.Item1, Calc(argument.Item2, env))).ToList();
-                    var newEnv = funcEnv.WithNewContext(givenArgumentsValues.ToArray());
-                    return CalcFunctionBody.CalcFunction(body, newEnv);
                 }
             default:
                 throw new Exception($"Evaluation Error:{input}");
