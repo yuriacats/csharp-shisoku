@@ -7,7 +7,8 @@ public class BiltinFunctions
         switch (FuncName)
         {
             case "print":
-                break;
+                Console.WriteLine(string.Join("", argumentValues.Select(x => x.Item2.ToString())));
+                return new UndefinedValue();
             default:
                 throw new Exception($"{FuncName} is not bultinFunction Menber");
         }

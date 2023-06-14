@@ -17,6 +17,10 @@ public record BiltlinFunctionValue(string FunctionName, List<string> argumentNam
 {
     public override string ToString() => $"{FunctionName}({string.Join(", ", argumentNames)})";
 }
+public record UndefinedValue() : Value
+{
+    public override string ToString() => "Undefined";
+}
 
 
 public class VariableEnvironment
