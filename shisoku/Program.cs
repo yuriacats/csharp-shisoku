@@ -31,7 +31,7 @@ class Program
                     throw new Exception("ファイルが存在しません");
                 }
                 var input = File.ReadAllText(fileName);
-                Console.WriteLine(Calculate(input, new VariableEnvironment()));
+                Calculate(input, new VariableEnvironment());
             }
             else if (expinput != null)
             {
