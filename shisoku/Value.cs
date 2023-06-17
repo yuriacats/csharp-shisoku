@@ -13,6 +13,14 @@ public record FunctionValue(List<string> argumentNames, Statement[] body, Variab
 {
     public override string ToString() => $"FunctionValue({string.Join(", ", argumentNames)})";
 };
+public record BuiltInFunctionValue(string FunctionName, List<string> argumentNames) : Value
+{
+    public override string ToString() => $"{FunctionName}({string.Join(", ", argumentNames)})";
+}
+public record UnitValue() : Value
+{
+    public override string ToString() => "Unit";
+}
 
 
 public class VariableEnvironment
@@ -24,7 +32,10 @@ public class VariableEnvironment
     }
     public VariableEnvironment()
     {
-        this.envDictionaries = new List<Dictionary<string, Value>> { new Dictionary<string, Value>() };
+        this.envDictionaries = new List<Dictionary<string, Value>> { new Dictionary<string, Value>(){
+            {"print", new BuiltInFunctionValue("print", new List<string>(){ "message" })}
+        },
+         };
     }
     public void Add(string name, Value value)
     {

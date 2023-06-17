@@ -3,4 +3,4 @@ const c=3;
 return a+b*2+c*3;
 };
 
-return f(a=1,b=2);
+print(message=f(a=1,b=2));

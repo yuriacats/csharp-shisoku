@@ -197,6 +197,18 @@ public class CalcTest
                 break;
         }
     }
+    // TODO 標準出力をキャプチャし、Print関数が正しく標準出力に渡っているかを確認するテストを書く。
+    [Fact]
+    public void CallPrintFunctionCanCalc()
+    {
+        var expectedValue = new UnitValue();
+        var argumentsExpressions = new (string, Expression)[] { ("message", new NumberExpression(3)) };
+        var actualValue = shisoku.CalcExpression.Calc(
+            new CallExpression(argumentsExpressions, new VariableExpression("print")),
+            new VariableEnvironment()
+        );
+        Assert.Equal(expectedValue, actualValue);
+    }
     [Fact]
     public void CallFunctionCanCalc()
     {
