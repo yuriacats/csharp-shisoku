@@ -197,6 +197,7 @@ public class CalcTest
                 break;
         }
     }
+    // TODO 標準出力をキャプチャし、Print関数が正しく標準出力に渡っているかを確認するテストを書く。
     [Fact]
     public void CallPrintFunctionCanCalc()
     {
