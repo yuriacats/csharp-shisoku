@@ -3,5 +3,5 @@ def sumFromOneToN {| n |->
         true: {return 1;},
         default: {return n +sumFromOneToN(n=n-1);},;
 };
-return sumFromOneToN(n=100);
+print(message=sumFromOneToN(n=100));
 

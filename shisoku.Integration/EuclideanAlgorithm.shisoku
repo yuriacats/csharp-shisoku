@@ -4,4 +4,4 @@ def calcGcd {|m,n |->
         default:{ return calcGcd(m=n, n=(m % n));},;
 };
 
-return calcGcd(m=3355, n=2379);
+print(message=calcGcd(m=3355, n=2379));
