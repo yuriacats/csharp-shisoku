@@ -198,6 +198,17 @@ public class CalcTest
         }
     }
     [Fact]
+    public void CallPrintFunctionCanCalc()
+    {
+        var expectedValue = new UndefinedValue();
+        var argumentsExpressions = new (string, Expression)[] { ("message", new NumberExpression(3)) };
+        var actualValue = shisoku.CalcExpression.Calc(
+            new CallExpression(argumentsExpressions, new VariableExpression("print")),
+            new VariableEnvironment()
+        );
+        Assert.Equal(expectedValue, actualValue);
+    }
+    [Fact]
     public void CallFunctionCanCalc()
     {
         var expectedValue = new IntValue(12);
