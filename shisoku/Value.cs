@@ -13,7 +13,7 @@ public record FunctionValue(List<string> argumentNames, Statement[] body, Variab
 {
     public override string ToString() => $"FunctionValue({string.Join(", ", argumentNames)})";
 };
-public record BiltlinFunctionValue(string FunctionName, List<string> argumentNames) : Value
+public record BuiltInFunctionValue(string FunctionName, List<string> argumentNames) : Value
 {
     public override string ToString() => $"{FunctionName}({string.Join(", ", argumentNames)})";
 }
@@ -33,7 +33,7 @@ public class VariableEnvironment
     public VariableEnvironment()
     {
         this.envDictionaries = new List<Dictionary<string, Value>> { new Dictionary<string, Value>(){
-            {"print", new BiltlinFunctionValue("print", new List<string>(){ "message" })}
+            {"print", new BuiltInFunctionValue("print", new List<string>(){ "message" })}
         },
          };
     }

@@ -108,7 +108,7 @@ public class CalcExpression
                                 var newEnv = funcEnv.WithNewContext(givenArgumentsValues.ToArray());
                                 return CalcFunctionBody.CalcFunction(body, newEnv);
                             }
-                        case BiltlinFunctionValue(var functionName, var argumentNames):
+                        case BuiltInFunctionValue(var functionName, var argumentNames):
                             {
                                 var givenArgumentsValues = argumentList(argumentsExpressions, argumentNames, env);
                                 return BiltinFunctions.calc(functionName, givenArgumentsValues.ToArray(), env);
