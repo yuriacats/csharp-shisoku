@@ -7,6 +7,7 @@ public class BiltinFunctions
         switch (FuncName)
         {
             case "print":
+                // TODO printに対応する名前付き引数の名前を対応させる.print(message="")が適切そう
                 Console.WriteLine(string.Join("", argumentValues.Select(x => x.Item2.ToString())));
                 return new UndefinedValue();
             default:

@@ -32,7 +32,10 @@ public class VariableEnvironment
     }
     public VariableEnvironment()
     {
-        this.envDictionaries = new List<Dictionary<string, Value>> { new Dictionary<string, Value>() };
+        this.envDictionaries = new List<Dictionary<string, Value>> { new Dictionary<string, Value>(){
+            {"print", new BiltlinFunctionValue("print", new List<string>(){ "message" })}
+        },
+         };
     }
     public void Add(string name, Value value)
     {
