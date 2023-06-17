@@ -201,7 +201,7 @@ public class CalcTest
     [Fact]
     public void CallPrintFunctionCanCalc()
     {
-        var expectedValue = new UndefinedValue();
+        var expectedValue = new UnitValue();
         var argumentsExpressions = new (string, Expression)[] { ("message", new NumberExpression(3)) };
         var actualValue = shisoku.CalcExpression.Calc(
             new CallExpression(argumentsExpressions, new VariableExpression("print")),

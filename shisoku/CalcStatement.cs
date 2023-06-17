@@ -3,7 +3,7 @@ public class CalcFunctionBody
 {
     public static Value CalcFunction(Statement[] input, VariableEnvironment env)
     {
-        return CalcStatements(input, env)!;
+        return CalcStatements(input, env) ?? new UnitValue();
     }
     //TODO ToIntの命名の変換を行う
     public static Value? CalcStatements(Statement[] input, VariableEnvironment env)
