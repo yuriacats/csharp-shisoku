@@ -24,7 +24,7 @@ public class ParserTest
             new TokenNumber(13)
         };
         var (outputAst, _) = ParseExpression.parse(inputToken.ToArray());
-        var expectedAst = new AddExpression(new NumberExpression(12), new NumberExpression(13), new Checked(new IntType()));
+        var expectedAst = new AddExpression(new NumberExpression(12), new NumberExpression(13), new Unchecked());
         Assert.Equal(expectedAst, outputAst);
     }
     [Fact]
@@ -36,7 +36,7 @@ public class ParserTest
             new TokenNumber(13)
         };
         var (outputAst, _) = ParseExpression.parse(inputToken.ToArray());
-        var expectedAst = new MulExpression(new NumberExpression(12), new NumberExpression(13), new Checked(new IntType()));
+        var expectedAst = new MulExpression(new NumberExpression(12), new NumberExpression(13), new Unchecked());
         Assert.Equal(expectedAst, outputAst);
     }
     [Fact]
@@ -48,7 +48,7 @@ public class ParserTest
             new TokenNumber(13)
         };
         var (outputAst, _) = ParseExpression.parse(inputToken.ToArray());
-        var expectedAst = new SubExpression(new NumberExpression(12), new NumberExpression(13), new Checked(new IntType()));
+        var expectedAst = new SubExpression(new NumberExpression(12), new NumberExpression(13), new Unchecked() );
         Assert.Equal(expectedAst, outputAst);
     }
     [Fact]
@@ -60,7 +60,7 @@ public class ParserTest
             new TokenNumber(13)
         };
         var (outputAst, _) = ParseExpression.parse(inputToken.ToArray());
-        var expectedAst = new DivExpression(new NumberExpression(12), new NumberExpression(13), new Checked(new IntType()));
+        var expectedAst = new DivExpression(new NumberExpression(12), new NumberExpression(13), new Unchecked());
         Assert.Equal(expectedAst, outputAst);
     }
     [Fact]
@@ -72,7 +72,7 @@ public class ParserTest
             new TokenNumber(13)
         };
         var (outputAst, _) = ParseExpression.parse(inputToken.ToArray());
-        var expectedAst = new ModExpression(new NumberExpression(12), new NumberExpression(13), new Checked(new IntType()));
+        var expectedAst = new ModExpression(new NumberExpression(12), new NumberExpression(13), new Unchecked());
         Assert.Equal(expectedAst, outputAst);
     }
     [Fact]
@@ -87,8 +87,8 @@ public class ParserTest
         };
         var (outputAst, _) = ParseExpression.parse(inputToken.ToArray());
         var expectedAst = new SubExpression(
-            new SubExpression(new NumberExpression(12), new NumberExpression(13), new Checked(new IntType())),
-            new NumberExpression(14), new Checked(new IntType())
+            new SubExpression(new NumberExpression(12), new NumberExpression(13), new Unchecked()),
+            new NumberExpression(14), new Unchecked() 
         );
         Assert.Equal(expectedAst, outputAst);
     }
@@ -112,7 +112,7 @@ public class ParserTest
         var expectedAst = new Statement[]{
             new StatementExpression(
                 new SubExpression(
-                    new NumberExpression(12), new NumberExpression(13), new Checked(new IntType())
+                    new NumberExpression(12), new NumberExpression(13), new Unchecked()
                 )
         )};
         var (outputAst, _) = ParseStatement.parse(inputToken.ToArray());
@@ -320,7 +320,7 @@ public class ParserTest
                 new TokenBracketOpen(),
                 new TokenBracketClose()
             };
-        var expectedAst = new CallExpression(new (string, Expression)[] { }, new VariableExpression("hoge", new Checked(new IntType())), new Unchecked());
+        var expectedAst = new CallExpression(new (string, Expression)[] { }, new VariableExpression("hoge", new Unchecked()), new Unchecked());
         (var result, _) = ParseExpression.parse(inputToken.ToArray());
         switch (result)
         {
@@ -346,7 +346,7 @@ public class ParserTest
                 new TokenNumber(12),
                 new TokenBracketClose()
             };
-        var expectedAst = new CallExpression(new (string, Expression)[] { ("huga", new NumberExpression(12)) }, new VariableExpression("hoge", new Checked(new IntType())), new Unchecked());
+        var expectedAst = new CallExpression(new (string, Expression)[] { ("huga", new NumberExpression(12)) }, new VariableExpression("hoge",new Unchecked()), new Unchecked());
         (var result, _) = ParseExpression.parse(inputToken.ToArray());
         switch (result)
         {
@@ -377,7 +377,7 @@ public class ParserTest
                 new TokenNumber(13),
                 new TokenBracketClose()
             };
-        var expectedAst = new CallExpression(new (string, Expression)[] { ("huga", new NumberExpression(12)), ("piyo", new NumberExpression(13)) }, new VariableExpression("hoge", new Checked(new IntType())), new Unchecked());
+        var expectedAst = new CallExpression(new (string, Expression)[] { ("huga", new NumberExpression(12)), ("piyo", new NumberExpression(13)) }, new VariableExpression("hoge", new Unchecked()), new Unchecked());
         (var result, _) = ParseExpression.parse(inputToken.ToArray());
         switch (result)
         {
