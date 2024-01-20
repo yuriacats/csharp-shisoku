@@ -24,7 +24,7 @@ public class ParserTest
             new TokenNumber(13)
         };
         var (outputAst, _) = ParseExpression.parse(inputToken.ToArray());
-        var expectedAst = new AddExpression(new NumberExpression(12), new NumberExpression(13));
+        var expectedAst = new AddExpression(new NumberExpression(12), new NumberExpression(13), new Checked(new IntType()));
         Assert.Equal(expectedAst, outputAst);
     }
     [Fact]
@@ -36,7 +36,7 @@ public class ParserTest
             new TokenNumber(13)
         };
         var (outputAst, _) = ParseExpression.parse(inputToken.ToArray());
-        var expectedAst = new MulExpression(new NumberExpression(12), new NumberExpression(13));
+        var expectedAst = new MulExpression(new NumberExpression(12), new NumberExpression(13), new Checked(new IntType()));
         Assert.Equal(expectedAst, outputAst);
     }
     [Fact]
@@ -48,7 +48,7 @@ public class ParserTest
             new TokenNumber(13)
         };
         var (outputAst, _) = ParseExpression.parse(inputToken.ToArray());
-        var expectedAst = new SubExpression(new NumberExpression(12), new NumberExpression(13));
+        var expectedAst = new SubExpression(new NumberExpression(12), new NumberExpression(13), new Checked(new IntType()));
         Assert.Equal(expectedAst, outputAst);
     }
     [Fact]
@@ -60,7 +60,7 @@ public class ParserTest
             new TokenNumber(13)
         };
         var (outputAst, _) = ParseExpression.parse(inputToken.ToArray());
-        var expectedAst = new DivExpression(new NumberExpression(12), new NumberExpression(13));
+        var expectedAst = new DivExpression(new NumberExpression(12), new NumberExpression(13), new Checked(new IntType()));
         Assert.Equal(expectedAst, outputAst);
     }
     [Fact]
@@ -72,7 +72,7 @@ public class ParserTest
             new TokenNumber(13)
         };
         var (outputAst, _) = ParseExpression.parse(inputToken.ToArray());
-        var expectedAst = new ModExpression(new NumberExpression(12), new NumberExpression(13));
+        var expectedAst = new ModExpression(new NumberExpression(12), new NumberExpression(13), new Checked(new IntType()));
         Assert.Equal(expectedAst, outputAst);
     }
     [Fact]
@@ -87,8 +87,8 @@ public class ParserTest
         };
         var (outputAst, _) = ParseExpression.parse(inputToken.ToArray());
         var expectedAst = new SubExpression(
-            new SubExpression(new NumberExpression(12), new NumberExpression(13)),
-            new NumberExpression(14)
+            new SubExpression(new NumberExpression(12), new NumberExpression(13), new Checked(new IntType())),
+            new NumberExpression(14), new Checked(new IntType())
         );
         Assert.Equal(expectedAst, outputAst);
     }
@@ -112,7 +112,7 @@ public class ParserTest
         var expectedAst = new Statement[]{
             new StatementExpression(
                 new SubExpression(
-                    new NumberExpression(12), new NumberExpression(13)
+                    new NumberExpression(12), new NumberExpression(13), new Checked(new IntType())
                 )
         )};
         var (outputAst, _) = ParseStatement.parse(inputToken.ToArray());
@@ -199,15 +199,15 @@ public class ParserTest
             new TokenSemicolon(),
             new TokenCurlyBracketClose()
         };
-        var expectedAst = new FunctionExpression(new List<string>(), new Statement[]{
+        var expectedAst = new FunctionExpression(new List<(string, Type)>(), new Statement[]{
             new StatementConst("test", new NumberExpression(12))
-        });
+        }, new IntType());
         (var result, _) = ParseExpression.parse(inputToken.ToArray());
         switch (result)
         {
-            case FunctionExpression(var arguments, var body):
-                Assert.Equal(expectedAst.body, body);
-                Assert.Equal(expectedAst.argumentNames, arguments);
+            case FunctionExpression(var arguments, var body, _):
+                Assert.Equal(expectedAst.Body, body);
+                Assert.Equal(expectedAst.ArgumentNames, arguments);
                 break;
 
             default:
@@ -232,16 +232,16 @@ public class ParserTest
             new TokenSemicolon(),
             new TokenCurlyBracketClose()
         };
-        var expectedAst = new RecursiveFunctionExpression(new List<string>(), new Statement[]{
+        var expectedAst = new RecursiveFunctionExpression(new List<(string,Type)>(), new Statement[]{
             new StatementConst("test", new NumberExpression(12))
-        }, "test");
+        }, "test", new IntType());
         (var result, _) = ParseExpression.parse(inputToken.ToArray());
         switch (result)
         {
-            case RecursiveFunctionExpression(var arguments, var body, var name):
-                Assert.Equal(expectedAst.body, body);
-                Assert.Equal(expectedAst.argumentNames, arguments);
-                Assert.Equal(expectedAst.funcName, name);
+            case RecursiveFunctionExpression(var arguments, var body, var name, _):
+                Assert.Equal(expectedAst.Body, body);
+                Assert.Equal(expectedAst.ArgumentNames, arguments);
+                Assert.Equal(expectedAst.FuncName, name);
                 break;
 
             default:
@@ -278,18 +278,18 @@ public class ParserTest
                 new TokenSemicolon(),
                 new TokenCurlyBracketClose()
             };
-        var expectedArguments = new List<String>();
-        expectedArguments.Add("hoge");
-        expectedArguments.Add("huga");
+        var expectedArguments = new List<(string,Type)>();
+        expectedArguments.Add(("hoge", new IntType()));
+        expectedArguments.Add(("huga", new IntType()));
         var expectedAst = new FunctionExpression(expectedArguments, new Statement[]{
                 new StatementConst("test", new NumberExpression(12))
-            });
+            }, new IntType());
         (var result, _) = ParseExpression.parse(inputToken.ToArray());
         switch (result)
         {
-            case FunctionExpression(var arguments, var body):
-                Assert.Equal(expectedAst.body, body);
-                Assert.Equal(expectedAst.argumentNames, arguments);
+            case FunctionExpression(var arguments, var body,_):
+                Assert.Equal(expectedAst.Body, body);
+                Assert.Equal(expectedAst.ArgumentNames, arguments);
                 break;
 
             default:
@@ -320,13 +320,13 @@ public class ParserTest
                 new TokenBracketOpen(),
                 new TokenBracketClose()
             };
-        var expectedAst = new CallExpression(new (string, Expression)[] { }, new VariableExpression("hoge"));
+        var expectedAst = new CallExpression(new (string, Expression)[] { }, new VariableExpression("hoge", new Checked(new IntType())), new Unchecked());
         (var result, _) = ParseExpression.parse(inputToken.ToArray());
         switch (result)
         {
-            case CallExpression(var arguments, var body):
-                Assert.Equal(expectedAst.arguments, arguments);
-                Assert.Equal(expectedAst.functionBody, body);
+            case CallExpression(var arguments, var body,_):
+                Assert.Equal(expectedAst.Arguments, arguments);
+                Assert.Equal(expectedAst.FunctionBody, body);
                 break;
 
             default:
@@ -346,13 +346,13 @@ public class ParserTest
                 new TokenNumber(12),
                 new TokenBracketClose()
             };
-        var expectedAst = new CallExpression(new (string, Expression)[] { ("huga", new NumberExpression(12)) }, new VariableExpression("hoge"));
+        var expectedAst = new CallExpression(new (string, Expression)[] { ("huga", new NumberExpression(12)) }, new VariableExpression("hoge", new Checked(new IntType())), new Unchecked());
         (var result, _) = ParseExpression.parse(inputToken.ToArray());
         switch (result)
         {
-            case CallExpression(var arguments, var body):
-                Assert.Equal(expectedAst.arguments, arguments);
-                Assert.Equal(expectedAst.functionBody, body);
+            case CallExpression(var arguments, var body, _):
+                Assert.Equal(expectedAst.Arguments, arguments);
+                Assert.Equal(expectedAst.FunctionBody, body);
                 break;
 
             default:
@@ -377,13 +377,13 @@ public class ParserTest
                 new TokenNumber(13),
                 new TokenBracketClose()
             };
-        var expectedAst = new CallExpression(new (string, Expression)[] { ("huga", new NumberExpression(12)), ("piyo", new NumberExpression(13)) }, new VariableExpression("hoge"));
+        var expectedAst = new CallExpression(new (string, Expression)[] { ("huga", new NumberExpression(12)), ("piyo", new NumberExpression(13)) }, new VariableExpression("hoge", new Checked(new IntType())), new Unchecked());
         (var result, _) = ParseExpression.parse(inputToken.ToArray());
         switch (result)
         {
-            case CallExpression(var arguments, var body):
-                Assert.Equal(expectedAst.arguments, arguments);
-                Assert.Equal(expectedAst.functionBody, body);
+            case CallExpression(var arguments, var body,_):
+                Assert.Equal(expectedAst.Arguments, arguments);
+                Assert.Equal(expectedAst.FunctionBody, body);
                 break;
 
             default:
@@ -437,10 +437,10 @@ public class ParserTest
         };
         (var result, _) = ParseStatement.parse(inputToken.ToArray());
         var exprectedAst = new StatementSwitch(
-            new EqualExpression(new VariableExpression("a"), new NumberExpression(12)),
+            new EqualExpression(new VariableExpression("a",new Unchecked()), new NumberExpression(12)),
             new List<(Expression, Statement[])>{
             new (new BoolExpression(true),new List<Statement>{new StatementReturn(new NumberExpression(12))}.ToArray()),
-            new (new VariableExpression("default"), new List<Statement>{new StatementReturn(new NumberExpression(13))}.ToArray())
+            new (new VariableExpression("default", new Unchecked()), new List<Statement>{new StatementReturn(new NumberExpression(13))}.ToArray())
             }.ToArray()
         );
         if (result.Length != 1)
@@ -450,9 +450,9 @@ public class ParserTest
         switch (result[0])
         {
             case StatementSwitch(var targetExpression, var cases):
-                Assert.Equal(exprectedAst.targetExpression, targetExpression);
-                Assert.Equal(exprectedAst.cases[0].Item1, cases[0].Item1);
-                Assert.Equal(exprectedAst.cases[0].Item2[0], cases[0].Item2[0]);
+                Assert.Equal(exprectedAst.TargetExpression, targetExpression);
+                Assert.Equal(exprectedAst.Cases[0].Item1, cases[0].Item1);
+                Assert.Equal(exprectedAst.Cases[0].Item2[0], cases[0].Item2[0]);
                 break;
 
             default:

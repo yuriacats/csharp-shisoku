@@ -76,7 +76,7 @@ public class ParseStatement
         {
             var (aCase, rest4) = ParseCase(rest);
             cases = cases.Append(aCase).ToArray();
-            if (aCase.Item1 is VariableExpression("default"))
+            if (aCase.Item1 is VariableExpression("default", _))
             // TODO defaultをキーワードとしてTokerneizerのところから特別扱いする。ちょっと処理が特殊になりそうなので一旦放置
             {
                 return (new StatementSwitch(expression, cases), rest4);

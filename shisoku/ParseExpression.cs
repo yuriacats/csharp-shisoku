@@ -1,4 +1,4 @@
-
+using System.Linq;
 namespace shisoku;
 public class ParseExpression
 {
@@ -33,12 +33,12 @@ public class ParseExpression
             {
                 case TokenPlus:
                     var (addRhs, addRest) = parseMulDiv(rest2);
-                    result = new AddExpression(result, addRhs);
+                    result = new AddExpression(result, addRhs, new Unchecked());
                     rest = addRest;
                     break;
                 case TokenMinus:
                     var (subRhs, subRest) = parseMulDiv(rest2);
-                    result = new SubExpression(result, subRhs);
+                    result = new SubExpression(result, subRhs ,new Unchecked());
                     rest = subRest;
                     break;
             }
@@ -54,17 +54,17 @@ public class ParseExpression
             {
                 case TokenAsterisk:
                     var (malRhs, malRest) = parseCall(rest2);
-                    result = new MulExpression(result, malRhs);
+                    result = new MulExpression(result, malRhs, new Unchecked());
                     rest = malRest;
                     break;
                 case TokenSlash:
                     var (divRhs, divRest) = parseCall(rest2);
-                    result = new DivExpression(result, divRhs);
+                    result = new DivExpression(result, divRhs,new Unchecked());
                     rest = divRest;
                     break;
                 case TokenPercent:
                     var (modRhs, modRest) = parseCall(rest2);
-                    result = new ModExpression(result, modRhs);
+                    result = new ModExpression(result, modRhs, new Unchecked());
                     rest = modRest;
                     break;
             }
@@ -79,7 +79,7 @@ public class ParseExpression
         while (rest is [TokenBracketOpen, .. var innerRest])
         {
             (var arguments, rest) = parseArguments(innerRest);
-            result = new CallExpression(arguments, result);
+            result = new CallExpression(arguments, result ,new Unchecked());
         }
         return (result, rest);
     }
@@ -132,28 +132,32 @@ public class ParseExpression
                 }
             case [TokenDef, TokenIdentifier(var name), TokenCurlyBracketOpen, TokenPipe, .. var target]:
                 (var defArgumentNames, var defBodyTokens) = argumentsPaser(target);
+                // TODO: 型をしていする表層構文を追加する。一旦INT
+                List<(string , Type)> defArguments   = defArgumentNames.Select((x)=> (x,  new IntType() as Type )).ToList();
                 var defBodys = new List<Statement> { };
                 while (defBodyTokens is not [TokenCurlyBracketClose, ..])
                 {
                     (var defBody, defBodyTokens) = ParseStatement.parseStatement(defBodyTokens);
                     defBodys.Add(defBody);
                 }
-                return (new RecursiveFunctionExpression(defArgumentNames, defBodys.ToArray(), name), defBodyTokens[1..]);
+                // TDOO: 型をしていする表層構文を追加する。一旦INT
+                return (new RecursiveFunctionExpression(defArguments, defBodys.ToArray(), name, new IntType()), defBodyTokens[1..]);
             case [TokenCurlyBracketOpen, TokenPipe, .. var target]:
                 (var argumentNames, var bodyTokens) = argumentsPaser(target);
+                List<(string , Type)> Arguments   = argumentNames.Select((x)=> (x,  new IntType() as Type )).ToList();
                 var bodys = new List<Statement> { };
                 while (bodyTokens is not [TokenCurlyBracketClose, ..])
                 {
                     (var body, bodyTokens) = ParseStatement.parseStatement(bodyTokens);
                     bodys.Add(body);
                 }
-                return (new FunctionExpression(argumentNames, bodys.ToArray()), bodyTokens[1..]);
+                return (new FunctionExpression(Arguments, bodys.ToArray(), new IntType()), bodyTokens[1..]);
             case [TokenTrue, .. var rest]:
                 return (new BoolExpression(true), rest);
             case [TokenFalse, .. var rest]:
                 return (new BoolExpression(false), rest);
             case [TokenIdentifier(var name), .. var rest]:
-                return (new VariableExpression(name), rest);
+                return (new VariableExpression(name, new Unchecked()), rest);
 
             default:
                 throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
