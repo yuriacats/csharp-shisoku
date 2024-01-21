@@ -26,7 +26,7 @@ public class CalcFunctionBody
                     var newEnv = env.WithNewContext();
                     foreach (var aCase in cases)
                     {
-                        if (aCase.Item1 == new VariableExpression("default"))
+                        if (aCase.Item1 == new VariableExpression("default", new Unchecked()))
                         {
                             var result = CalcStatements(aCase.Item2, newEnv);
                             switch (result)
