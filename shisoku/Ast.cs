@@ -23,7 +23,7 @@ public record CallExpression((string, Expression)[] Arguments, Expression Functi
 
 public abstract record Statement();
 public record StatementExpression(Expression Expr) : Statement;
-public record StatementConst(string Name, Expression Expr) : Statement;
+public record StatementConst(string Name, Type type, Expression Expr) : Statement;
 public record StatementReturn(Expression Expr) : Statement;
 public record StatementSwitch(Expression TargetExpression, (Expression, Statement[])[] Cases) : Statement;
 

@@ -134,6 +134,8 @@ public class ParserTest
         var inputToken = new List<Token>{
         new TokenConst(),
         new TokenIdentifier("test"),
+        new TokenColon(),
+        new TokenIdentifier("int"),
         new TokenEqual(),
         new TokenNumber(12),
         new TokenSemicolon()
@@ -141,6 +143,7 @@ public class ParserTest
         var expectedAst = new Statement[] {
             new StatementConst(
                 "test",
+                new IntType(),
                 new NumberExpression(12)
             )
         };
@@ -152,6 +155,8 @@ public class ParserTest
         var inputToken = new List<Token>{
         new TokenConst(),
         new TokenIdentifier("test"),
+        new TokenColon(),
+        new TokenIdentifier("int"),
         new TokenEqual(),
         new TokenNumber(12),
     };
@@ -164,11 +169,15 @@ public class ParserTest
         var inputToken = new List<Token>{
         new TokenConst(),
         new TokenIdentifier("test"),
+        new TokenColon(),
+        new TokenIdentifier("int"),
         new TokenEqual(),
         new TokenNumber(12),
         new TokenSemicolon(),
         new TokenConst(),
         new TokenIdentifier("test2"),
+        new TokenColon(),
+        new TokenIdentifier("int"),
         new TokenEqual(),
         new TokenNumber(12),
         new TokenSemicolon()
@@ -176,9 +185,11 @@ public class ParserTest
         var expectedAst = new Statement[] {
             new StatementConst(
                 "test",
+                new IntType(),
                 new NumberExpression(12)
             ), new StatementConst(
                 "test2",
+                new IntType(),
                 new NumberExpression(12)
             )
         };
@@ -188,20 +199,23 @@ public class ParserTest
     public void CanParseFunction()
     {
         var inputToken = new List<Token>{
-            new TokenCurlyBracketOpen(),
             new TokenPipe(),
             new TokenPipe(),
             new TokenArrow(),
+            new TokenIdentifier("unit"),
+            new TokenCurlyBracketOpen(),
             new TokenConst(),
             new TokenIdentifier("test"),
+            new TokenColon(),
+            new TokenIdentifier("int"),
             new TokenEqual(),
             new TokenNumber(12),
             new TokenSemicolon(),
             new TokenCurlyBracketClose()
         };
         var expectedAst = new FunctionExpression(new List<(string, Type)>(), new Statement[]{
-            new StatementConst("test", new NumberExpression(12))
-        }, new IntType());
+            new StatementConst("test", new IntType(), new NumberExpression(12))
+        }, new UnitType());
         (var result, _) = ParseExpression.parse(inputToken.ToArray());
         switch (result)
         {
@@ -221,19 +235,23 @@ public class ParserTest
         var inputToken = new List<Token>{
             new TokenDef(),
             new TokenIdentifier("test"),
-            new TokenCurlyBracketOpen(),
+            new TokenEqual(),
             new TokenPipe(),
             new TokenPipe(),
             new TokenArrow(),
+            new TokenIdentifier("int"),
+            new TokenCurlyBracketOpen(),
             new TokenConst(),
             new TokenIdentifier("test"),
+            new TokenColon(),
+            new TokenIdentifier("int"),
             new TokenEqual(),
             new TokenNumber(12),
             new TokenSemicolon(),
             new TokenCurlyBracketClose()
         };
         var expectedAst = new RecursiveFunctionExpression(new List<(string,Type)>(), new Statement[]{
-            new StatementConst("test", new NumberExpression(12))
+            new StatementConst("test", new IntType(), new NumberExpression(12))
         }, "test", new IntType());
         (var result, _) = ParseExpression.parse(inputToken.ToArray());
         switch (result)
@@ -253,10 +271,10 @@ public class ParserTest
     public void CanNotParseFunction()
     {
         var inputToken = new List<Token>{
-            new TokenCurlyBracketOpen(),
             new TokenPipe(),
             new TokenPipe(),
             new TokenArrow(),
+            new TokenCurlyBracketOpen(),
         };
         Assert.Throws<Exception>(() => ParseExpression.parse(inputToken.ToArray()));
     }
@@ -264,15 +282,22 @@ public class ParserTest
     public void twoArgumentsCanParse()
     {
         var inputToken = new List<Token>{
-                new TokenCurlyBracketOpen(),
                 new TokenPipe(),
-                new TokenComma(),
                 new TokenIdentifier("hoge"),
+                new TokenColon(),
+                new TokenIdentifier("int"),
                 new TokenComma(),
                 new TokenIdentifier("huga"),
+                new TokenColon(),
+                new TokenIdentifier("int"),
+                new TokenPipe(),
                 new TokenArrow(),
+                new TokenIdentifier("int"),
+                new TokenCurlyBracketOpen(),
                 new TokenConst(),
                 new TokenIdentifier("test"),
+                new TokenColon(),
+                new TokenIdentifier("int"),
                 new TokenEqual(),
                 new TokenNumber(12),
                 new TokenSemicolon(),
@@ -282,7 +307,7 @@ public class ParserTest
         expectedArguments.Add(("hoge", new IntType()));
         expectedArguments.Add(("huga", new IntType()));
         var expectedAst = new FunctionExpression(expectedArguments, new Statement[]{
-                new StatementConst("test", new NumberExpression(12))
+                new StatementConst("test", new IntType(), new NumberExpression(12))
             }, new IntType());
         (var result, _) = ParseExpression.parse(inputToken.ToArray());
         switch (result)
