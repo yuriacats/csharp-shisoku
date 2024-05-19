@@ -279,6 +279,30 @@ public class ParserTest
         Assert.Throws<Exception>(() => ParseExpression.parse(inputToken.ToArray()));
     }
     [Fact]
+    public void CanNotParseConstNotHuveType()
+    {
+        var inputToken = new List<Token>{
+            new TokenConst(),
+            new TokenIdentifier("test"),
+            new TokenEqual(),
+            new TokenNumber(12),
+        };
+        Assert.Throws<Exception>(() => ParseExpression.parse(inputToken.ToArray()));
+    }
+    [Fact]
+    public void CanNotParseArgumentNotHuveType()
+    {
+        var inputToken = new List<Token>{
+            new TokenPipe(),
+            new TokenIdentifier("hoge"),
+            new TokenPipe(),
+            new TokenArrow(),
+            new TokenIdentifier("int"),
+            new TokenCurlyBracketOpen(),
+        };
+        Assert.Throws<Exception>(() => ParseExpression.parse(inputToken.ToArray()));
+    }
+    [Fact]
     public void twoArgumentsCanParse()
     {
         var inputToken = new List<Token>{
