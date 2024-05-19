@@ -4,7 +4,11 @@ public class ParseType{
     {
         return typeParser(input);
     }
-    public static (List<(string,Type)>,Type, shisoku.Token[]) functionTypeParser(shisoku.Token[] input)
+    public static (List<(string,Type)>,Type, shisoku.Token[]) functionTypeParser(shisoku.Token[] input){
+        return innerFunctionTypeParser(input);
+
+    }
+    static (List<(string,Type)>,Type, shisoku.Token[]) innerFunctionTypeParser(shisoku.Token[] input)
     {
         var target = input;
         var result = new List<(string, Type)>();
