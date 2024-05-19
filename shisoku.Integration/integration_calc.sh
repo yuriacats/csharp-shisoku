@@ -1,5 +1,11 @@
 #!/bin/bash
+
+BINARY_DIR="bin"
+BINARY="${BINARY_DIR}/shisoku"
+
 function main() {
+    dotnet publish shisoku --output ${BINARY_DIR}
+
     local sum_exit_code=0
     run_test_exp_case "足し算" "1+1;" 2
     sum_exit_code=$((sum_exit_code + $?))
@@ -32,23 +38,23 @@ function main() {
     sum_exit_code=$((sum_exit_code + $?))
     run_test_exp_case "Booleanが扱える" "1==1;" True
     sum_exit_code=$((sum_exit_code + $?))
-    run_test_exp_case "Booleanが扱える(False)" "2==1;" False 
+    run_test_exp_case "Booleanが扱える(False)" "2==1;" False
     sum_exit_code=$((sum_exit_code + $?))
-    run_test_exp_case "Booleanが扱える(bool同士)" "true==true;" True 
+    run_test_exp_case "Booleanが扱える(bool同士)" "true==true;" True
     sum_exit_code=$((sum_exit_code + $?))
-    run_test_exp_case "Booleanが混ざった複合演算ができる" "true== (1+1 == 2);" True 
+    run_test_exp_case "Booleanが混ざった複合演算ができる" "true== (1+1 == 2);" True
     sum_exit_code=$((sum_exit_code + $?))
-    run_test_file_case "複数分の入ったファイルを読み込んで実行できる" "shisoku.Integration/test.shisoku" "2" 
+    run_test_file_case "複数分の入ったファイルを読み込んで実行できる" "shisoku.Integration/test.shisoku" "2"
     sum_exit_code=$((sum_exit_code + $?))
-    run_test_file_case "名前なし関数の実行ができる" "shisoku.Integration/namelessFunctionTest.shisoku" "8" 
+    run_test_file_case "名前なし関数の実行ができる" "shisoku.Integration/namelessFunctionTest.shisoku" "8"
     sum_exit_code=$((sum_exit_code + $?))
-    run_test_file_case "関数内で関数を定義できる" "shisoku.Integration/functionCanReturnFunction.shisoku" "12" 
+    run_test_file_case "関数内で関数を定義できる" "shisoku.Integration/functionCanReturnFunction.shisoku" "12"
     sum_exit_code=$((sum_exit_code + $?))
-    run_test_file_case "関数ないで変数を定義できる" "shisoku.Integration/functionCanHaveConstStatement.shisoku" "14" 
+    run_test_file_case "関数ないで変数を定義できる" "shisoku.Integration/functionCanHaveConstStatement.shisoku" "14"
     sum_exit_code=$((sum_exit_code + $?))
-    run_test_file_case "再帰関数を定義できる" "shisoku.Integration/RecursionFunction.shisoku" "5050" 
+    run_test_file_case "再帰関数を定義できる" "shisoku.Integration/RecursionFunction.shisoku" "5050"
     sum_exit_code=$((sum_exit_code + $?))
-    run_test_file_case "ユークリッドの互除法" "shisoku.Integration/EuclideanAlgorithm.shisoku" "61" 
+    run_test_file_case "ユークリッドの互除法" "shisoku.Integration/EuclideanAlgorithm.shisoku" "61"
     sum_exit_code=$((sum_exit_code + $?))
 
     if [ ${sum_exit_code} == "0" ]; then
@@ -64,7 +70,7 @@ function run_test_exp_case() {
     local expected="$3"
 
     local output
-    output=$(dotnet run --no-build --project shisoku -- --exp "${input}" 2>/dev/null)
+    output=$($BINARY --exp "${input}" 2>/dev/null)
     local error_code=$?
     if [ "${output}" = "${expected}" ]; then
         echo "${case_name}:Pass"
@@ -83,7 +89,7 @@ function run_test_file_case() {
     local expected="$3"
 
     local output
-    output=$(dotnet run --no-build --project shisoku -- --file "${input}" 2>/dev/null)
+    output=$($BINARY --file "${input}" 2>/dev/null)
     local error_code=$?
     if [ "${output}" = "${expected}" ]; then
         echo "${case_name}:Pass"
