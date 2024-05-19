@@ -268,7 +268,7 @@ public class ParserTest
         }
     }
     [Fact]
-    public void CanNotParseFunction()
+    public void CanNotParseFunctionWithoutRerurnType()
     {
         var inputToken = new List<Token>{
             new TokenPipe(),
@@ -279,7 +279,7 @@ public class ParserTest
         Assert.Throws<Exception>(() => ParseExpression.parse(inputToken.ToArray()));
     }
     [Fact]
-    public void CanNotParseConstNotHuveType()
+    public void CanNotParseConstWithoutType()
     {
         var inputToken = new List<Token>{
             new TokenConst(),
@@ -290,7 +290,7 @@ public class ParserTest
         Assert.Throws<Exception>(() => ParseExpression.parse(inputToken.ToArray()));
     }
     [Fact]
-    public void CanNotParseArgumentNotHuveType()
+    public void CanNotParseArgumentWithoutType()
     {
         var inputToken = new List<Token>{
             new TokenPipe(),
