@@ -130,28 +130,34 @@ public class ParseExpression
                 {
                     throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
                 }
-            case [TokenDef, TokenIdentifier(var name), TokenCurlyBracketOpen, TokenPipe, .. var target]:
-                (var defArgumentNames, var defBodyTokens) = argumentsPaser(target);
-                // TODO: 型をしていする表層構文を追加する。一旦INT
-                List<(string , Type)> defArguments   = defArgumentNames.Select((x)=> (x,  new IntType() as Type )).ToList();
+            case [TokenDef, TokenIdentifier(var name), TokenEqual , .. var target]:
+                (var defArguments,var defReturnType, var defBodyTokens) = ParseType.functionTypeParser(target);
                 var defBodys = new List<Statement> { };
+                if (defBodyTokens.Length == 0)
+                {
+                    throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
+                }
+                if (defBodyTokens[0] is not TokenCurlyBracketOpen)
+                {
+                    throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
+                }
+                defBodyTokens = defBodyTokens[1..];
                 while (defBodyTokens is not [TokenCurlyBracketClose, ..])
                 {
                     (var defBody, defBodyTokens) = ParseStatement.parseStatement(defBodyTokens);
                     defBodys.Add(defBody);
                 }
-                // TDOO: 型をしていする表層構文を追加する。一旦INT
-                return (new RecursiveFunctionExpression(defArguments, defBodys.ToArray(), name, new IntType()), defBodyTokens[1..]);
-            case [TokenCurlyBracketOpen, TokenPipe, .. var target]:
-                (var argumentNames, var bodyTokens) = argumentsPaser(target);
-                List<(string , Type)> Arguments   = argumentNames.Select((x)=> (x,  new IntType() as Type )).ToList();
+                return (new RecursiveFunctionExpression(defArguments, defBodys.ToArray(), name, defReturnType), defBodyTokens[1..]);
+            case [TokenPipe, ..]:
+                (var arguments,var returnType, var bodyTokens) = ParseType.functionTypeParser(input);
                 var bodys = new List<Statement> { };
+                bodyTokens = bodyTokens[1..];
                 while (bodyTokens is not [TokenCurlyBracketClose, ..])
                 {
                     (var body, bodyTokens) = ParseStatement.parseStatement(bodyTokens);
                     bodys.Add(body);
                 }
-                return (new FunctionExpression(Arguments, bodys.ToArray(), new IntType()), bodyTokens[1..]);
+                return (new FunctionExpression(arguments, bodys.ToArray(), returnType), bodyTokens[1..]);
             case [TokenTrue, .. var rest]:
                 return (new BoolExpression(true), rest);
             case [TokenFalse, .. var rest]:
@@ -165,31 +171,4 @@ public class ParseExpression
 
     }
 
-    static (List<string>, shisoku.Token[]) argumentsPaser(shisoku.Token[] input)
-    {
-        var target = input;
-        var result = new List<string>();
-        while (target is not [])
-        {
-            switch (target)
-            {
-                case [TokenIdentifier(var name), .. var rest]:
-                    result.Add(name);
-                    target = rest;
-
-                    continue;
-                case [TokenPipe, .. var rest]:
-                    target = rest;
-                    continue;
-                case [TokenComma, .. var rest]:
-                    target = rest;
-                    continue;
-                case [TokenArrow, .. var body]:
-                    return (result, body);
-                default:
-                    throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
-            }
-        }
-        throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
-    }
 }

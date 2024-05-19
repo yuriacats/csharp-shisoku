@@ -1,7 +1,7 @@
-def calcGcd {|m,n |->
+def calcGcd =| m: int,n: int |-> int {
     switch n ?
         0 : {return m;},
-        default:{ return calcGcd(m=n, n=(m % n));},;
+        default: { return calcGcd(m=n, n=(m % n));},;
 };
 
 print(message=calcGcd(m=3355, n=2379));

@@ -43,10 +43,16 @@ public class ParseStatement
     }
     private static (Statement, Token[]) parseConst(Token[] tokens)
     {
-        if (tokens is [TokenConst, TokenIdentifier(var exprName), TokenEqual, .. var restToken])
+        if (tokens is [TokenConst, TokenIdentifier(var exprName), TokenColon, .. var restToken])
         {
-            (var expression, var rest) = ParseExpression.parse(restToken);
-            return (new StatementConst(exprName, expression), rest);
+            (var type, restToken) = ParseType.parse(restToken);
+            if (restToken is not [TokenEqual, ..])
+            {
+                throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', tokens)}");
+            }
+            restToken = restToken[1..];
+            (var expression, var expresstionRest) = ParseExpression.parse(restToken);
+            return (new StatementConst(exprName,type, expression), expresstionRest);
         }
         throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', tokens)}");
     }

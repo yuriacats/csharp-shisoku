@@ -175,7 +175,7 @@ public class CalcTest
         var expectedValue = new FunctionValue(
             new List<string>(),
             new Statement[] {
-                new StatementConst("x",new NumberExpression(12)),
+                new StatementConst("x", new IntType(), new NumberExpression(12)),
                 new StatementReturn(new VariableExpression("x", new Checked(new IntType())))
             },
             new VariableEnvironment()
@@ -183,7 +183,7 @@ public class CalcTest
         var result = shisoku.CalcExpression.Calc(new FunctionExpression(
             new List<(string,Type)>(),
             new Statement[] {
-                new StatementConst("x",new NumberExpression(12)),
+                new StatementConst("x", new IntType(), new NumberExpression(12)),
                 new StatementReturn(new VariableExpression("x", new Checked(new IntType())))
             },
             new IntType()
@@ -285,7 +285,7 @@ public class CalcTest
     public void CallSwitchCanCalclate()
     {
         var statement = new Statement[] {
-            new StatementConst("a",new NumberExpression(12)),
+            new StatementConst("a", new IntType(), new NumberExpression(12)),
             new StatementSwitch(
                 new EqualExpression(new VariableExpression("a", new Checked(new IntType())), new NumberExpression(12)),
                 new List<(Expression, Statement[])>{
@@ -301,7 +301,7 @@ public class CalcTest
     public void CallSwitchCanCalclateNotRerurn()
     {
         var statement = new Statement[] {
-            new StatementConst("a",new NumberExpression(12)),
+            new StatementConst("a", new IntType(), new NumberExpression(12)),
             new StatementSwitch(
                 new EqualExpression(new VariableExpression("a", new Checked(new IntType())), new NumberExpression(12)),
                 new List<(Expression, Statement[])>{
