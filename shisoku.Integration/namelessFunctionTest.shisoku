@@ -1,4 +1,4 @@
-{|a,b|->
-const c=3;
+| a :int ,b: int |-> int {
+const c: int=3;
 return print(message=a+b*2+c);
 }(a=1,b=2);

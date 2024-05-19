@@ -1,2 +1,2 @@
-const a=1;
-print(message=a+1);
+const a: int=1;
+print(message =a+1);
