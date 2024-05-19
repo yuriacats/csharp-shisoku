@@ -1,4 +1,4 @@
-const f :|a:int, b:int| -> int = |a: int, b: int |-> int {
+const f : |a:int, b:int| -> int = |a: int, b: int |-> int {
 const c:int =3;
 return a+b*2+c*3;
 };
