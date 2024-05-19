@@ -19,6 +19,8 @@ jobs:
           run: dotnet build
     unit-test:
         runs-on: ubuntu-latest
+        permissions:
+          pull-requests: write
         steps:
         - uses: actions/checkout@v3
         - name: setup C-charp
