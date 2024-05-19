@@ -1,0 +1,34 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+
+tasks:
+  default:
+    desc: "Shows all the tasks"
+    cmds:
+      - task --list-all
+    silent: true
+  build:
+    desc: "Builds the project"
+    cmds:
+      - dotnet build
+  unit-test:
+    desc: "Runs unit tests"
+    cmds:
+      - dotnet test
+  integration-test:
+    deps:
+      - build
+    desc: "Runs integration tests"
+    cmds:
+      - shisoku.Integration/integration_calc.sh
+    silent: true
+  check-all:
+    desc: "Runs all checks"
+    cmds:
+      - task build
+      - task unit-test
+      - task integration-test
