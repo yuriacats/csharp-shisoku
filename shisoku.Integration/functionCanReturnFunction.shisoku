@@ -1,5 +1,7 @@
-const f= {|a |->
-return{|b|-> return a+b;};
+const f: |a: int| -> int = |a: int |-> int {
+    return |b: int| -> int {
+        return a+b;
+    };
 };
 print(message=f(a=5)(b=7));
 

@@ -1,4 +1,4 @@
-def sumFromOneToN {| n |->
+def sumFromOneToN = | n: int |-> int {
     switch n == 1 ?
         true: {return 1;},
         default: {return n +sumFromOneToN(n=n-1);},;
