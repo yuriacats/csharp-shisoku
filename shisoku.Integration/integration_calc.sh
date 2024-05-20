@@ -4,7 +4,7 @@ BINARY_DIR="bin"
 BINARY="${BINARY_DIR}/shisoku"
 
 function main() {
-    dotnet publish shisoku --output ${BINARY_DIR}
+    dotnet publish shisoku --configuration Release --output ${BINARY_DIR}
 
     local sum_exit_code=0
     run_test_exp_case "足し算" "1+1;" 2
