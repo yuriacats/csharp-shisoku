@@ -20,8 +20,6 @@ tasks:
     cmds:
       - dotnet test
   integration-test:
-    deps:
-      - build
     desc: "Runs integration tests"
     cmds:
       - shisoku.Integration/integration_calc.sh
