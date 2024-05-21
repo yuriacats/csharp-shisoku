@@ -16,7 +16,7 @@ public class CalcFunctionBody
                 case StatementExpression(var expr):
                     CalcExpression.Calc(expr, env);
                     continue;
-                case StatementConst(var name,_, var expr):
+                case StatementConst(var name, _, var expr):
                     env.Add(name, CalcExpression.Calc(expr, env));
                     continue;
                 case StatementReturn(var expr):

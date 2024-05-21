@@ -52,7 +52,7 @@ public class ParseStatement
             }
             restToken = restToken[1..];
             (var expression, var expresstionRest) = ParseExpression.parse(restToken);
-            return (new StatementConst(exprName,type, expression), expresstionRest);
+            return (new StatementConst(exprName, type, expression), expresstionRest);
         }
         throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', tokens)}");
     }

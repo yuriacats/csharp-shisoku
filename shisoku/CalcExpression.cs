@@ -46,7 +46,7 @@ public class CalcExpression
 
                     return new IntValue(value);
                 }
-            case VariableExpression(var name,_):
+            case VariableExpression(var name, _):
                 {
                     return env[name];
                 }
@@ -54,7 +54,7 @@ public class CalcExpression
                 {
                     return new BoolValue(value);
                 }
-            case AddExpression(var lhs, var rhs,_):
+            case AddExpression(var lhs, var rhs, _):
                 {
                     return new IntValue(toInt(Calc(lhs, env)) + toInt(Calc(rhs, env)));
                 }
@@ -62,15 +62,15 @@ public class CalcExpression
                 {
                     return new IntValue(toInt(Calc(lhs, env)) - toInt(Calc(rhs, env)));
                 }
-            case MulExpression(var lhs, var rhs,_):
+            case MulExpression(var lhs, var rhs, _):
                 {
                     return new IntValue(toInt(Calc(lhs, env)) * toInt(Calc(rhs, env)));
                 }
-            case DivExpression(var lhs, var rhs,_):
+            case DivExpression(var lhs, var rhs, _):
                 {
                     return new IntValue(toInt(Calc(lhs, env)) / toInt(Calc(rhs, env)));
                 }
-            case ModExpression(var lhs, var rhs,_):
+            case ModExpression(var lhs, var rhs, _):
                 {
                     return new IntValue(toInt(Calc(lhs, env)) % toInt(Calc(rhs, env)));
                 }
@@ -88,16 +88,16 @@ public class CalcExpression
                             throw new Exception($"Evaluation Error:Argment types differ.({lhs.ToString},{rhs.ToString})");
                     }
                 }
-            case FunctionExpression(var argumentNames, var body,_):
+            case FunctionExpression(var argumentNames, var body, _):
                 {
                     return new FunctionValue((argumentNames.Select((x) => x.Item1).ToList()), body, env);
                 }
-            case RecursiveFunctionExpression(var argumentNames, var body, var ValueName,_):
+            case RecursiveFunctionExpression(var argumentNames, var body, var ValueName, _):
                 {
                     env.Add(ValueName, new FunctionValue(argumentNames.Select((x) => x.Item1).ToList(), body, env));
                     return new FunctionValue(argumentNames.Select(x => x.Item1).ToList(), body, env);
                 }
-            case CallExpression(var argumentsExpressions, var function,_):
+            case CallExpression(var argumentsExpressions, var function, _):
                 {
                     var functionValue = Calc(function, env);
                     switch (functionValue)
