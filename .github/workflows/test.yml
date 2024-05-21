@@ -17,6 +17,16 @@ jobs:
             dotnet-version: 7.0.x
         - name: build
           run: dotnet build
+    check-if-formatted:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v3
+        - name: Install Task
+          uses: arduino/setup-task@v1
+          with:
+            version: 3.x
+        - name: Check if formatted
+          run: task check-if-formatted
     unit-test:
         runs-on: ubuntu-latest
         permissions:

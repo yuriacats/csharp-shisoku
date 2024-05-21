@@ -26,6 +26,15 @@ tasks:
     cmds:
       - shisoku.Integration/integration_calc.sh
     silent: true
+  format:
+    desc: "Formats the code"
+    cmds:
+      - dotnet format
+  check-if-formatted:
+    desc: "Checks if the code is formatted"
+    cmds:
+      - shfmt -d .
+      - dotnet format --verify-no-changes
   check-all:
     desc: "Runs all checks"
     cmds:
