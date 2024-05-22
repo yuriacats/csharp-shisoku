@@ -33,9 +33,14 @@ tasks:
     cmds:
       - shfmt -d .
       - dotnet format --verify-no-changes
+  install-shfmt:
+    desc: "Installs shfmt"
+    cmds:
+      - curl -sS https://webi.sh/shfmt | sh
   check-all:
     desc: "Runs all checks"
     cmds:
+      - task check-if-formatted
       - task build
       - task unit-test
       - task integration-test

@@ -25,6 +25,8 @@ jobs:
           uses: arduino/setup-task@v1
           with:
             version: 3.x
+        - name: install shfmt
+          run: task install-shfmt
         - name: Check if formatted
           run: task check-if-formatted
     unit-test:
