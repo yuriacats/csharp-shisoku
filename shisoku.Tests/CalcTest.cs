@@ -16,14 +16,14 @@ public class CalcTest
     public void AddEvaluates()
     {
         var expectedValue = new IntValue(12);
-        var value = shisoku.CalcExpression.Calc(new AddExpression(new NumberExpression(5), new NumberExpression(7) ,new Checked(new IntType())), new VariableEnvironment());
+        var value = shisoku.CalcExpression.Calc(new AddExpression(new NumberExpression(5), new NumberExpression(7), new Checked(new IntType())), new VariableEnvironment());
         Assert.Equal<Value>(expectedValue, value);
     }
     [Fact]
     public void SubEvaluates()
     {
         var expectedValue = new IntValue(12);
-        var value = shisoku.CalcExpression.Calc(new SubExpression(new NumberExpression(16), new NumberExpression(4),new Checked(new IntType())), new VariableEnvironment());
+        var value = shisoku.CalcExpression.Calc(new SubExpression(new NumberExpression(16), new NumberExpression(4), new Checked(new IntType())), new VariableEnvironment());
         Assert.Equal<Value>(expectedValue, value);
     }
     [Fact]
@@ -44,7 +44,7 @@ public class CalcTest
     public void ModEvaluates()
     {
         var expectedValue = new IntValue(1);
-        var value = shisoku.CalcExpression.Calc(new ModExpression(new NumberExpression(25), new NumberExpression(2),new Checked(new IntType())), new VariableEnvironment());
+        var value = shisoku.CalcExpression.Calc(new ModExpression(new NumberExpression(25), new NumberExpression(2), new Checked(new IntType())), new VariableEnvironment());
         Assert.Equal<Value>(expectedValue, value);
     }
     [Fact]
@@ -92,7 +92,7 @@ public class CalcTest
     [Fact]
     public void EqualExpressionDoesNotEvaluateWhenDiffrentTypeArgmentsAreGiven()
     {
-        Assert.Throws<Exception>(() => shisoku.CalcExpression.Calc(new EqualExpression(new BoolExpression(true), new NumberExpression(12) ), new VariableEnvironment()));
+        Assert.Throws<Exception>(() => shisoku.CalcExpression.Calc(new EqualExpression(new BoolExpression(true), new NumberExpression(12)), new VariableEnvironment()));
     }
     [Fact]
     public void AddExpressionDoesNotEvaluateWhenBooleanTypeArgmentsAreGiven()
@@ -107,18 +107,18 @@ public class CalcTest
     [Fact]
     public void MulExpressionDoesNotEvaluateWhenBooleanTypeArgmentsAreGiven()
     {
-        Assert.Throws<Exception>(() => shisoku.CalcExpression.Calc(new MulExpression(new BoolExpression(true), new BoolExpression(true),new Checked(new BoolType())), new VariableEnvironment()));
+        Assert.Throws<Exception>(() => shisoku.CalcExpression.Calc(new MulExpression(new BoolExpression(true), new BoolExpression(true), new Checked(new BoolType())), new VariableEnvironment()));
     }
     [Fact]
     public void DivExpressionDoesNotEvaluateWhenBooleanTypeArgmentsAreGiven()
     {
-        Assert.Throws<Exception>(() => shisoku.CalcExpression.Calc(new DivExpression(new BoolExpression(true), new BoolExpression(true),new Checked(new BoolType())), new VariableEnvironment()));
+        Assert.Throws<Exception>(() => shisoku.CalcExpression.Calc(new DivExpression(new BoolExpression(true), new BoolExpression(true), new Checked(new BoolType())), new VariableEnvironment()));
     }
     [Fact]
     public void functionExpressionCanEvaluate()
     {
         var expectedValue = new FunctionValue(new List<string>(), new Statement[] { }, new VariableEnvironment());
-        var result = shisoku.CalcExpression.Calc(new FunctionExpression(new List<(string,Type)>(), new Statement[] { }, new IntType()), new VariableEnvironment());
+        var result = shisoku.CalcExpression.Calc(new FunctionExpression(new List<(string, Type)>(), new Statement[] { }, new IntType()), new VariableEnvironment());
         switch (result)
         {
             case FunctionValue(var arguments, var body, var env):
@@ -137,7 +137,7 @@ public class CalcTest
         var env = new VariableEnvironment();
         env.Add("func", new FunctionValue(new List<string>(), new Statement[] { }, new VariableEnvironment()));
         var expectedValue = new FunctionValue(new List<string>(), new Statement[] { }, env);
-        var result = shisoku.CalcExpression.Calc(new RecursiveFunctionExpression(new List<(string,Type)>(), new Statement[] { }, "fanc",new IntType()), new VariableEnvironment());
+        var result = shisoku.CalcExpression.Calc(new RecursiveFunctionExpression(new List<(string, Type)>(), new Statement[] { }, "fanc", new IntType()), new VariableEnvironment());
         switch (result)
         {
             case FunctionValue(var arguments, var body, _):
@@ -155,7 +155,7 @@ public class CalcTest
     {
         var expression = new CallExpression(
             new (string, Expression)[] { },
-                new FunctionExpression(new List<(string,Type)>(),
+                new FunctionExpression(new List<(string, Type)>(),
                 new Statement[] {
                     new StatementReturn(new AddExpression(
                         new NumberExpression(1),new NumberExpression(2),new Checked(new IntType())
@@ -181,7 +181,7 @@ public class CalcTest
             new VariableEnvironment()
         );
         var result = shisoku.CalcExpression.Calc(new FunctionExpression(
-            new List<(string,Type)>(),
+            new List<(string, Type)>(),
             new Statement[] {
                 new StatementConst("x", new IntType(), new NumberExpression(12)),
                 new StatementReturn(new VariableExpression("x", new Checked(new IntType())))
@@ -222,7 +222,7 @@ public class CalcTest
         new CallExpression(
                 new (string, Expression)[] { ("x", new NumberExpression(12)) },
                 new FunctionExpression(
-                    new List<(string,Type)>() { ("x",new IntType()) },
+                    new List<(string, Type)>() { ("x", new IntType()) },
                     new Statement[] {
                             new StatementReturn(new VariableExpression("x", new Checked(new IntType())))
                     },
@@ -243,7 +243,7 @@ public class CalcTest
             new CallExpression(
                     new (string, Expression)[] { ("x", new NumberExpression(12)), ("y", new NumberExpression(13)) },
                     new FunctionExpression(
-                        new List<(string,Type)>() { ("x", new IntType()) },
+                        new List<(string, Type)>() { ("x", new IntType()) },
                         new Statement[] {
                                 new StatementReturn(new VariableExpression("x", new Checked(new IntType())))
                         },
@@ -264,7 +264,7 @@ public class CalcTest
             new CallExpression(
                     new (string, Expression)[] { ("x", new NumberExpression(12)) },
                     new FunctionExpression(
-                        new List<(string,Type)>() { ("x", new IntType()), ("y", new IntType()) },
+                        new List<(string, Type)>() { ("x", new IntType()), ("y", new IntType()) },
                         new Statement[] {
                                 new StatementReturn(new AddExpression(
                                     new VariableExpression("x", new Checked(new IntType())),

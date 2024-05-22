@@ -38,7 +38,7 @@ public class ParseExpression
                     break;
                 case TokenMinus:
                     var (subRhs, subRest) = parseMulDiv(rest2);
-                    result = new SubExpression(result, subRhs ,new Unchecked());
+                    result = new SubExpression(result, subRhs, new Unchecked());
                     rest = subRest;
                     break;
             }
@@ -59,7 +59,7 @@ public class ParseExpression
                     break;
                 case TokenSlash:
                     var (divRhs, divRest) = parseCall(rest2);
-                    result = new DivExpression(result, divRhs,new Unchecked());
+                    result = new DivExpression(result, divRhs, new Unchecked());
                     rest = divRest;
                     break;
                 case TokenPercent:
@@ -79,7 +79,7 @@ public class ParseExpression
         while (rest is [TokenBracketOpen, .. var innerRest])
         {
             (var arguments, rest) = parseArguments(innerRest);
-            result = new CallExpression(arguments, result ,new Unchecked());
+            result = new CallExpression(arguments, result, new Unchecked());
         }
         return (result, rest);
     }
@@ -130,8 +130,8 @@ public class ParseExpression
                 {
                     throw new Exception($"Unexpected Tokens: {String.Join<Token>(',', input)}");
                 }
-            case [TokenDef, TokenIdentifier(var name), TokenEqual , .. var target]:
-                (var defArguments,var defReturnType, var defBodyTokens) = ParseType.functionTypeParser(target);
+            case [TokenDef, TokenIdentifier(var name), TokenEqual, .. var target]:
+                (var defArguments, var defReturnType, var defBodyTokens) = ParseType.functionTypeParser(target);
                 var defBodys = new List<Statement> { };
                 if (defBodyTokens.Length == 0)
                 {
@@ -149,7 +149,7 @@ public class ParseExpression
                 }
                 return (new RecursiveFunctionExpression(defArguments, defBodys.ToArray(), name, defReturnType), defBodyTokens[1..]);
             case [TokenPipe, ..]:
-                (var arguments,var returnType, var bodyTokens) = ParseType.functionTypeParser(input);
+                (var arguments, var returnType, var bodyTokens) = ParseType.functionTypeParser(input);
                 var bodys = new List<Statement> { };
                 bodyTokens = bodyTokens[1..];
                 while (bodyTokens is not [TokenCurlyBracketClose, ..])
