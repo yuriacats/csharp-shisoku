@@ -27,6 +27,7 @@ tasks:
   format:
     desc: "Formats the code"
     cmds:
+      - shfmt -w .
       - dotnet format
   check-if-formatted:
     desc: "Checks if the code is formatted"
