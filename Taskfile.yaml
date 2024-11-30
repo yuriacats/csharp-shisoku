@@ -24,9 +24,24 @@ tasks:
     cmds:
       - shisoku.Integration/integration_calc.sh
     silent: true
+  format:
+    desc: "Formats the code"
+    cmds:
+      - shfmt -w .
+      - dotnet format
+  check-if-formatted:
+    desc: "Checks if the code is formatted"
+    cmds:
+      - shfmt -d .
+      - dotnet format --verify-no-changes
+  install-shfmt:
+    desc: "Installs shfmt"
+    cmds:
+      - curl -sS https://webi.sh/shfmt | sh
   check-all:
     desc: "Runs all checks"
     cmds:
+      - task check-if-formatted
       - task build
       - task unit-test
       - task integration-test

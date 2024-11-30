@@ -13,10 +13,22 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"task.vscode-task"
-			]
+				"task.vscode-task",
+				"ms-dotnettools.csharp",
+				"ms-dotnettools.csdevkit",
+				"mkhl.shfmt"
+			],
+			"settings": {
+				"[csharp]": {
+					"editor.defaultFormatter": "ms-dotnettools.csharp"
+				},
+				"[shellscript]": {
+					"editor.defaultFormatter": "mkhl.shfmt"
+				}
+			}
 		}
 	},
+	"onCreateCommand": "curl -sS https://webi.sh/shfmt | sh",
 
 	"postCreateCommand": "dotnet restore"
 }
